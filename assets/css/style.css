@@ -1,0 +1,678 @@
+/* ===================== Тағйирёбандаҳои рангӣ ===================== */
+:root {
+  --primary: #1450a3;
+  --primary-dark: #0b3a78;
+  --primary-light: #e8f0fc;
+  --accent: #f4a93b;
+  --accent-dark: #d98c1c;
+  --bg: #f5f7fb;
+  --card-bg: #ffffff;
+  --text: #1f2937;
+  --text-light: #6b7280;
+  --border: #e3e8f0;
+  --success: #15803d;
+  --success-bg: #e9f7ef;
+  --danger: #b91c1c;
+  --danger-bg: #fdecea;
+  --radius: 12px;
+  --shadow: 0 4px 14px rgba(20, 80, 163, 0.08);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Segoe UI", "Noto Sans", "Roboto", Tahoma, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+img {
+  max-width: 100%;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+ul {
+  padding-right: 0;
+}
+
+/* ===================== Сарлавҳа ва навигатсия ===================== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(20, 80, 163, 0.05);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+}
+
+.logo:hover {
+  text-decoration: none;
+}
+
+.logo .logo-accent {
+  color: var(--accent);
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.main-nav a {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.main-nav a:hover {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  text-decoration: none;
+}
+
+.main-nav a.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1.4rem;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  color: var(--primary-dark);
+}
+
+/* ===================== Геро (саҳифаи асосӣ) ===================== */
+.hero {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: #fff;
+  padding: 64px 0;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  margin-bottom: 16px;
+  font-weight: 800;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  max-width: 680px;
+  margin: 0 auto 30px;
+  color: #e6edfb;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ===================== Тугмаҳо ===================== */
+.btn {
+  display: inline-block;
+  padding: 13px 28px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:hover {
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #1f2937;
+}
+
+.btn-primary:hover {
+  background: var(--accent-dark);
+}
+
+.btn-outline {
+  background: transparent;
+  border-color: #fff;
+  color: #fff;
+}
+
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.btn-secondary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-secondary:hover {
+  background: var(--primary-dark);
+}
+
+/* ===================== Қисматҳои умумӣ ===================== */
+.section {
+  padding: 56px 0;
+}
+
+.section-title {
+  text-align: center;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  margin-bottom: 12px;
+  color: var(--primary-dark);
+  font-weight: 800;
+}
+
+.section-subtitle {
+  text-align: center;
+  color: var(--text-light);
+  max-width: 680px;
+  margin: 0 auto 40px;
+}
+
+.page-header {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: #fff;
+  padding: 46px 0;
+  text-align: center;
+}
+
+.page-header h1 {
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.page-header p {
+  color: #e6edfb;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* ===================== Кортҳо (Cards) ===================== */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(20, 80, 163, 0.14);
+}
+
+.card .card-icon {
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  color: var(--primary-dark);
+}
+
+.card p {
+  color: var(--text-light);
+  margin-bottom: 14px;
+}
+
+.card-big {
+  text-align: center;
+  padding: 36px 28px;
+}
+
+.card-big h2 {
+  color: var(--primary-dark);
+  margin-bottom: 12px;
+  font-size: 1.5rem;
+}
+
+.card-big p {
+  color: var(--text-light);
+  margin-bottom: 20px;
+}
+
+/* ===================== Феҳристи мавзуъҳо ===================== */
+.topic-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin: 0 auto 10px;
+  list-style: none;
+}
+
+.topic-list li a {
+  display: block;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-weight: 600;
+  color: var(--text);
+  transition: all 0.15s ease;
+}
+
+.topic-list li a:hover {
+  border-color: var(--primary);
+  color: var(--primary-dark);
+  background: var(--primary-light);
+  text-decoration: none;
+}
+
+.topic-list .topic-num {
+  display: inline-block;
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  margin-left: 8px;
+}
+
+/* ===================== Аккордеон (мавзуъҳои дарс) ===================== */
+.lesson {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.lesson-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 22px;
+  background: var(--card-bg);
+  border: none;
+  cursor: pointer;
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  text-align: right;
+  font-family: inherit;
+}
+
+.lesson-header:hover {
+  background: var(--primary-light);
+}
+
+.lesson-header .lesson-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.9rem;
+  margin-left: 12px;
+  flex-shrink: 0;
+}
+
+.lesson-header .lesson-title {
+  flex: 1;
+}
+
+.lesson-header .toggle-icon {
+  font-size: 1.4rem;
+  color: var(--accent-dark);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.lesson.open .toggle-icon {
+  transform: rotate(45deg);
+}
+
+.lesson-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding: 0 22px;
+}
+
+.lesson.open .lesson-body {
+  padding: 0 22px 22px;
+}
+
+.lesson-body h4 {
+  color: var(--primary-dark);
+  margin: 16px 0 8px;
+  font-size: 1.05rem;
+}
+
+.lesson-body p {
+  margin-bottom: 10px;
+}
+
+.lesson-body ul,
+.lesson-body ol {
+  margin: 0 0 12px 0;
+  padding-right: 22px;
+}
+
+.lesson-body li {
+  margin-bottom: 6px;
+}
+
+.formula {
+  background: var(--primary-light);
+  border-right: 4px solid var(--primary);
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin: 10px 0;
+  font-weight: 700;
+  color: var(--primary-dark);
+  direction: ltr;
+  text-align: center;
+  font-family: "Consolas", monospace;
+}
+
+.note {
+  background: #fff8e6;
+  border-right: 4px solid var(--accent);
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin: 10px 0;
+  font-size: 0.95rem;
+}
+
+.note strong {
+  color: var(--accent-dark);
+}
+
+/* ===================== Луғат ===================== */
+.glossary-search {
+  max-width: 480px;
+  margin: 0 auto 36px;
+}
+
+.glossary-search input {
+  width: 100%;
+  padding: 14px 18px;
+  font-size: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  outline: none;
+  box-shadow: var(--shadow);
+}
+
+.glossary-search input:focus {
+  border-color: var(--primary);
+}
+
+.glossary-list {
+  display: grid;
+  gap: 14px;
+}
+
+.glossary-item {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 22px;
+  box-shadow: var(--shadow);
+}
+
+.glossary-item dt {
+  font-weight: 800;
+  color: var(--primary-dark);
+  font-size: 1.05rem;
+  margin-bottom: 4px;
+}
+
+.glossary-item dt .en-term {
+  font-weight: 400;
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+.glossary-item dd {
+  color: var(--text);
+}
+
+.glossary-empty {
+  text-align: center;
+  color: var(--text-light);
+  padding: 30px 0;
+  display: none;
+}
+
+/* ===================== Санҷиш (Тест) ===================== */
+.quiz-select {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.quiz-select button {
+  padding: 12px 26px;
+  border-radius: 30px;
+  border: 2px solid var(--primary);
+  background: #fff;
+  color: var(--primary);
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.quiz-select button.active,
+.quiz-select button:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+.quiz-question {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.quiz-question p.question-text {
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--primary-dark);
+}
+
+.quiz-options {
+  display: grid;
+  gap: 8px;
+}
+
+.quiz-options label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.quiz-options label:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.quiz-options input {
+  accent-color: var(--primary);
+}
+
+.quiz-question.correct {
+  border-color: var(--success);
+  background: var(--success-bg);
+}
+
+.quiz-question.incorrect {
+  border-color: var(--danger);
+  background: var(--danger-bg);
+}
+
+.quiz-question .answer-feedback {
+  display: none;
+  margin-top: 10px;
+  font-size: 0.92rem;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+}
+
+.quiz-question.checked .answer-feedback {
+  display: block;
+}
+
+.quiz-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  margin: 28px 0;
+  flex-wrap: wrap;
+}
+
+.quiz-result {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+  padding: 18px;
+  border-radius: var(--radius);
+  background: var(--primary-light);
+  display: none;
+  margin-bottom: 24px;
+}
+
+/* ===================== Зербино ===================== */
+.site-footer {
+  background: var(--primary-dark);
+  color: #cfe0fb;
+  text-align: center;
+  padding: 28px 0;
+  margin-top: 40px;
+  font-size: 0.92rem;
+}
+
+.site-footer a {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ===================== Адаптивӣ (Responsive) ===================== */
+@media (max-width: 760px) {
+  .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .main-nav {
+    position: absolute;
+    top: 68px;
+    right: 0;
+    left: 0;
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 8px 16px 16px;
+    box-shadow: var(--shadow);
+    display: none;
+  }
+
+  .main-nav.open {
+    display: flex;
+  }
+
+  .main-nav a {
+    text-align: right;
+    padding: 12px 14px;
+  }
+
+  .hero {
+    padding: 44px 0;
+  }
+
+  .section {
+    padding: 40px 0;
+  }
+}

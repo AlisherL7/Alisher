@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Санҷиши донишҳо — ИқтисодОмӯз</title>
+  <meta name="description" content="Тести интерактивӣ барои санҷиши донишҳои худ аз микро- ва макроиқтисодиёт." />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">📊 Иқтисод<span class="logo-accent">Омӯз</span></a>
+      <nav class="main-nav" id="main-nav">
+        <a href="index.html">Хона</a>
+        <a href="mikroiqtisodiyot.html">Микроиқтисодиёт</a>
+        <a href="makroiqtisodiyot.html">Макроиқтисодиёт</a>
+        <a href="lugat.html">Луғат</a>
+        <a href="test.html" class="active">Санҷиш</a>
+      </nav>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Кушодани менюи навигатсия">☰</button>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="container">
+      <h1>✅ Санҷиши донишҳо</h1>
+      <p>
+        Бахшеро интихоб кунед, ба саволҳо ҷавоб диҳед ва тугмаи «Тафтиш
+        кардани ҷавобҳо»-ро пахш намоед. Барои ҳар савол ҷавоби дуруст ва
+        шарҳи кӳтоҳ нишон дода мешавад.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+      <div class="quiz-select">
+        <button data-category="mikro">🔍 Микроиқтисодиёт</button>
+        <button data-category="makro">🌍 Макроиқтисодиёт</button>
+        <button data-category="mixed">🎲 Тести омехта</button>
+      </div>
+
+      <div id="quiz-container"></div>
+
+      <div class="quiz-actions">
+        <button id="check-btn" class="btn btn-secondary">Тафтиш кардани ҷавобҳо</button>
+        <button id="reset-btn" class="btn btn-outline" style="border-color:var(--primary); color:var(--primary);">Аз нав сар кардан</button>
+      </div>
+
+      <div id="quiz-result" class="quiz-result"></div>
+
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="card card-big">
+        <h2>Натиҷаи паст гирифтед?</h2>
+        <p>Боз бармегардед ба дарсҳо ва мавзуъҳои душворро такрор кунед.</p>
+        <div class="hero-buttons" style="justify-content:center;">
+          <a href="mikroiqtisodiyot.html" class="btn btn-secondary">Микроиқтисодиёт</a>
+          <a href="makroiqtisodiyot.html" class="btn btn-secondary">Макроиқтисодиёт</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2026 ИқтисодОмӯз — Сайти таълимӣ оид ба микро- ва макроиқтисодиёт ба забони тоҷикӣ.</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/quiz-data.js"></script>
+  <script src="assets/js/quiz.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
