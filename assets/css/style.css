@@ -29,7 +29,7 @@ html {
 }
 
 body {
-  font-family: "Segoe UI", "Noto Sans", "Roboto", Tahoma, Arial, sans-serif;
+  font-family: "Noto Sans", "Segoe UI", "Roboto", Tahoma, Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.7;
@@ -130,6 +130,34 @@ ul {
   height: 44px;
   cursor: pointer;
   color: var(--primary-dark);
+}
+
+/* ===================== Ивазкунаки забон ===================== */
+.main-nav a.lang-link {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.main-nav a.lang-link-first {
+  margin-left: 12px;
+  padding-left: 16px;
+  border-left: 1px solid var(--border);
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.main-nav a.lang-link.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.main-nav a.lang-link:not(.active):hover {
+  background: var(--primary-light);
+  border-color: var(--primary);
 }
 
 /* ===================== Геро (саҳифаи асосӣ) ===================== */

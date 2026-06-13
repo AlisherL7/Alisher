@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Проверка знаний — ЭкономШкола</title>
+  <meta name="description" content="Интерактивный тест для проверки своих знаний по микро- и макроэкономике." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index-ru.html" class="logo">📊 Эконом<span class="logo-accent">Школа</span></a>
+      <nav class="main-nav" id="main-nav">
+        <a href="index-ru.html">Главная</a>
+        <a href="mikroiqtisodiyot-ru.html">Микроэкономика</a>
+        <a href="makroiqtisodiyot-ru.html">Макроэкономика</a>
+        <a href="lugat-ru.html">Словарь</a>
+        <a href="test-ru.html" class="active">Тест</a>
+        <a href="test.html" class="lang-link lang-link-first">TJ</a>
+        <a href="test-ru.html" class="lang-link active">RU</a>
+      </nav>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Открыть меню навигации">☰</button>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="container">
+      <h1>✅ Проверка знаний</h1>
+      <p>
+        Выберите раздел, ответьте на вопросы и нажмите кнопку «Проверить
+        ответы». Для каждого вопроса будет показан правильный ответ и
+        краткое объяснение.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+      <div class="quiz-select">
+        <button data-category="mikro">🔍 Микроэкономика</button>
+        <button data-category="makro">🌍 Макроэкономика</button>
+        <button data-category="mixed">🎲 Смешанный тест</button>
+      </div>
+
+      <div id="quiz-container"></div>
+
+      <div class="quiz-actions">
+        <button id="check-btn" class="btn btn-secondary">Проверить ответы</button>
+        <button id="reset-btn" class="btn btn-outline" style="border-color:var(--primary); color:var(--primary);">Начать заново</button>
+      </div>
+
+      <div id="quiz-result" class="quiz-result"></div>
+
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="card card-big">
+        <h2>Получили низкий результат?</h2>
+        <p>Вернитесь к урокам и повторите сложные темы.</p>
+        <div class="hero-buttons" style="justify-content:center;">
+          <a href="mikroiqtisodiyot-ru.html" class="btn btn-secondary">Микроэкономика</a>
+          <a href="makroiqtisodiyot-ru.html" class="btn btn-secondary">Макроэкономика</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2026 ЭкономШкола — Образовательный сайт по микро- и макроэкономике на русском языке.</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/quiz-data-ru.js"></script>
+  <script src="assets/js/quiz-ru.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
