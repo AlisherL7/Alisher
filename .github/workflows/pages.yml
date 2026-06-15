@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - claude/tajik-economics-site-vq7xf9
+      - claude/ai-capabilities-demo-dqzgq9
   workflow_dispatch:
 
 permissions:
