@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ИИ-Лаборатория инвестиций — ЭкономШкола</title>
+  <meta name="description" content="Интерактивная лаборатория: посмотрите, как алгоритмы и ИИ анализируют графики криптовалют и акций, постройте свою стратегию и сравните её с простым удержанием актива." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index-ru.html" class="logo">📊 Эконом<span class="logo-accent">Школа</span></a>
+      <nav class="main-nav" id="main-nav">
+        <a href="index-ru.html">Главная</a>
+        <a href="mikroiqtisodiyot-ru.html">Микроэкономика</a>
+        <a href="makroiqtisodiyot-ru.html">Макроэкономика</a>
+        <a href="lugat-ru.html">Словарь</a>
+        <a href="test-ru.html">Тест</a>
+        <a href="ai-lab-ru.html" class="active">🤖 ИИ-Лаб</a>
+        <a href="ai-lab.html" class="lang-link lang-link-first">TJ</a>
+        <a href="ai-lab-ru.html" class="lang-link active">RU</a>
+      </nav>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Открыть меню навигации">☰</button>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="container">
+      <h1>🤖 ИИ-Лаборатория инвестиций</h1>
+      <p>
+        Постройте собственную алгоритмическую стратегию, протестируйте её на
+        реальных или демонстрационных данных и посмотрите, как на самом деле
+        «думают» торговые алгоритмы на основе технического анализа и ИИ.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+      <div class="note" style="margin-bottom: 30px;">
+        <strong>⚠️ Важно:</strong> это образовательный симулятор. Все расчёты
+        выполняются прямо в вашем браузере на исторических или
+        демонстрационных данных. Результаты в прошлом не гарантируют
+        результата в будущем, и ничего на этой странице не является
+        индивидуальной инвестиционной рекомендацией. Тема «Провалы рынка» в
+        курсе микроэкономики и тема «Деловые циклы» в курсе макроэкономики
+        объясняют, почему риск — неотъемлемая часть любого рынка.
+      </div>
+
+      <div class="ai-lab-layout">
+        <aside class="ai-controls">
+          <h3>1. Выберите актив</h3>
+          <div class="asset-tabs" id="asset-tabs">
+            <button data-asset="btc" class="active">
+              ₿ Bitcoin (BTC) <span class="asset-price" id="price-btc"></span>
+            </button>
+            <button data-asset="eth">
+              Ξ Ethereum (ETH) <span class="asset-price" id="price-eth"></span>
+            </button>
+            <button data-asset="stock">
+              📈 Tech-акция (демо) <span class="asset-price" id="price-stock"></span>
+            </button>
+          </div>
+
+          <h3>2. Настройте ИИ-стратегию</h3>
+          <div class="control-group">
+            <label>Короткая SMA (быстрый тренд) <span class="control-value" id="val-short">10</span></label>
+            <input type="range" id="short-period" min="5" max="50" value="10" />
+          </div>
+          <div class="control-group">
+            <label>Длинная SMA (медленный тренд) <span class="control-value" id="val-long">30</span></label>
+            <input type="range" id="long-period" min="20" max="120" value="30" />
+          </div>
+          <div class="control-group">
+            <label>Период RSI <span class="control-value" id="val-rsi">14</span></label>
+            <input type="range" id="rsi-period" min="5" max="30" value="14" />
+          </div>
+          <div class="control-group">
+            <label>Порог перекупленности RSI <span class="control-value" id="val-rsi-th">70</span></label>
+            <input type="range" id="rsi-threshold" min="60" max="90" value="70" />
+          </div>
+
+          <button id="run-btn" class="btn btn-secondary" style="width:100%;">🤖 Запустить ИИ-анализ</button>
+          <button id="live-btn" class="btn btn-outline" style="width:100%; margin-top:10px; border-color:var(--primary); color:var(--primary);">📡 Подключить живые данные CoinGecko</button>
+          <div class="live-data-status" id="live-status"></div>
+        </aside>
+
+        <div class="ai-lab-main">
+          <div class="chart-card">
+            <h3>График цены и сигналы ИИ</h3>
+            <p class="chart-sub" id="price-chart-sub"></p>
+            <canvas class="chart-canvas" id="price-chart"></canvas>
+            <div class="chart-legend">
+              <span><span class="legend-dot" style="background:#1450a3;"></span> Цена</span>
+              <span><span class="legend-dot" style="background:#f4a93b;"></span> SMA короткая</span>
+              <span><span class="legend-dot" style="background:#b91c1c;"></span> SMA длинная</span>
+              <span>🔼 Сигнал «купить»</span>
+              <span>🔽 Сигнал «продать»</span>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <h3>Доходность: ИИ-стратегия vs «Купи и держи»</h3>
+            <p class="chart-sub">Старт со 100% капитала. Зелёная линия — ваша ИИ-стратегия, серая — если бы вы просто купили актив и ничего не делали.</p>
+            <canvas class="chart-canvas" id="equity-chart"></canvas>
+            <div class="chart-legend">
+              <span><span class="legend-dot" style="background:#15803d;"></span> ИИ-стратегия</span>
+              <span><span class="legend-dot" style="background:#6b7280;"></span> Купи и держи</span>
+            </div>
+          </div>
+
+          <div class="stat-grid" id="stat-grid"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section" style="background:#fff; border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+    <div class="container">
+      <h2 class="section-title">Как «думает» этот ИИ?</h2>
+      <p class="section-subtitle">
+        Под капотом — три классических индикатора технического анализа,
+        точно так же используемых в реальных алгоритмических и
+        количественных (quant) торговых системах.
+      </p>
+
+      <div class="card-grid">
+        <div class="card">
+          <span class="card-icon">📐</span>
+          <h3>1. Скользящие средние (SMA)</h3>
+          <p>
+            Короткая SMA реагирует на цену быстро, длинная — медленно. Когда
+            короткая пересекает длинную снизу вверх — это сигнал, что
+            краткосрочный тренд начинает обгонять долгосрочный (зарождение
+            восходящего тренда).
+          </p>
+          <div class="formula">SMA(n) = (P₁ + P₂ + … + Pₙ) / n</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">⚖️</span>
+          <h3>2. Индекс относительной силы (RSI)</h3>
+          <p>
+            RSI измеряет, насколько «разогрет» актив за последние N дней.
+            Значение выше порога перекупленности означает, что покупателей
+            стало слишком много — рост может быть исчерпан, и ИИ закрывает
+            позицию, фиксируя прибыль.
+          </p>
+          <div class="formula">RSI = 100 − 100 / (1 + Средний рост / Среднее падение)</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">🧠</span>
+          <h3>3. Правило принятия решений</h3>
+          <p>
+            Покупка: короткая SMA пересекает длинную вверх <strong>и</strong>
+            RSI ниже порога перекупленности. Продажа: обратное пересечение
+            <strong>или</strong> сильная перекупленность. Именно так
+            алгоритмы превращают «данные» в «решения».
+          </p>
+        </div>
+        <div class="card">
+          <span class="card-icon">🔗</span>
+          <h3>4. Связь с экономикой</h3>
+          <p>
+            По сути ИИ ищет момент, когда меняется баланс спроса и
+            предложения — то же самое рыночное равновесие, которое вы
+            изучаете в теме 4 курса микроэкономики, только применённое к
+            графику цены в реальном времени.
+          </p>
+        </div>
+      </div>
+
+      <div class="note" style="margin-top: 30px;">
+        <strong>Совет:</strong> попробуйте намеренно «сломать» стратегию —
+        поставьте короткую SMA равной 5, а длинную равной 8. Вы увидите много
+        сделок и, скорее всего, более низкую доходность из-за «шума» —
+        это наглядно показывает, почему настройка ИИ-модели имеет огромное
+        значение.
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">От теории к доходу: 10 идей, которые можно начать уже сегодня</h2>
+      <p class="section-subtitle">
+        Это не «волшебная таблетка», а конкретные направления, которые
+        соединяют ваши интересы (криптовалюты, акции, ИИ-трейдинг, YouTube)
+        с реальными активами — например, с этим самым образовательным сайтом.
+      </p>
+
+      <div class="card-grid">
+        <div class="card idea-card">
+          <span class="idea-tag">YouTube · Детям</span>
+          <h3>📺 «Капитализм для детей»</h3>
+          <p>
+            20 готовых тем курса (микро + макро) — это уже 20 сценариев для
+            анимированных видео 5–7 минут: «Почему мороженое дорожает?»,
+            «Что такое зарплата?». Озвучка и анимация — через AI-инструменты.
+            Монетизация: AdSense + партнёрства с банками и edu-брендами,
+            которым нужна финансовая грамотность для детей.
+          </p>
+        </div>
+
+        <div class="card idea-card">
+          <span class="idea-tag">ИИ-продукт</span>
+          <h3>🤖 ИИ-Лаборатория как отдельный сервис</h3>
+          <p>
+            Инструмент с этой страницы можно превратить в Telegram-бота или
+            мини-приложение: бесплатная версия — 1 актив и базовая
+            стратегия, Pro-версия ($3–5/мес) — больше активов, больше
+            стратегий и уведомления о сигналах. Код уже готов — это рабочий
+            MVP.
+          </p>
+        </div>
+
+        <div class="card idea-card">
+          <span class="idea-tag">Shorts / Reels</span>
+          <h3>⏱️ «Экономика за 60 секунд»</h3>
+          <p>
+            В словаре сайта уже 40+ терминов. Каждый термин — это один
+            короткий вертикальный ролик с простым примером из жизни
+            («Инфляция — это когда твои 100 сомони покупают меньше мороженого,
+            чем год назад»). Воронка ведёт на платный курс или канал.
+          </p>
+        </div>
+
+        <div class="card idea-card">
+          <span class="idea-tag">Крипто · Telegram</span>
+          <h3>📡 «Крипто и экономика без хайпа»</h3>
+          <p>
+            Еженедельный авто-разбор рынка на основе тех же индикаторов
+            (SMA/RSI), но с привязкой к макроэкономике: «ставка ЦБ выросла —
+            вот что это значит для BTC». Образовательный тон вместо «сигналов
+            на покупку» снижает риски и строит долгосрочное доверие аудитории.
+          </p>
+        </div>
+
+        <div class="card idea-card">
+          <span class="idea-tag">Курс</span>
+          <h3>🎓 Премиум-модуль «Инвестиции на практике»</h3>
+          <p>
+            Расширьте бесплатные 20 уроков платным модулем: практические
+            задания прямо в ИИ-Лаборатории, разбор реальных кейсов, чек-листы
+            по управлению риском. Продажа через Gumroad или собственную
+            страницу оплаты.
+          </p>
+        </div>
+
+        <div class="card idea-card">
+          <span class="idea-tag">ИИ-бот</span>
+          <h3>💬 ИИ-репетитор по экономике</h3>
+          <p>
+            Словарь и тесты сайта — готовая база знаний для чат-бота в
+            Telegram, который 24/7 отвечает на вопросы студентов простым
+            языком и предлагает практику перед тестом. Freemium: бесплатные
+            вопросы + платная безлимитная подписка.
+          </p>
+        </div>
+
+        <div class="card idea-card">
+          <span class="idea-tag">Экспансия</span>
+          <h3>🌍 Мультиязычность — ваше конкурентное преимущество</h3>
+          <p>
+            Сайт уже на тоҷикском и русском. С помощью ИИ-перевода добавьте
+            узбекский, казахский и английский — качественного бесплатного
+            контента по экономике на этих языках почти нет. Это открывает
+            доступ к грантам образовательных НКО и партнёрствам со школами
+            всего региона.
+          </p>
+        </div>
+
+        <div class="card idea-card">
+          <span class="idea-tag">Цифровые товары</span>
+          <h3>🧾 Шаблоны для личных финансов</h3>
+          <p>
+            Создайте набор Notion/Excel-шаблонов: трекер личного бюджета,
+            калькулятор сложного процента, трекер криптопортфеля на основе
+            логики из ИИ-Лаборатории. Продавайте на Gumroad/Etsy, продвигайте
+            через YouTube-канал из идеи №1.
+          </p>
+        </div>
+
+        <div class="card idea-card">
+          <span class="idea-tag">Партнёрки</span>
+          <h3>🤝 Прозрачная партнёрская программа</h3>
+          <p>
+            Когда у вас будет образовательная аудитория, добавьте
+            referral-ссылки на проверенные биржи и брокерские платформы —
+            но всегда с пометкой «реклама» и без обещаний доходности. Доверие
+            важнее одной комиссии.
+          </p>
+        </div>
+
+        <div class="card idea-card">
+          <span class="idea-tag">Подписка</span>
+          <h3>📬 «ИИ-дайджест рынка» по подписке</h3>
+          <p>
+            Еженедельная рассылка (email/Telegram) с графиками вроде тех, что
+            на этой странице, плюс объяснение «почему» через призму уроков
+            сайта. Простая подписка $3–5/мес — десятки подписчиков уже дают
+            ощутимый дополнительный доход.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="card card-big" style="background:linear-gradient(135deg, var(--primary-light), #fff);">
+        <h2>Прежде чем заработать — поймите, как работает рынок</h2>
+        <p>
+          Любая стратегия, ИИ или нет, опирается на фундаментальные понятия:
+          спрос, предложение, риск, цикличность. Начните с уроков — это
+          лучшая инвестиция, которая ничего не стоит.
+        </p>
+        <div class="hero-buttons" style="justify-content:center;">
+          <a href="mikroiqtisodiyot-ru.html" class="btn btn-secondary">Микроэкономика</a>
+          <a href="makroiqtisodiyot-ru.html" class="btn btn-secondary">Макроэкономика</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2026 ЭкономШкола — Образовательный сайт по микро- и макроэкономике на русском языке.</p>
+      <p>Материалы сайта предназначены только для образовательных целей и не являются инвестиционной рекомендацией.</p>
+    </div>
+  </footer>
+
+  <script>
+    window.AI_LAB_I18N = {
+      chartSubLive: "Реальные дневные данные CoinGecko за последние ~240 дней.",
+      chartSubDemo: "Демонстрационные данные: реалистичная симуляция рынка (детерминированная, для воспроизводимых результатов).",
+      liveLoading: "Загрузка живых данных с CoinGecko…",
+      liveSuccess: "Готово! Загружены реальные данные CoinGecko.",
+      liveError: "Не удалось получить живые данные (нет доступа к сети или лимит API). Используются демонстрационные данные.",
+      liveUnsupported: "Живые данные доступны только для Bitcoin и Ethereum.",
+      statTotalReturn: "Доходность ИИ-стратегии",
+      statBuyHold: "Доходность «Купи и держи»",
+      statMaxDrawdown: "Макс. просадка",
+      statTrades: "Сделок за период",
+      statWinRate: "Win rate (% прибыльных)",
+      statTimeInMarket: "Время в рынке"
+    };
+  </script>
+  <script src="assets/js/ai-lab.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

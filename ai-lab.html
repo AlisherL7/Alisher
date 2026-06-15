@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Лабораторияи AӢ барои сармоягузорӣ — ИқтисодОмӯз</title>
+  <meta name="description" content="Лабораторияи интерактивӣ: бубинед, ки алгоритмҳо ва AӢ графикҳои криптоасъор ва саҳмияҳоро чӣ тавр таҳлил мекунанд, стратегияи худро созед ва бо нигоҳ доштани оддии актив муқоиса кунед." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">📊 Иқтисод<span class="logo-accent">Омӯз</span></a>
+      <nav class="main-nav" id="main-nav">
+        <a href="index.html">Хона</a>
+        <a href="mikroiqtisodiyot.html">Микроиқтисодиёт</a>
+        <a href="makroiqtisodiyot.html">Макроиқтисодиёт</a>
+        <a href="lugat.html">Луғат</a>
+        <a href="test.html">Санҷиш</a>
+        <a href="ai-lab.html" class="active">🤖 AӢ-Лаб</a>
+        <a href="ai-lab.html" class="lang-link lang-link-first active">TJ</a>
+        <a href="ai-lab-ru.html" class="lang-link">RU</a>
+      </nav>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Кушодани менюи навигатсия">☰</button>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="container">
+      <h1>🤖 Лабораторияи AӢ барои сармоягузорӣ</h1>
+      <p>
+        Стратегияи алгоритмии худро созед, онро бо маълумоти воқеӣ ё намоишӣ
+        санҷед ва бубинед, ки алгоритмҳои тиҷоратӣ дар асоси таҳлили техникӣ
+        ва AӢ дар асл чӣ тавр «фикр мекунанд».
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+      <div class="note" style="margin-bottom: 30px;">
+        <strong>⚠️ Муҳим:</strong> ин як симулятори таълимӣ аст. Ҳама ҳисобҳо
+        мустақиман дар браузери шумо дар асоси маълумоти таърихӣ ё намоишӣ
+        иҷро мешаванд. Натиҳои гузашта натиҳои ояндаро кафолат намедиҳанд ва
+        ҳеҷ чизи дар ин саҳифа тавсияи инфиродии сармоягузорӣ нест. Мавзуи
+        «Нокомии бозор» дар курси микроиқтисодиёт ва мавзуи «Давраҳои
+        тиҷоратӣ» дар курси макроиқтисодиёт мефаҳмонанд, чаро хатар қисми
+        ҷудонашавандаи ҳар бозор аст.
+      </div>
+
+      <div class="ai-lab-layout">
+        <aside class="ai-controls">
+          <h3>1. Активро интихоб кунед</h3>
+          <div class="asset-tabs" id="asset-tabs">
+            <button data-asset="btc" class="active">
+              ₿ Bitcoin (BTC) <span class="asset-price" id="price-btc"></span>
+            </button>
+            <button data-asset="eth">
+              Ξ Ethereum (ETH) <span class="asset-price" id="price-eth"></span>
+            </button>
+            <button data-asset="stock">
+              📈 Саҳмияи технологӣ (намоишӣ) <span class="asset-price" id="price-stock"></span>
+            </button>
+          </div>
+
+          <h3>2. Стратегияи AӢ-ро танзим кунед</h3>
+          <div class="control-group">
+            <label>SMA кӯтоҳ (тамоюли тез) <span class="control-value" id="val-short">10</span></label>
+            <input type="range" id="short-period" min="5" max="50" value="10" />
+          </div>
+          <div class="control-group">
+            <label>SMA дароз (тамоюли суст) <span class="control-value" id="val-long">30</span></label>
+            <input type="range" id="long-period" min="20" max="120" value="30" />
+          </div>
+          <div class="control-group">
+            <label>Давраи RSI <span class="control-value" id="val-rsi">14</span></label>
+            <input type="range" id="rsi-period" min="5" max="30" value="14" />
+          </div>
+          <div class="control-group">
+            <label>Ҳадди харидории барзиёди RSI <span class="control-value" id="val-rsi-th">70</span></label>
+            <input type="range" id="rsi-threshold" min="60" max="90" value="70" />
+          </div>
+
+          <button id="run-btn" class="btn btn-secondary" style="width:100%;">🤖 Таҳлили AӢ-ро оғоз кунед</button>
+          <button id="live-btn" class="btn btn-outline" style="width:100%; margin-top:10px; border-color:var(--primary); color:var(--primary);">📡 Маълумоти зиндаи CoinGecko-ро пайваст кунед</button>
+          <div class="live-data-status" id="live-status"></div>
+        </aside>
+
+        <div class="ai-lab-main">
+          <div class="chart-card">
+            <h3>Графики нарх ва сигналҳои AӢ</h3>
+            <p class="chart-sub" id="price-chart-sub"></p>
+            <canvas class="chart-canvas" id="price-chart"></canvas>
+            <div class="chart-legend">
+              <span><span class="legend-dot" style="background:#1450a3;"></span> Нарх</span>
+              <span><span class="legend-dot" style="background:#f4a93b;"></span> SMA кӯтоҳ</span>
+              <span><span class="legend-dot" style="background:#b91c1c;"></span> SMA дароз</span>
+              <span>🔼 Сигнали «харидан»</span>
+              <span>🔽 Сигнали «фурӯхтан»</span>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <h3>Фоиданокӣ: стратегияи AӢ ва «Бихар ва нигоҳ дор»</h3>
+            <p class="chart-sub">Оғоз бо 100% сармоя. Хатти сабз — стратегияи AӢ-и шумо, хатти хокистарӣ — агар шумо танҳо активро мехаридед ва ҳеҷ кор намекардед.</p>
+            <canvas class="chart-canvas" id="equity-chart"></canvas>
+            <div class="chart-legend">
+              <span><span class="legend-dot" style="background:#15803d;"></span> Стратегияи AӢ</span>
+              <span><span class="legend-dot" style="background:#6b7280;"></span> Бихар ва нигоҳ дор</span>
+            </div>
+          </div>
+
+          <div class="stat-grid" id="stat-grid"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section" style="background:#fff; border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+    <div class="container">
+      <h2 class="section-title">Ин AӢ чӣ тавр «фикр мекунад»?</h2>
+      <p class="section-subtitle">
+        Дар дохили он — се нишондиҳандаи классикии таҳлили техникӣ, ки маҳз
+        ҳамин тавр дар системаҳои воқеии тиҷорати алгоритмӣ ва квантӣ
+        истифода мешаванд.
+      </p>
+
+      <div class="card-grid">
+        <div class="card">
+          <span class="card-icon">📐</span>
+          <h3>1. Миёнаҳои ҳаракаткунанда (SMA)</h3>
+          <p>
+            SMA кӯтоҳ ба нарх зуд вокуниш мекунад, SMA дароз — суст. Вақте ки
+            хатти кӯтоҳ хатти дарозро аз поён ба боло мегузарад — ин сигнали
+            он аст, ки тамоюли кӯтоҳмуддат аз тамоюли дарозмуддат пеш мегузарад
+            (оғози тамоюли болоравӣ).
+          </p>
+          <div class="formula">SMA(n) = (P₁ + P₂ + … + Pₙ) / n</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">⚖️</span>
+          <h3>2. Индекси қувваи нисбӣ (RSI)</h3>
+          <p>
+            RSI чен мекунад, ки актив дар тӯли N рӯзи охир то чӣ андоза «гарм
+            шудааст». Қиммати болотар аз ҳадди харидории барзиёд маънои онро
+            дорад, ки харидорон хеле зиёд шудаанд — афзоиш мумкин аст ба охир
+            расида бошад, ва AӢ позицияро мепӯшад ва фоидаро собит мекунад.
+          </p>
+          <div class="formula">RSI = 100 − 100 / (1 + Миёнаи афзоиш / Миёнаи коҳиш)</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">🧠</span>
+          <h3>3. Қоидаи қабули қарор</h3>
+          <p>
+            Харид: SMA кӯтоҳ хатти дарозро ба боло мегузарад
+            <strong>ва</strong> RSI поёнтар аз ҳадди харидории барзиёд аст.
+            Фурӯш: гузариши баракс <strong>ё</strong> харидории барзиёди
+            шадид. Маҳз ҳамин тавр алгоритмҳо «маълумотро» ба «қарор» табдил
+            медиҳанд.
+          </p>
+        </div>
+        <div class="card">
+          <span class="card-icon">🔗</span>
+          <h3>4. Алоқа бо иқтисодиёт</h3>
+          <p>
+            Дар асл AӢ лаҳзаеро меҷӯяд, ки тавозуни тақозо ва пешниҳод тағйир
+            меёбад — ҳамон мувозинати бозорӣ, ки шумо дар мавзуи 4 курси
+            микроиқтисодиёт меомӯзед, фақат ба графики нарх дар вақти воқеӣ
+            татбиқ шудааст.
+          </p>
+        </div>
+      </div>
+
+      <div class="note" style="margin-top: 30px;">
+        <strong>Маслиҳат:</strong> кӯшиш кунед, ки стратегияро қасдан «вайрон»
+        кунед — SMA кӯтоҳро баробари 5 ва дарозро баробари 8 гузоред. Шумо
+        амалиётҳои зиёд ва, эҳтимолан, фоиданокии пасттарро аз сабаби «садо»
+        хоҳед дид — ин ба таври аён нишон медиҳад, ки танзими модели AӢ чӣ
+        қадар муҳим аст.
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Аз назария ба даромад: 10 идея, ки имрӯз метавонед сар кунед</h2>
+      <p class="section-subtitle">
+        Ин «доруи мӯъҷизавӣ» нест, балки самтҳои мушаххасе мебошанд, ки
+        шавқу ҳаваси шуморо (криптоасъор, саҳмияҳо, тиҷорати AӢ, YouTube) бо
+        активҳои воқеӣ — масалан, бо ҳамин сайти таълимӣ — мепайвандад.
+      </p>
+
+      <div class="card-grid">
+        <div class="card idea-card">
+          <span class="idea-tag">YouTube · Барои кӯдакон</span>
+          <h3>📺 «Капитализм барои кӯдакон»</h3>
+          <p>
+            20 мавзуи тайёри курс (микро + макро) аллакай 20 сценарияи
+            видеоҳои аниматсионии 5–7 дақиқагӣ мебошанд: «Чаро яхмос гарон
+            мешавад?», «Маош чист?». Овоздиҳӣ ва аниматсия — тавассути
+            абзорҳои AӢ. Даромад: AdSense + ҳамкорӣ бо бонкҳо ва брендҳои
+            таълимӣ, ки ба саводнокии молиявӣ барои кӯдакон ниёз доранд.
+          </p>
+        </div>
+
+        <div class="card idea-card">
+          <span class="idea-tag">Маҳсулоти AӢ</span>
+          <h3>🤖 Лабораторияи AӢ ҳамчун хидмати алоҳида</h3>
+          <p>
+            Абзори ин саҳифаро мумкин аст ба боти Telegram ё мини-барнома
+            табдил дод: версияи ройгон — 1 актив ва стратегияи асосӣ, версияи
+            Pro (3–5 $/моҳ) — активҳои бештар, стратегияҳои бештар ва
+            огоҳиномаҳо дар бораи сигналҳо. Код аллакай тайёр аст — ин як
+            MVP-и коркунанда мебошад.
+          </p>
+        </div>
+
+        <div class="card idea-card">
+          <span class="idea-tag">Shorts / Reels</span>
+          <h3>⏱️ «Иқтисодиёт дар 60 сония»</h3>
+          <p>
+            Дар луғати сайт аллакай зиёда аз 40 истилоҳ мавҷуд аст. Ҳар
+            истилоҳ — як видеои кӯтоҳи амудӣ бо мисоли соддаи ҳаётӣ («Таваррум
+            он гоҳ аст, ки 100 сомонии шумо камтар яхмос нисбат ба як сол пеш
+            мехарад»). Канал ба курси пулакӣ ё канали асосӣ роҳ мекушояд.
+          </p>
+        </div>
+
+        <div class="card idea-card">
+          <span class="idea-tag">Крипто · Telegram</span>
+          <h3>📡 «Крипто ва иқтисодиёт бе ҳаёҷон»</h3>
+          <p>
+            Таҳлили ҳафтаинаи худкори бозор дар асоси ҳамон нишондиҳандаҳо
+            (SMA/RSI), вале бо алоқа ба макроиқтисодиёт: «Фоизи бонки марказӣ
+            боло рафт — ин барои BTC чӣ маъно дорад». Лаҳни таълимӣ ба ҷои
+            «сигналҳои харид» хатарҳоро коҳиш дода, эътимоди дарозмуддати
+            аудиторияро месозад.
+          </p>
+        </div>
+
+        <div class="card idea-card">
+          <span class="idea-tag">Курс</span>
+          <h3>🎓 Модули премиум «Сармоягузорӣ дар амал»</h3>
+          <p>
+            20 дарси ройгонро бо як модули пулакӣ васеъ кунед: вазифаҳои
+            амалӣ дар Лабораторияи AӢ, таҳлили ҳолатҳои воқеӣ, рӯйхати
+            санҷишии идоракунии хатар. Фурӯш тавассути Gumroad ё саҳифаи
+            пардохти худи шумо.
+          </p>
+        </div>
+
+        <div class="card idea-card">
+          <span class="idea-tag">Боти AӢ</span>
+          <h3>💬 Репетитори AӢ оид ба иқтисодиёт</h3>
+          <p>
+            Луғат ва тестҳои сайт — заминаи дониши тайёр барои боти чат дар
+            Telegram, ки 24/7 ба саволҳои хонандагон бо забони содда ҷавоб
+            медиҳад ва пеш аз тест машғулиятро пешниҳод мекунад. Freemium:
+            саволҳои ройгон + обуначаи беандозаи пулакӣ.
+          </p>
+        </div>
+
+        <div class="card idea-card">
+          <span class="idea-tag">Экспансия</span>
+          <h3>🌍 Бисёрзабонӣ — бартарии рақобатии шумо</h3>
+          <p>
+            Сайт аллакай ба забони тоҷикӣ ва русӣ мавҷуд аст. Бо ёрии
+            тарҷумаи AӢ забонҳои ӯзбекӣ, қазоқӣ ва англисиро илова кунед —
+            мундариҷаи ройгони босифат оид ба иқтисодиёт бо ин забонҳо қариб
+            вуҷуд надорад. Ин дарро ба грантҳои ТҲТ-ҳои таълимӣ ва ҳамкорӣ бо
+            мактабҳои тамоми минтақа мекушояд.
+          </p>
+        </div>
+
+        <div class="card idea-card">
+          <span class="idea-tag">Маҳсулоти рақамӣ</span>
+          <h3>🧾 Шаблонҳо барои молияи шахсӣ</h3>
+          <p>
+            Маҷмӯи шаблонҳои Notion/Excel созед: пайгирии буҷети шахсӣ,
+            ҳисобкунаки фоизи мураккаб, пайгирии портфели крипто дар асоси
+            мантиқи Лабораторияи AӢ. Дар Gumroad/Etsy фурӯш кунед, тавассути
+            канали YouTube аз идеяи 1 пешбарӣ кунед.
+          </p>
+        </div>
+
+        <div class="card idea-card">
+          <span class="idea-tag">Шарикӣ</span>
+          <h3>🤝 Барномаи шарикии шафоф</h3>
+          <p>
+            Вақте ки шумо аудиторияи таълимӣ дошта бошед, пайвандҳои referral
+            ба биржаҳо ва платформаҳои брокерии санҷидашуда илова кунед — вале
+            ҳамеша бо қайди «реклама» ва бе ваъдаи фоиданокӣ. Эътимод аз як
+            комиссия муҳимтар аст.
+          </p>
+        </div>
+
+        <div class="card idea-card">
+          <span class="idea-tag">Обуна</span>
+          <h3>📬 «Дайджести бозори AӢ» бо обуна</h3>
+          <p>
+            Хабарномаи ҳафтаинаи (email/Telegram) бо графикҳои монанд ба ин
+            саҳифа, плюс шарҳи «чаро» аз нигоҳи дарсҳои сайт. Обунаи содда
+            3–5 $/моҳ — даҳҳо обунашуда аллакай даромади иловагии назаррас
+            медиҳанд.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="card card-big" style="background:linear-gradient(135deg, var(--primary-light), #fff);">
+        <h2>Пеш аз он ки даромад ёбед — фаҳмед, ки бозор чӣ тавр кор мекунад</h2>
+        <p>
+          Ҳар стратегия, AӢ бошад ё на, ба мафҳумҳои бунёдӣ асос меёбад:
+          тақозо, пешниҳод, хатар, давравӣ. Аз дарсҳо сар кунед — ин
+          беҳтарин сармоягузорӣ аст, ки ҳеҷ чиз нарх надорад.
+        </p>
+        <div class="hero-buttons" style="justify-content:center;">
+          <a href="mikroiqtisodiyot.html" class="btn btn-secondary">Микроиқтисодиёт</a>
+          <a href="makroiqtisodiyot.html" class="btn btn-secondary">Макроиқтисодиёт</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2026 ИқтисодОмӯз — Сайти таълимӣ оид ба микро- ва макроиқтисодиёт ба забони тоҷикӣ.</p>
+      <p>Маводи сайт танҳо барои мақсадҳои таълимӣ пешбинӣ шудааст ва тавсияи сармоягузорӣ нест.</p>
+    </div>
+  </footer>
+
+  <script>
+    window.AI_LAB_I18N = {
+      chartSubLive: "Маълумоти воқеии рӯзонаи CoinGecko барои ~240 рӯзи охир.",
+      chartSubDemo: "Маълумоти намоишӣ: симулятори воқеии бозор (детерминистӣ, барои натиҷаҳои такрорпазир).",
+      liveLoading: "Боргирии маълумоти зинда аз CoinGecko…",
+      liveSuccess: "Тайёр! Маълумоти воқеии CoinGecko боргирӣ шуд.",
+      liveError: "Гирифтани маълумоти зинда муваффақ нашуд (дастрасӣ ба шабака нест ё ҳадди API). Маълумоти намоишӣ истифода мешавад.",
+      liveUnsupported: "Маълумоти зинда танҳо барои Bitcoin ва Ethereum дастрас аст.",
+      statTotalReturn: "Фоиданокии стратегияи AӢ",
+      statBuyHold: "Фоиданокии «Бихар ва нигоҳ дор»",
+      statMaxDrawdown: "Ҳадди ниҳоии коҳиш",
+      statTrades: "Амалиётҳо дар давра",
+      statWinRate: "Win rate (% судманд)",
+      statTimeInMarket: "Вақт дар бозор"
+    };
+  </script>
+  <script src="assets/js/ai-lab.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
