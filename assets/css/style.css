@@ -664,6 +664,180 @@ ul {
   font-weight: 600;
 }
 
+/* ===================== Бозии тиҷоратӣ (Бизнес-игра) ===================== */
+.game-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.game-stat {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.game-stat .game-stat-label {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.game-stat .game-stat-value {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+}
+
+.game-event {
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  font-size: 0.92rem;
+  border: 1px solid var(--border);
+  background: var(--primary-light);
+}
+
+.game-event.positive {
+  border-color: var(--success);
+  background: var(--success-bg);
+}
+
+.game-event.negative {
+  border-color: var(--danger);
+  background: var(--danger-bg);
+}
+
+.game-event a {
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+.game-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.game-panel {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: var(--shadow);
+}
+
+.game-panel h3 {
+  font-size: 1rem;
+  color: var(--primary-dark);
+  margin-bottom: 14px;
+}
+
+.game-controls {
+  position: sticky;
+  top: 84px;
+}
+
+.game-control-group {
+  margin-bottom: 16px;
+}
+
+.game-control-group label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-weight: 600;
+  font-size: 0.88rem;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.game-control-group label .game-value {
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.game-control-group input[type="range"] {
+  width: 100%;
+  accent-color: var(--primary);
+}
+
+.game-log {
+  max-height: 320px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.game-log-entry {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--bg);
+  font-size: 0.85rem;
+}
+
+.game-log-entry .profit {
+  color: var(--success);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.game-log-entry .loss {
+  color: var(--danger);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.game-end {
+  text-align: center;
+  padding: 36px 20px;
+  display: none;
+}
+
+.game-end .game-rank {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin: 10px 0;
+}
+
+.game-end .game-record {
+  color: var(--success);
+  font-weight: 700;
+}
+
+.game-end .game-end-lessons {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  margin: 14px 0 20px;
+}
+
+@media (max-width: 900px) {
+  .game-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .game-controls {
+    position: static;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ===================== Адаптивӣ (Responsive) ===================== */
 @media (max-width: 760px) {
   .nav-toggle {

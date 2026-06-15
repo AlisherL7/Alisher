@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Бозии тиҷоратӣ — Чойхонаи ман — ИқтисодОмӯз</title>
+  <meta name="description" content="Бозии иқтисодии интерактивӣ: идора кардани чойхона ва дидани он, ки талабот, пешниҳод, эластикӣ, таваррум ва андоз чӣ тавр ба фоидаи бизнес таъсир мерасонанд." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">📊 Иқтисод<span class="logo-accent">Омӯз</span></a>
+      <nav class="main-nav" id="main-nav">
+        <a href="index.html">Хона</a>
+        <a href="mikroiqtisodiyot.html">Микроиқтисодиёт</a>
+        <a href="makroiqtisodiyot.html">Макроиқтисодиёт</a>
+        <a href="lugat.html">Луғат</a>
+        <a href="test.html">Санҷиш</a>
+        <a href="biznes-game.html" class="active">🎮 Бозӣ</a>
+        <a href="biznes-game.html" class="lang-link lang-link-first active">TJ</a>
+        <a href="biznes-game-ru.html" class="lang-link">RU</a>
+      </nav>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Кушодани менюи навигатсия">☰</button>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="container">
+      <h1>🎮 Чойхонаи ман — бозии иқтисодӣ</h1>
+      <p>
+        Шумо соҳиби чойхонаи хурд дар маркази шаҳр ҳастед. Ҳар ҳафта нархи чой
+        ва самбӯсаро муайян кунед, захира тайёр кунед ва шумораи кормандонро
+        интихоб намоед. 12 ҳафта (як мавсим) идора кунед ва бинед, ки
+        қонунҳои иқтисод — талабот, эластикӣ, хароҳот, таваррум — чӣ тавр ба
+        фоидаи шумо таъсир мерасонанд.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+      <div class="game-stats">
+        <div class="game-stat">
+          <div class="game-stat-label">Ҳафта</div>
+          <div class="game-stat-value" id="stat-week">1 / 12</div>
+        </div>
+        <div class="game-stat">
+          <div class="game-stat-label">Пул дар сандуқ</div>
+          <div class="game-stat-value" id="stat-cash">500 смн</div>
+        </div>
+        <div class="game-stat">
+          <div class="game-stat-label">Эътибор</div>
+          <div class="game-stat-value" id="stat-rep">50%</div>
+        </div>
+      </div>
+
+      <div id="game-event-banner" class="game-event" style="display:none;"></div>
+
+      <div class="game-layout">
+        <div class="game-panel game-controls" id="game-controls-panel">
+          <h3>Қарорҳои ин ҳафта</h3>
+
+          <div class="game-control-group">
+            <label>Нархи чой <span class="game-value" id="val-tea-price">3 смн</span></label>
+            <input type="range" id="ctrl-tea-price" data-field="teaPrice" min="1" max="8" step="0.5" value="3">
+          </div>
+
+          <div class="game-control-group">
+            <label>Нархи самбӯса <span class="game-value" id="val-samsa-price">6 смн</span></label>
+            <input type="range" id="ctrl-samsa-price" data-field="samsaPrice" min="2" max="15" step="0.5" value="6">
+          </div>
+
+          <div class="game-control-group">
+            <label>Захираи чой <span class="game-value" id="val-tea-stock">70 пиёла</span></label>
+            <input type="range" id="ctrl-tea-stock" data-field="teaStock" min="0" max="150" step="5" value="70">
+          </div>
+
+          <div class="game-control-group">
+            <label>Захираи самбӯса <span class="game-value" id="val-samsa-stock">30 дона</span></label>
+            <input type="range" id="ctrl-samsa-stock" data-field="samsaStock" min="0" max="100" step="5" value="30">
+          </div>
+
+          <div class="game-control-group">
+            <label>Кормандон <span class="game-value" id="val-staff">1 нафар</span></label>
+            <input type="range" id="ctrl-staff" data-field="staff" min="1" max="3" step="1" value="1">
+          </div>
+
+          <button id="next-week-btn" class="btn btn-secondary" style="width:100%;">Ҳафтаи дигар →</button>
+        </div>
+
+        <div class="game-panel">
+          <h3>Таърихи ҳафтаҳо</h3>
+          <div class="game-log" id="game-log"></div>
+        </div>
+      </div>
+
+      <div class="game-panel game-end" id="game-end"></div>
+
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <h2 class="section-title">Чӣ тавр иқтисоди бозӣ кор мекунад?</h2>
+      <p class="section-subtitle">Ҳар механизми бозӣ ба як дарси воқеӣ дар сайт алоқаманд аст.</p>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">📐</div>
+          <h3>Эластикӣ</h3>
+          <p>Агар нархи чойро баланд кунед, талабот кам мешавад — аммо бо суръати гуногун. Ин маҳз «Эластикии талабот ва пешниҳод» аст (<a href="mikroiqtisodiyot.html#lesson-5">дарси 5</a>).</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🏭</div>
+          <h3>Хароҳот</h3>
+          <p>Маводи тайёр кардаед, аммо нафурӯхта — пул нею. Ин аз дарси «Истеҳсолот ва хароҳот» (<a href="mikroiqtisodiyot.html#lesson-7">дарси 7</a>) аст.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">⭐</div>
+          <h3>Эътибор</h3>
+          <p>Агар мизоҷон чизи лозимаро напайдо кунанд, эътиборатон паст мешавад — мисли «Назарияи рафтори истеъмолкунанда» (<a href="mikroiqtisodiyot.html#lesson-6">дарси 6</a>).</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📈</div>
+          <h3>Таваррум</h3>
+          <p>Гоҳ-гоҳ нархи маводи хом бо сабаби таваррум боло меравад — бевосита аз дарси «Таваррум» (<a href="makroiqtisodiyot.html#lesson-4">макро, дарси 4</a>).</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🏛️</div>
+          <h3>Андоз</h3>
+          <p>Тағйири андоз ба хароҳоти собити шумо таъсир мекунад — мавзуи «Сиёсати фискалӣ» (<a href="makroiqtisodiyot.html#lesson-7">макро, дарси 7</a>).</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌍</div>
+          <h3>Қурби асъор</h3>
+          <p>Боло рафтани қурби асъор маводи воридотиро қиматтар мекунад — «Тиҷорати байналмилалӣ» (<a href="makroiqtisodiyot.html#lesson-9">макро, дарси 9</a>).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="card card-big">
+        <h2>Бозиро бехтар бозед</h2>
+        <p>Барои стратегияи оқилона дарсҳои дахолатдор аз бахшҳои зерин бихонед.</p>
+        <div class="hero-buttons" style="justify-content:center;">
+          <a href="mikroiqtisodiyot.html" class="btn btn-secondary">Микроиқтисодиёт</a>
+          <a href="makroiqtisodiyot.html" class="btn btn-secondary">Макроиқтисодиёт</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2026 ИқтисодОмӯз — Сайти таълимӣ оид ба микро- ва макроиқтисодиёт ба забони тоҷикӣ.</p>
+    </div>
+  </footer>
+
+  <script>
+    window.GAME_I18N = {
+      ui: {
+        currency: 'смн',
+        cupsUnit: 'пиёла',
+        piecesUnit: 'дона',
+        staffUnit: 'нафар',
+        weekLabel: 'Ҳафта',
+        soldLabel: 'Фурӯхта шуд:',
+        quietWeek: 'Ҳафтаи ором — бе ҳодиса.',
+        gameOverBankrupt: 'Сандуқ холӣ шуд — чойхона баста шуд.',
+        gameOverFinished: 'Мавсим (12 ҳафта) ба итмом расид!',
+        finalCashLabel: 'Маблағи ниҳоӣ',
+        newRecord: 'Рекорди нав!',
+        bestScoreLabel: 'Рекорди беҳтарин',
+        relatedLessonLabel: 'Алоқаманд бо дарс',
+        lessonsHint: 'Барои стратегияи беҳтар дарсҳои «Эластикии талабот ва пешниҳод» ва «Истеҳсолот ва хароҳот»-ро дар бахши Микроиқтисодиёт бихонед.',
+        restartBtn: 'Бозӣ аз нав',
+      },
+      ranks: {
+        bankrupt: 'Банкрот',
+        beginner: 'Соҳибкори навомӯз',
+        stable: 'Соҳиби чойхонаи устувор',
+        successful: 'Соҳибкори муваффақ',
+        magnate: 'Шоҳи чойхонаҳо',
+      },
+      events: {
+        heatwave: { text: '🌞 Дар шаҳр гармои сахт! Ҳама нӧшокии хунук ва газак мехоҳанд — талабот боло рафт.', type: 'positive', lessonPage: 'mikroiqtisodiyot.html', lessonAnchor: 2, lessonTitle: 'Талабот (тақозо)' },
+        competitor: { text: '🏪 Дар наздикӣ чойхонаи рақиб кушода шуд — қисми мизоҷон ба он мераванд.', type: 'negative', lessonPage: 'mikroiqtisodiyot.html', lessonAnchor: 8, lessonTitle: 'Сохторҳои бозор' },
+        inflation: { text: '📈 Таъминкунандагон нархи маводи хомро баланд карданд — таваррум!', type: 'negative', lessonPage: 'makroiqtisodiyot.html', lessonAnchor: 4, lessonTitle: 'Таваррум (инфлятсия)' },
+        tax: { text: '🏛️ Андоз барои бизнеси хурд дар ин ҳафта баланд шуд.', type: 'negative', lessonPage: 'makroiqtisodiyot.html', lessonAnchor: 7, lessonTitle: 'Сиёсати фискалӣ' },
+        goodpress: { text: '⭐ Блогери маъруф чойхонаи шуморо тавсиф кард — эътибор баланд шуд!', type: 'positive', lessonPage: 'mikroiqtisodiyot.html', lessonAnchor: 6, lessonTitle: 'Назарияи рафтори истеъмолкунанда' },
+        holiday: { text: '🎉 Дар шаҳр ид аст — талабот ба чой ва самбӯса якбора боло рафт!', type: 'positive', lessonPage: 'mikroiqtisodiyot.html', lessonAnchor: 3, lessonTitle: 'Пешниҳод (арза)' },
+        shortage: { text: '🚚 Таъмин қатъ шуд — захираи пуррае, ки мехостед, тайёр нашуд.', type: 'negative', lessonPage: 'mikroiqtisodiyot.html', lessonAnchor: 3, lessonTitle: 'Пешниҳод (арза)' },
+        fx: { text: '💱 Қурби асъор боло рафт — маводи воридотӣ қиматтар шуд.', type: 'negative', lessonPage: 'makroiqtisodiyot.html', lessonAnchor: 9, lessonTitle: 'Тиҷорати байналмилалӣ' },
+      },
+    };
+  </script>
+  <script src="assets/js/biznes-game.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

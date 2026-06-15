@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Бизнес-игра — Моя чайхана — ЭкономШкола</title>
+  <meta name="description" content="Интерактивная экономическая игра: управляйте чайханой и узнайте, как спрос, предложение, эластичность, инфляция и налоги влияют на прибыль бизнеса." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index-ru.html" class="logo">📊 Эконом<span class="logo-accent">Школа</span></a>
+      <nav class="main-nav" id="main-nav">
+        <a href="index-ru.html">Главная</a>
+        <a href="mikroiqtisodiyot-ru.html">Микроэкономика</a>
+        <a href="makroiqtisodiyot-ru.html">Макроэкономика</a>
+        <a href="lugat-ru.html">Словарь</a>
+        <a href="test-ru.html">Тест</a>
+        <a href="biznes-game-ru.html" class="active">🎮 Игра</a>
+        <a href="biznes-game.html" class="lang-link lang-link-first">TJ</a>
+        <a href="biznes-game-ru.html" class="lang-link active">RU</a>
+      </nav>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Открыть меню навигации">☰</button>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="container">
+      <h1>🎮 Моя чайхана — экономическая бизнес-игра</h1>
+      <p>
+        Вы — владелец небольшой чайханы в центре города. Каждую неделю
+        назначайте цену на чай и самсу, готовьте запасы и решайте, сколько
+        сотрудников нанять. Продержитесь 12 недель (один сезон) и посмотрите,
+        как законы экономики — спрос, эластичность, издержки, инфляция —
+        влияют на вашу прибыль.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+      <div class="game-stats">
+        <div class="game-stat">
+          <div class="game-stat-label">Неделя</div>
+          <div class="game-stat-value" id="stat-week">1 / 12</div>
+        </div>
+        <div class="game-stat">
+          <div class="game-stat-label">Касса</div>
+          <div class="game-stat-value" id="stat-cash">500 смн</div>
+        </div>
+        <div class="game-stat">
+          <div class="game-stat-label">Репутация</div>
+          <div class="game-stat-value" id="stat-rep">50%</div>
+        </div>
+      </div>
+
+      <div id="game-event-banner" class="game-event" style="display:none;"></div>
+
+      <div class="game-layout">
+        <div class="game-panel game-controls" id="game-controls-panel">
+          <h3>Решения на эту неделю</h3>
+
+          <div class="game-control-group">
+            <label>Цена чая <span class="game-value" id="val-tea-price">3 смн</span></label>
+            <input type="range" id="ctrl-tea-price" data-field="teaPrice" min="1" max="8" step="0.5" value="3">
+          </div>
+
+          <div class="game-control-group">
+            <label>Цена самсы <span class="game-value" id="val-samsa-price">6 смн</span></label>
+            <input type="range" id="ctrl-samsa-price" data-field="samsaPrice" min="2" max="15" step="0.5" value="6">
+          </div>
+
+          <div class="game-control-group">
+            <label>Запас чая <span class="game-value" id="val-tea-stock">70 чашек</span></label>
+            <input type="range" id="ctrl-tea-stock" data-field="teaStock" min="0" max="150" step="5" value="70">
+          </div>
+
+          <div class="game-control-group">
+            <label>Запас самсы <span class="game-value" id="val-samsa-stock">30 шт</span></label>
+            <input type="range" id="ctrl-samsa-stock" data-field="samsaStock" min="0" max="100" step="5" value="30">
+          </div>
+
+          <div class="game-control-group">
+            <label>Сотрудники <span class="game-value" id="val-staff">1 чел.</span></label>
+            <input type="range" id="ctrl-staff" data-field="staff" min="1" max="3" step="1" value="1">
+          </div>
+
+          <button id="next-week-btn" class="btn btn-secondary" style="width:100%;">Следующая неделя →</button>
+        </div>
+
+        <div class="game-panel">
+          <h3>История недель</h3>
+          <div class="game-log" id="game-log"></div>
+        </div>
+      </div>
+
+      <div class="game-panel game-end" id="game-end"></div>
+
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <h2 class="section-title">Как работает экономика игры?</h2>
+      <p class="section-subtitle">Каждый механизм игры связан с реальным уроком на сайте.</p>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">📐</div>
+          <h3>Эластичность</h3>
+          <p>Поднимете цену чая — спрос упадёт, но с разной скоростью. Это и есть «Эластичность спроса и предложения» (<a href="mikroiqtisodiyot-ru.html#lesson-5">урок 5</a>).</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🏭</div>
+          <h3>Издержки</h3>
+          <p>Заготовили товар, но не продали — деньги потрачены впустую. Это из урока «Производство и издержки» (<a href="mikroiqtisodiyot-ru.html#lesson-7">урок 7</a>).</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">⭐</div>
+          <h3>Репутация</h3>
+          <p>Если клиенты не находят нужный товар, репутация падает — как в «Теории поведения потребителя» (<a href="mikroiqtisodiyot-ru.html#lesson-6">урок 6</a>).</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📈</div>
+          <h3>Инфляция</h3>
+          <p>Иногда цены на сырьё растут из-за инфляции — прямо из урока «Инфляция» (<a href="makroiqtisodiyot-ru.html#lesson-4">макро, урок 4</a>).</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🏛️</div>
+          <h3>Налоги</h3>
+          <p>Изменение налога влияет на ваши постоянные издержки — тема «Фискальная политика» (<a href="makroiqtisodiyot-ru.html#lesson-7">макро, урок 7</a>).</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌍</div>
+          <h3>Курс валюты</h3>
+          <p>Рост курса валюты делает импортное сырьё дороже — «Международная торговля» (<a href="makroiqtisodiyot-ru.html#lesson-9">макро, урок 9</a>).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="card card-big">
+        <h2>Играйте умнее</h2>
+        <p>Для разумной стратегии почитайте связанные уроки в этих разделах.</p>
+        <div class="hero-buttons" style="justify-content:center;">
+          <a href="mikroiqtisodiyot-ru.html" class="btn btn-secondary">Микроэкономика</a>
+          <a href="makroiqtisodiyot-ru.html" class="btn btn-secondary">Макроэкономика</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2026 ЭкономШкола — образовательный сайт по микро- и макроэкономике.</p>
+    </div>
+  </footer>
+
+  <script>
+    window.GAME_I18N = {
+      ui: {
+        currency: 'смн',
+        cupsUnit: 'чашек',
+        piecesUnit: 'шт',
+        staffUnit: 'чел.',
+        weekLabel: 'Неделя',
+        soldLabel: 'Продано:',
+        quietWeek: 'Спокойная неделя — без сюрпризов.',
+        gameOverBankrupt: 'Касса опустела — чайхана закрылась.',
+        gameOverFinished: 'Сезон (12 недель) завершён!',
+        finalCashLabel: 'Итоговая касса',
+        newRecord: 'Новый рекорд!',
+        bestScoreLabel: 'Лучший результат',
+        relatedLessonLabel: 'Связано с уроком',
+        lessonsHint: 'Для лучшей стратегии почитайте уроки «Эластичность спроса и предложения» и «Производство и издержки» в разделе Микроэкономика.',
+        restartBtn: 'Играть снова',
+      },
+      ranks: {
+        bankrupt: 'Банкрот',
+        beginner: 'Начинающий торговец',
+        stable: 'Стабильный хозяин чайханы',
+        successful: 'Успешный предприниматель',
+        magnate: 'Магнат чайханы',
+      },
+      events: {
+        heatwave: { text: '🌞 В городе сильная жара! Все хотят холодных напитков и перекус — спрос вырос.', type: 'positive', lessonPage: 'mikroiqtisodiyot-ru.html', lessonAnchor: 2, lessonTitle: 'Спрос' },
+        competitor: { text: '🏪 Рядом открылась чайхана-конкурент — часть клиентов уходит туда.', type: 'negative', lessonPage: 'mikroiqtisodiyot-ru.html', lessonAnchor: 8, lessonTitle: 'Структуры рынка' },
+        inflation: { text: '📈 Поставщики поднимают цены на продукты — инфляция!', type: 'negative', lessonPage: 'makroiqtisodiyot-ru.html', lessonAnchor: 4, lessonTitle: 'Инфляция' },
+        tax: { text: '🏛️ Налог для малого бизнеса повышен на этой неделе.', type: 'negative', lessonPage: 'makroiqtisodiyot-ru.html', lessonAnchor: 7, lessonTitle: 'Фискальная политика' },
+        goodpress: { text: '⭐ Известный блогер похвалил вашу чайхану — репутация выросла!', type: 'positive', lessonPage: 'mikroiqtisodiyot-ru.html', lessonAnchor: 6, lessonTitle: 'Теория поведения потребителя' },
+        holiday: { text: '🎉 В городе праздник — спрос на чай и самсу резко вырос!', type: 'positive', lessonPage: 'mikroiqtisodiyot-ru.html', lessonAnchor: 3, lessonTitle: 'Предложение' },
+        shortage: { text: '🚚 Перебой с поставками — заготовить весь нужный объём не удалось.', type: 'negative', lessonPage: 'mikroiqtisodiyot-ru.html', lessonAnchor: 3, lessonTitle: 'Предложение' },
+        fx: { text: '💱 Курс валюты вырос — импортное сырьё подорожало.', type: 'negative', lessonPage: 'makroiqtisodiyot-ru.html', lessonAnchor: 9, lessonTitle: 'Международная торговля' },
+      },
+    };
+  </script>
+  <script src="assets/js/biznes-game.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
