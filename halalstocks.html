@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HalalStocks — Шариатский скринер акций</title>
+<meta name="description" content="Первый русскоязычный скринер акций на соответствие шариату по стандарту AAOIFI.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080e0c;--bg2:#0e1814;--bg3:#111f1a;
+  --border:#1a2b25;--border2:#243b32;
+  --text:#e2f0eb;--muted:#6e9e90;--dim:#3d6358;
+  --em:#059669;--em2:#10b981;--em3:#34d399;
+  --eglow:rgba(5,150,105,.14);--eglow2:rgba(5,150,105,.08);
+  --yellow:#f59e0b;--yglow:rgba(245,158,11,.12);
+  --red:#ef4444;--rglow:rgba(239,68,68,.12);
+  --r:12px;--r2:8px;--tr:all .18s ease;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif;font-weight:700}
+
+/* ── HEADER ── */
+.hdr{position:sticky;top:0;z-index:100;background:rgba(8,14,12,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.hdr-in{max-width:1200px;margin:0 auto;padding:0 1.2rem;height:62px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--em),#047857);display:flex;align-items:center;justify-content:center;font-size:17px}
+.logo-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text)}
+.logo-name em{font-style:normal;color:var(--em2)}
+.lang{display:flex;background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.lang button{padding:6px 13px;font-size:.78rem;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:var(--tr);letter-spacing:.05em;font-family:inherit}
+.lang button.on{background:var(--em);color:#fff}
+
+/* ── HERO ── */
+.hero{padding:72px 1.2rem 56px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:700px;height:500px;background:radial-gradient(ellipse,rgba(5,150,105,.07) 0%,transparent 65%);pointer-events:none}
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--eglow);border:1px solid rgba(5,150,105,.28);color:var(--em2);padding:5px 15px;border-radius:100px;font-size:.75rem;font-weight:600;margin-bottom:22px;letter-spacing:.05em}
+.hero h1{font-size:clamp(1.9rem,6vw,3.4rem);line-height:1.08;letter-spacing:-.025em;margin-bottom:18px}
+.hero h1 em{font-style:normal;color:var(--em2)}
+.hero p{font-size:1.05rem;color:var(--muted);max-width:520px;margin:0 auto 44px}
+.stats{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.chip{display:flex;align-items:center;gap:7px;padding:9px 18px;border-radius:100px;font-size:.83rem;font-weight:600;border:1px solid}
+.chip.h{background:var(--eglow);border-color:rgba(5,150,105,.28);color:var(--em2)}
+.chip.d{background:var(--yglow);border-color:rgba(245,158,11,.28);color:var(--yellow)}
+.chip.r{background:var(--rglow);border-color:rgba(239,68,68,.28);color:var(--red)}
+.dot{width:7px;height:7px;border-radius:50%}
+.chip.h .dot{background:var(--em2)}
+.chip.d .dot{background:var(--yellow)}
+.chip.r .dot{background:var(--red)}
+
+/* ── SCREENER ── */
+.screen{padding:48px 0 72px}
+.wrap{max-width:1200px;margin:0 auto;padding:0 1.2rem}
+.ctrl{display:flex;flex-direction:column;gap:14px;margin-bottom:28px}
+.srch-wrap{position:relative}
+.srch-ico{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:.95rem;pointer-events:none}
+.srch{width:100%;padding:13px 15px 13px 44px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:.95rem;font-family:inherit;outline:none;transition:var(--tr)}
+.srch::placeholder{color:var(--dim)}
+.srch:focus{border-color:rgba(5,150,105,.45);box-shadow:0 0 0 3px var(--eglow2)}
+.frow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.fbtn{padding:7px 15px;border-radius:100px;font-size:.78rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--bg2);color:var(--muted);transition:var(--tr);white-space:nowrap;font-family:inherit}
+.fbtn:hover{border-color:var(--border2);color:var(--text)}
+.fbtn.fa{background:var(--em);border-color:var(--em);color:#fff}
+.fbtn.fh{background:var(--eglow);border-color:rgba(5,150,105,.35);color:var(--em2)}
+.fbtn.fd{background:var(--yglow);border-color:rgba(245,158,11,.35);color:var(--yellow)}
+.fbtn.fr{background:var(--rglow);border-color:rgba(239,68,68,.35);color:var(--red)}
+.secsel{padding:7px 34px 7px 13px;border-radius:100px;font-size:.78rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--bg2);color:var(--muted);font-family:inherit;outline:none;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%233d6358' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;transition:var(--tr)}
+.secsel:focus{border-color:rgba(5,150,105,.4)}
+.meta{display:flex;align-items:center;margin-bottom:18px}
+.cnt{color:var(--muted);font-size:.83rem}
+
+/* ── GRID ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+@media(max-width:380px){.grid{grid-template-columns:1fr}}
+
+/* ── CARD ── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:var(--tr);cursor:default}
+.card:hover{border-color:var(--border2);box-shadow:0 6px 28px rgba(0,0,0,.35)}
+.card.h{border-left:3px solid var(--em)}
+.card.d{border-left:3px solid var(--yellow)}
+.card.r{border-left:3px solid var(--red)}
+.chd{padding:18px 18px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.cleft{display:flex;align-items:center;gap:12px}
+.ico{width:46px;height:46px;border-radius:11px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;font-family:'Space Grotesk',sans-serif;color:var(--text);letter-spacing:-.02em;flex-shrink:0}
+.cname{font-size:.95rem;font-weight:700;margin-bottom:2px}
+.ctick{font-size:.7rem;color:var(--dim);font-weight:600;letter-spacing:.06em;font-family:'Space Grotesk',sans-serif}
+.sbadge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:100px;font-size:.72rem;font-weight:700;white-space:nowrap;flex-shrink:0;border:1px solid}
+.sbadge.h{background:var(--eglow);border-color:rgba(5,150,105,.28);color:var(--em2)}
+.sbadge.d{background:var(--yglow);border-color:rgba(245,158,11,.28);color:var(--yellow)}
+.sbadge.r{background:var(--rglow);border-color:rgba(239,68,68,.28);color:var(--red)}
+.sdot{width:5px;height:5px;border-radius:50%}
+.sbadge.h .sdot{background:var(--em2)}
+.sbadge.d .sdot{background:var(--yellow)}
+.sbadge.r .sdot{background:var(--red)}
+.csec{padding:0 18px 12px}
+.stag{display:inline-block;font-size:.68rem;font-weight:600;color:var(--dim);background:var(--bg);border:1px solid var(--border);padding:3px 9px;border-radius:100px;letter-spacing:.04em}
+.cmets{padding:0 18px 14px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.met{display:flex;flex-direction:column;gap:2px}
+.mlbl{font-size:.62rem;color:var(--dim);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.mval{font-size:.88rem;font-weight:700;font-family:'Space Grotesk',sans-serif}
+.mval.ok{color:var(--em2)}
+.mval.wn{color:var(--yellow)}
+.mval.bd{color:var(--red)}
+.ctog{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;border-top:1px solid var(--border);font-size:.78rem;font-weight:600;color:var(--muted);cursor:pointer;user-select:none;transition:var(--tr)}
+.ctog:hover{color:var(--text);background:rgba(255,255,255,.02)}
+.togico{width:19px;height:19px;display:flex;align-items:center;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:50%;font-size:.6rem;transition:transform .2s ease}
+.card.open .togico{transform:rotate(180deg)}
+.cdet{display:none;padding:18px;border-top:1px solid var(--border);background:var(--bg)}
+.card.open .cdet{display:block}
+.dlbl{font-size:.65rem;font-weight:700;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.dtxt{font-size:.85rem;color:var(--muted);line-height:1.75}
+.clist{display:flex;flex-direction:column;gap:7px;margin-top:14px}
+.ci{display:flex;align-items:center;gap:9px;font-size:.79rem}
+.cico{width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.58rem;flex-shrink:0;border:1px solid}
+.cico.pass{background:var(--eglow);color:var(--em2);border-color:rgba(5,150,105,.35)}
+.cico.fail{background:var(--rglow);color:var(--red);border-color:rgba(239,68,68,.35)}
+.cico.warn{background:var(--yglow);color:var(--yellow);border-color:rgba(245,158,11,.35)}
+.ctxt{color:var(--muted)}
+.ctxt b{color:var(--text);font-weight:600;font-family:'Space Grotesk',sans-serif}
+
+/* ── NO RESULTS ── */
+.empty{text-align:center;padding:80px 20px;color:var(--dim)}
+.empty-ico{font-size:2.8rem;margin-bottom:14px}
+
+/* ── EDU ── */
+.edu{padding:72px 0;border-top:1px solid var(--border)}
+.sh{margin-bottom:44px}
+.stag2{display:inline-flex;align-items:center;gap:6px;background:var(--eglow);border:1px solid rgba(5,150,105,.2);color:var(--em2);padding:4px 13px;border-radius:100px;font-size:.72rem;font-weight:600;margin-bottom:14px;letter-spacing:.05em}
+.sh h2{font-size:clamp(1.45rem,4vw,2.1rem);letter-spacing:-.02em;margin-bottom:10px}
+.sh p{color:var(--muted);max-width:560px;font-size:.95rem}
+.egrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.ec{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:26px}
+.eico{width:46px;height:46px;border-radius:11px;background:var(--eglow);border:1px solid rgba(5,150,105,.2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:18px}
+.ec h3{font-size:.95rem;margin-bottom:8px}
+.ec p{font-size:.83rem;color:var(--muted);line-height:1.72}
+.elim{margin-top:11px;display:flex;align-items:center;gap:7px;padding:7px 12px;background:var(--bg);border:1px solid var(--border);border-radius:7px;font-size:.78rem}
+.elim-n{font-weight:700;color:var(--em2);font-family:'Space Grotesk',sans-serif}
+.elim-l{color:var(--dim)}
+
+/* ── ABOUT ── */
+.about{padding:72px 0;border-top:1px solid var(--border)}
+.acard{background:linear-gradient(135deg,#0d2019,#091610);border:1px solid rgba(5,150,105,.18);border-radius:18px;padding:44px;position:relative;overflow:hidden}
+.acard::before{content:'';position:absolute;top:-50px;right:-50px;width:220px;height:220px;background:radial-gradient(circle,rgba(5,150,105,.1) 0%,transparent 70%);pointer-events:none}
+.acard h2{font-size:clamp(1.4rem,4vw,1.9rem);margin-bottom:14px;letter-spacing:-.02em}
+.acard p{font-size:1rem;color:var(--muted);max-width:580px;line-height:1.8}
+
+/* ── FOOTER ── */
+.ftr{border-top:1px solid var(--border);padding:36px 0}
+.fin{display:flex;flex-direction:column;gap:18px}
+.ftop{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.flogo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.95rem;color:var(--text)}
+.flogo em{font-style:normal;color:var(--em2)}
+.fstd{display:flex;align-items:center;gap:7px;font-size:.72rem;color:var(--dim)}
+.fstd span.bd2{background:var(--bg2);border:1px solid var(--border);padding:3px 9px;border-radius:6px;font-weight:600;font-family:'Space Grotesk',sans-serif;font-size:.68rem}
+.disc{padding:14px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);font-size:.73rem;color:var(--dim);line-height:1.72}
+.fcopy{font-size:.72rem;color:var(--dim)}
+
+@media(max-width:768px){
+  .hero{padding:54px 1.2rem 40px}
+  .hero h1{font-size:1.95rem}
+  .grid{grid-template-columns:1fr}
+  .egrid{grid-template-columns:1fr}
+  .acard{padding:26px}
+}
+@media(max-width:520px){
+  .stats{gap:7px}
+  .chip{padding:8px 13px;font-size:.78rem}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="#" class="logo">
+      <div class="logo-mark">🌙</div>
+      <span class="logo-name">Halal<em>Stocks</em></span>
+    </a>
+    <div class="lang">
+      <button id="btnRu" class="on" onclick="setLang('ru')">RU</button>
+      <button id="btnTj" onclick="setLang('tj')">TJ</button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="badge">☪ <span data-t="hero_tag"></span></div>
+    <h1><span data-t="hero_h1"></span><br><em data-t="hero_h2"></em></h1>
+    <p data-t="hero_p"></p>
+    <div class="stats" id="stats"></div>
+  </div>
+</section>
+
+<!-- SCREENER -->
+<section class="screen">
+  <div class="wrap">
+    <div class="ctrl">
+      <div class="srch-wrap">
+        <span class="srch-ico">🔍</span>
+        <input class="srch" id="srch" type="text" autocomplete="off">
+      </div>
+      <div class="frow">
+        <div id="sfilt" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+        <select class="secsel" id="secsel"></select>
+      </div>
+    </div>
+    <div class="meta"><span class="cnt" id="cnt"></span></div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" style="display:none">
+      <div class="empty-ico">🔍</div>
+      <p data-t="no_results"></p>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section class="edu">
+  <div class="wrap">
+    <div class="sh">
+      <div class="stag2">📚 <span data-t="edu_tag"></span></div>
+      <h2 data-t="edu_h2"></h2>
+      <p data-t="edu_p"></p>
+    </div>
+    <div class="egrid">
+      <div class="ec">
+        <div class="eico">🏭</div>
+        <h3 data-t="e1h"></h3>
+        <p data-t="e1p"></p>
+        <div class="elim"><span class="elim-n" data-t="e1n"></span><span class="elim-l" data-t="e1l"></span></div>
+      </div>
+      <div class="ec">
+        <div class="eico">💳</div>
+        <h3 data-t="e2h"></h3>
+        <p data-t="e2p"></p>
+        <div class="elim"><span class="elim-n">&lt; 30%</span><span class="elim-l" data-t="e2l"></span></div>
+      </div>
+      <div class="ec">
+        <div class="eico">🏦</div>
+        <h3 data-t="e3h"></h3>
+        <p data-t="e3p"></p>
+        <div class="elim"><span class="elim-n">&lt; 5%</span><span class="elim-l" data-t="e3l"></span></div>
+      </div>
+      <div class="ec">
+        <div class="eico">⚠️</div>
+        <h3 data-t="e4h"></h3>
+        <p data-t="e4p"></p>
+        <div class="elim"><span class="elim-n">&lt; 5%</span><span class="elim-l" data-t="e4l"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about">
+  <div class="wrap">
+    <div class="acard">
+      <div class="stag2" style="margin-bottom:22px">ℹ️ <span data-t="ab_tag"></span></div>
+      <h2>HalalStocks</h2>
+      <p data-t="ab_p"></p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="ftr">
+  <div class="wrap">
+    <div class="fin">
+      <div class="ftop">
+        <div class="flogo">Halal<em>Stocks</em></div>
+        <div class="fstd"><span data-t="f_std"></span><span class="bd2">AAOIFI</span></div>
+      </div>
+      <div class="disc" data-t="f_disc"></div>
+      <div class="fcopy" data-t="f_copy"></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ═══════════════════ TRANSLATIONS ═══════════════════
+const TR = {
+ru:{
+  hero_tag:'По стандарту AAOIFI',
+  hero_h1:'Шариатский скринер',
+  hero_h2:'акций',
+  hero_p:'Проверяйте популярные акции на соответствие нормам ислама по международному стандарту AAOIFI',
+  srch_ph:'Поиск по тикеру или названию…',
+  f_all:'Все',f_halal:'Халяль',f_doubtful:'Сомнительно',f_haram:'Харам',
+  sec_all:'Все секторы',
+  cnt_pre:'Найдено',cnt_suf:'акций',
+  s_halal:'халяль',s_doubt:'сомнительных',s_haram:'харам',
+  st_halal:'Халяль',st_doubt:'Сомнительно',st_haram:'Харам',
+  more:'Подробнее',less:'Скрыть',
+  lbl_reason:'ЗАКЛЮЧЕНИЕ',lbl_crit:'КРИТЕРИИ AAOIFI',
+  c1:'Основная деятельность не харам',
+  c2:'Долг / рыночная капитализация < 30%',
+  c3:'Процентный доход / выручка < 5%',
+  c4:'Харамный доход / выручка < 5%',
+  m_debt:'Долг/Кап.',m_haram:'Харам %',m_int:'Процент %',
+  no_results:'Ничего не найдено. Измените запрос или фильтры.',
+  edu_tag:'Образование',
+  edu_h2:'Как работает шариатский скрининг?',
+  edu_p:'Четыре ключевых критерия AAOIFI, определяющих допустимость акции для мусульманского инвестора',
+  e1h:'Основная деятельность',e1p:'Компания не должна вести деятельность в харамных отраслях: банкинг на риба, алкоголь, табак, свинина, азартные игры, оружие, контент для взрослых.',e1n:'0%',e1l:'харамной деятельности в основном бизнесе',
+  e2h:'Долговая нагрузка',e2p:'Совокупный долг к рыночной капитализации — не более 30%. Ограничивает зависимость от процентных займов (риба).',e2l:'долг / рыночная капитализация',
+  e3h:'Процентный доход',e3p:'Доходы от процентов (депозиты, облигации и прочие инструменты) — менее 5% от общей выручки.',e3l:'процентного дохода от выручки',
+  e4h:'Харамный доход',e4p:'Доход из запрещённых источников (алкоголь, свинина, азартные игры) — менее 5% выручки. Излишки рекомендуется очистить через садака.',e4l:'харамного дохода от выручки',
+  ab_tag:'О проекте',
+  ab_p:'HalalStocks — первый русскоязычный скринер акций на соответствие шариату. Наша миссия — сделать халяль-инвестиции доступными для каждого мусульманина.',
+  f_std:'Стандарт:',
+  f_disc:'⚠️ Информация на сайте не является финансовой рекомендацией. Данные приблизительные и могут не отражать актуальную финансовую отчётность компаний. Перед инвестированием проконсультируйтесь с квалифицированным шариатским консультантом.',
+  f_copy:'© 2026 HalalStocks. Все права защищены.',
+},
+tj:{
+  hero_tag:'Мувофиқи стандарти AAOIFI',
+  hero_h1:'Скринери шариатии',
+  hero_h2:'саҳмияҳо',
+  hero_p:'Саҳмияҳои маъмулро аз рӯи меъёрҳои ислом тибқи стандарти байналмилалии AAOIFI санҷед',
+  srch_ph:'Ҷустуҷӯ аз рӯи тикер ё ном…',
+  f_all:'Ҳама',f_halal:'Ҳалол',f_doubtful:'Шубҳанок',f_haram:'Ҳаром',
+  sec_all:'Ҳамаи соҳаҳо',
+  cnt_pre:'Ёфт шуд',cnt_suf:'саҳмия',
+  s_halal:'ҳалол',s_doubt:'шубҳанок',s_haram:'ҳаром',
+  st_halal:'Ҳалол',st_doubt:'Шубҳанок',st_haram:'Ҳаром',
+  more:'Бештар',less:'Пинҳон кардан',
+  lbl_reason:'ХУЛОСА',lbl_crit:'МЕЪЁРҲОИ AAOIFI',
+  c1:'Фаъолияти асосӣ ҳаром нест',
+  c2:'Қарз / капитализатсияи бозорӣ < 30%',
+  c3:'Даромади фоизӣ / даромад < 5%',
+  c4:'Даромади ҳаром / даромад < 5%',
+  m_debt:'Қарз/Кап.',m_haram:'Ҳаром %',m_int:'Фоиз %',
+  no_results:'Ҳеҷ чиз ёфт нашуд. Дархост ё филтрҳоро тағйир диҳед.',
+  edu_tag:'Таълим',
+  edu_h2:'Скрининги шариат чӣ тавр кор мекунад?',
+  edu_p:'Чаҳор меъёри калидии AAOIFI, ки мақбулияти саҳмияро барои сармоягузори мусулмон муайян мекунанд',
+  e1h:'Фаъолияти асосӣ',e1p:'Ширкат набояд дар соҳаҳои ҳаром фаъолият кунад: бонкдории риба, алкоголь, тамоку, гӯшти хук, қимор, силоҳ, мундариҷаи калонсолон.',e1n:'0%',e1l:'фаъолияти ҳаром дар тиҷорати асосӣ',
+  e2h:'Бори қарзӣ',e2p:'Нисбати умумии қарз ба капитализатсияи бозорӣ — на бештар аз 30%. Вобастагиро аз қарзҳои фоизӣ (риба) маҳдуд мекунад.',e2l:'қарз / капитализатсияи бозорӣ',
+  e3h:'Даромади фоизӣ',e3p:'Даромад аз фоиз (депозитҳо, қарзҳо ва дигар асбобҳо) — камтар аз 5% умумии даромад.',e3l:'даромади фоизӣ аз умумии даромад',
+  e4h:'Даромади ҳаром',e4p:'Даромад аз манбаъҳои манъшуда (алкоголь, гӯшти хук, қимор) — камтар аз 5% даромад. Тозакунии садақа тавсия дода мешавад.',e4l:'даромади ҳаром аз умумии даромад',
+  ab_tag:'Дар бораи лоиҳа',
+  ab_p:'HalalStocks — аввалин скринери саҳмияҳо дар забони русӣ барои мувофиқат бо шариат. Рисолати мо — сармоягузории ҳалолро барои ҳар мусулмон дастрас кардан аст.',
+  f_std:'Стандарт:',
+  f_disc:'⚠️ Иттилооти сайт тавсияи молиявӣ нест. Маълумот тахминӣ аст ва метавонад ҳисоботи молиявии воқеии ширкатҳоро инъикос накунад. Пеш аз сармоягузорӣ бо мушовири шариатии баландихтисос машварат кунед.',
+  f_copy:'© 2026 HalalStocks. Ҳамаи ҳуқуқҳо ҳифз шудаанд.',
+}
+};
+
+// ═══════════════════ STOCK DATA ═══════════════════
+const DB = [
+  // ── ХАЛЯЛЬ (11) ──
+  {tk:'AAPL',nr:'Apple',nt:'Apple',sr:'Технологии',st:'Технологияҳо',sts:'h',debt:8,haram:0,intr:0.8,
+   rr:'Apple производит потребительскую электронику и программное обеспечение. Долговая нагрузка минимальна. Харамные доходы отсутствуют. Полностью соответствует критериям AAOIFI.',
+   rt:'Apple маҳсулоти электронии истеъмолӣ ва нармафзор истеҳсол мекунад. Бори қарзӣ ниҳоят кам аст. Даромади ҳаром вуҷуд надорад. Пурра ба меъёрҳои AAOIFI мувофиқат мекунад.',
+   cr:{b:'pass',d:'pass',i:'pass',h:'pass'}},
+  {tk:'MSFT',nr:'Microsoft',nt:'Microsoft',sr:'Технологии',st:'Технологияҳо',sts:'h',debt:5,haram:0,intr:1.2,
+   rr:'Microsoft предоставляет облачные сервисы и ПО. Очень низкая долговая нагрузка, нулевой харамный доход. Один из наиболее предпочтительных активов для мусульманских портфелей.',
+   rt:'Microsoft хидматҳои абрӣ ва нармафзор пешниҳод мекунад. Бори қарзии хеле паст, даромади ҳаром сифр. Яке аз беҳтарин активҳо барои портфелҳои мусулмонон.',
+   cr:{b:'pass',d:'pass',i:'pass',h:'pass'}},
+  {tk:'GOOGL',nr:'Alphabet (Google)',nt:'Alphabet (Google)',sr:'Технологии',st:'Технологияҳо',sts:'h',debt:4,haram:0,intr:2.1,
+   rr:'Основной доход — реклама и облачные сервисы. Долговая нагрузка крайне низкая. Харамные источники дохода отсутствуют по критериям AAOIFI.',
+   rt:'Даромади асосӣ — таблиғот ва хидматҳои абрӣ. Бори қарзӣ ниҳоят паст. Манбаъҳои даромади ҳаром мувофиқи меъёрҳои AAOIFI вуҷуд надоранд.',
+   cr:{b:'pass',d:'pass',i:'pass',h:'pass'}},
+  {tk:'NVDA',nr:'NVIDIA',nt:'NVIDIA',sr:'Полупроводники',st:'Нимноқилҳо',sts:'h',debt:3,haram:0,intr:0.9,
+   rr:'NVIDIA производит видеопроцессоры и чипы для ИИ. Минимальная задолженность, нулевой харамный доход. Продукция применяется в дата-центрах и научных исследованиях.',
+   rt:'NVIDIA видеопротсессорҳо ва чипҳо барои зеҳни сунъӣ истеҳсол мекунад. Қарзи хеле кам, даромади ҳаром сифр. Маҳсулот дар марказҳои маълумот ва тадқиқоти илмӣ истифода мешавад.',
+   cr:{b:'pass',d:'pass',i:'pass',h:'pass'}},
+  {tk:'TSLA',nr:'Tesla',nt:'Tesla',sr:'Электромобили',st:'Мошинҳои барқӣ',sts:'h',debt:15,haram:0,intr:1.5,
+   rr:'Tesla производит электромобили и системы хранения энергии. Умеренная долговая нагрузка ниже порога 30%. Харамных доходов нет. Бизнес способствует развитию чистой энергетики.',
+   rt:'Tesla мошинҳои барқӣ ва системаҳои нигаҳдории энергия истеҳсол мекунад. Бори қарзии мӯътадил аз ҳадди 30% паин. Даромади ҳаром нест. Тиҷорат рушди энергетикаи тозаро мусоидат мекунад.',
+   cr:{b:'pass',d:'pass',i:'pass',h:'pass'}},
+  {tk:'JNJ',nr:'Johnson & Johnson',nt:'Johnson & Johnson',sr:'Здравоохранение',st:'Тандурустӣ',sts:'h',debt:12,haram:0,intr:0.7,
+   rr:'Производит фармацевтические препараты и медицинские устройства. Деятельность направлена на сохранение здоровья, одобряемое шариатом. Все критерии соблюдены.',
+   rt:'Дорусозӣ ва дастгоҳҳои тиббӣ истеҳсол мекунад. Фаъолият ба нигаҳдории саломатӣ нигаронида шудааст, ки шариат онро тасдиқ мекунад. Ҳамаи меъёрҳо риоя карда шудаанд.',
+   cr:{b:'pass',d:'pass',i:'pass',h:'pass'}},
+  {tk:'NKE',nr:'Nike',nt:'Nike',sr:'Спортивные товары',st:'Молҳои варзишӣ',sts:'h',debt:10,haram:0,intr:0.5,
+   rr:'Nike производит спортивную одежду и обувь. Прозрачная бизнес-модель без харамных элементов. Долговая нагрузка в пределах нормы. Рекомендован для мусульманских портфелей.',
+   rt:'Nike либосу пойафзоли варзишӣ истеҳсол мекунад. Модели тиҷорати шаффоф бе унсурҳои ҳаром. Бори қарзӣ дар ҳудуди меъёр. Барои портфелҳои мусулмонон тавсия дода мешавад.',
+   cr:{b:'pass',d:'pass',i:'pass',h:'pass'}},
+  {tk:'ADBE',nr:'Adobe',nt:'Adobe',sr:'Технологии',st:'Технологияҳо',sts:'h',debt:6,haram:0,intr:1.0,
+   rr:'Предоставляет ПО для творческих индустрий. Низкий долг, нулевой харамный доход. Продукт используется дизайнерами и разработчиками по всему миру.',
+   rt:'Нармафзор барои саноати эҷодӣ пешниҳод мекунад. Қарзи паст, даромади ҳаром сифр. Маҳсулот аз ҷониби тарроҳон ва барномасозони ҷаҳон истифода мешавад.',
+   cr:{b:'pass',d:'pass',i:'pass',h:'pass'}},
+  {tk:'CRM',nr:'Salesforce',nt:'Salesforce',sr:'Технологии',st:'Технологияҳо',sts:'h',debt:7,haram:0,intr:1.3,
+   rr:'Лидер в сфере облачных CRM-решений. Бизнес на SaaS-модели. Долговая нагрузка приемлема, харамных доходов нет.',
+   rt:'Пешбари соҳаи ҳалли CRM-и абрӣ. Тиҷорат ба модели SaaS асос ёфтааст. Бори қарзӣ қабулшаванда, даромади ҳаром нест.',
+   cr:{b:'pass',d:'pass',i:'pass',h:'pass'}},
+  {tk:'AMD',nr:'Advanced Micro Devices',nt:'Advanced Micro Devices',sr:'Полупроводники',st:'Нимноқилҳо',sts:'h',debt:5,haram:0,intr:0.6,
+   rr:'Производит процессоры и видеочипы для потребительского и серверного рынков. Все финансовые показатели в пределах шариатских норм.',
+   rt:'Протсессорҳо ва видеочипҳо барои бозорҳои истеъмолӣ ва серверӣ истеҳсол мекунад. Ҳамаи нишондиҳандаҳои молиявӣ дар доираи меъёрҳои шариат.',
+   cr:{b:'pass',d:'pass',i:'pass',h:'pass'}},
+  {tk:'UNH',nr:'UnitedHealth Group',nt:'UnitedHealth Group',sr:'Здравоохранение',st:'Тандурустӣ',sts:'h',debt:20,haram:0,intr:1.8,
+   rr:'Крупнейшая компания в сфере управляемого медицинского обслуживания США. Деятельность дозволена. Умеренная долговая нагрузка, в пределах допустимого.',
+   rt:'Бузургтарин ширкат дар соҳаи хизматрасонии тиббии идорашаванда. Фаъолият иҷозатдодашуда. Бори қарзии мӯътадил, дар ҳудуди иҷоздодашуда.',
+   cr:{b:'pass',d:'pass',i:'pass',h:'pass'}},
+
+  // ── СОМНИТЕЛЬНО (15) ──
+  {tk:'AMZN',nr:'Amazon',nt:'Amazon',sr:'Технологии / Ритейл',st:'Технологияҳо / Чакана фурӯш',sts:'d',debt:22,haram:4.2,intr:1.1,
+   rr:'Amazon — маркетплейс, через который реализуются алкоголь, свинина и другие харамные товары. Доля харамного дохода близка к допустимому порогу 5%. Рекомендуется очищение через садака.',
+   rt:'Amazon як маркетплейс аст, ки тавассути он алкоголь, гӯшти хук ва дигар молҳои ҳаром фурӯхта мешаванд. Саҳми даромади ҳаром ба ҳадди 5% наздик аст. Тозакунии садақа тавсия дода мешавад.',
+   cr:{b:'warn',d:'pass',i:'pass',h:'warn'}},
+  {tk:'META',nr:'Meta Platforms',nt:'Meta Platforms',sr:'Социальные сети',st:'Шабакаҳои иҷтимоӣ',sts:'d',debt:3,haram:3.1,intr:2.2,
+   rr:'Meta (Facebook, Instagram) получает рекламный доход частично от компаний азартных игр, алкоголя и контента для взрослых. Многие шариатские учёные относят к "сомнительным".',
+   rt:'Meta (Facebook, Instagram) аз таблиғот даромад мегирад, ки қисме аз он аз ширкатҳои қимор, алкоголь ва мундариҷаи калонсолон аст. Бисёр олимони шариат онро "шубҳанок" меноманд.',
+   cr:{b:'warn',d:'pass',i:'pass',h:'warn'}},
+  {tk:'V',nr:'Visa',nt:'Visa',sr:'Финансовые услуги',st:'Хидматҳои молиявӣ',sts:'d',debt:18,haram:0,intr:0.8,
+   rr:'Visa — платёжная сеть, зарабатывающая комиссии за транзакции. Сама риба не взимает, однако обрабатывает кредитные транзакции с процентами. Мнения учёных расходятся.',
+   rt:'Visa як шабакаи пардохт аст, ки аз амалиёт комиссионӣ мегирад. Худи Visa риборо намегирад, аммо амалиёти кредитиро бо фоиз коркард мекунад. Назарияҳои олимон фарқ мекунанд.',
+   cr:{b:'warn',d:'pass',i:'pass',h:'pass'}},
+  {tk:'MA',nr:'Mastercard',nt:'Mastercard',sr:'Финансовые услуги',st:'Хидматҳои молиявӣ',sts:'d',debt:22,haram:0,intr:0.9,
+   rr:'Mastercard аналогично Visa является посредником платёжных транзакций. Не начисляет проценты напрямую, но участвует в цепочке кредитных расчётов. Позиция учёных неоднозначна.',
+   rt:'Mastercard монанди Visa миёнарав дар амалиёти пардохт аст. Мустақиман фоиз намегирад, аммо дар занҷири ҳисобу китоби кредитӣ иштирок мекунад. Мавқеи олимон мубҳам аст.',
+   cr:{b:'warn',d:'pass',i:'pass',h:'pass'}},
+  {tk:'KO',nr:'Coca-Cola',nt:'Coca-Cola',sr:'Напитки',st:'Нӯшокиҳо',sts:'d',debt:14,haram:2.8,intr:0.4,
+   rr:'Преимущественно производит безалкогольные напитки, однако через дочерние компании и партнёрства реализует ряд алкогольных продуктов. Очистка дохода через садака необходима.',
+   rt:'Асосан нӯшокиҳои безалкоголӣ истеҳсол мекунад, аммо тавассути ширкатҳои фаръӣ як қатор маҳсулоти спиртиро низ мефурӯшад. Тозакунии даромад тавассути садақа зарур аст.',
+   cr:{b:'pass',d:'pass',i:'pass',h:'warn'}},
+  {tk:'PEP',nr:'PepsiCo',nt:'PepsiCo',sr:'Напитки / Еда',st:'Нӯшокиҳо / Хӯрокворӣ',sts:'d',debt:32,haram:1.2,intr:0.5,
+   rr:'PepsiCo превышает допустимый порог долговой нагрузки (32% > 30%). Это нарушение критерия по долгу AAOIFI делает акцию "сомнительной". Харамный доход незначителен.',
+   rt:'PepsiCo аз ҳадди иҷозатдодашудаи бори қарзӣ зиёд аст (32% > 30%). Ин вайронкунии меъёри қарз мувофиқи AAOIFI саҳмияро "шубҳанок" мегардонад. Даромади ҳаром ночиз аст.',
+   cr:{b:'pass',d:'fail',i:'pass',h:'pass'}},
+  {tk:'DIS',nr:'The Walt Disney',nt:'The Walt Disney',sr:'Медиа / Развлечения',st:'Медиа / Тафреҳ',sts:'d',debt:35,haram:4.8,intr:0.6,
+   rr:'Disney превышает норму долговой нагрузки (35%). Компания получает доход от казино (ESPN Bet и др.) и контента для взрослых. Несоответствие двум критериям.',
+   rt:'Disney аз меъёри бори қарзӣ зиёд аст (35%). Ширкат аз казинӣ (ESPN Bet ва дигарон) ва мундариҷаи калонсолон даромад мегирад. Мухолифат бо ду меъёр.',
+   cr:{b:'warn',d:'fail',i:'pass',h:'warn'}},
+  {tk:'INTC',nr:'Intel',nt:'Intel',sr:'Полупроводники',st:'Нимноқилҳо',sts:'d',debt:20,haram:4.9,intr:0.8,
+   rr:'Intel производит процессоры для гражданского и оборонного секторов. Доля дохода от военных госконтрактов приближается к пороговому значению 5%. Долговая нагрузка в норме.',
+   rt:'Intel протсессорҳо барои бахшҳои шаҳрвандӣ ва мудофиа истеҳсол мекунад. Саҳми даромад аз қарордодҳои ҳарбии давлатӣ ба арзиши 5% наздик аст. Бори қарзӣ меъёрист.',
+   cr:{b:'warn',d:'pass',i:'pass',h:'warn'}},
+  {tk:'PFE',nr:'Pfizer',nt:'Pfizer',sr:'Здравоохранение',st:'Тандурустӣ',sts:'d',debt:28,haram:0,intr:1.1,
+   rr:'Крупный фармацевтический производитель. Основная деятельность дозволена. Долговая нагрузка (28%) вплотную подходит к максимально допустимому порогу 30%. Требует мониторинга.',
+   rt:'Истеҳсолкунандаи бузурги дорусозист. Фаъолияти асосӣ иҷозатдодашуда. Бори қарзӣ (28%) ба ҳадди максималии 30% наздик аст. Назоратро талаб мекунад.',
+   cr:{b:'pass',d:'warn',i:'pass',h:'pass'}},
+  {tk:'WMT',nr:'Walmart',nt:'Walmart',sr:'Ритейл',st:'Чакана фурӯш',sts:'d',debt:18,haram:4.6,intr:0.3,
+   rr:'Крупнейший ритейлер мира. Реализует алкоголь, свинину и другие харамные продукты. Доля харамного дохода близка к пороговому значению. Необходимо очищение через садака.',
+   rt:'Бузургтарин чакана фурӯшандаи ҷаҳон. Алкоголь, гӯшти хук ва дигар маҳсулоти ҳаром мефурӯшад. Саҳми даромади ҳаром ба арзиши ҳадд наздик аст. Тозакунии садақа зарур аст.',
+   cr:{b:'warn',d:'pass',i:'pass',h:'warn'}},
+  {tk:'COST',nr:'Costco',nt:'Costco',sr:'Ритейл',st:'Чакана фурӯш',sts:'d',debt:12,haram:3.8,intr:0.4,
+   rr:'Сеть оптовых клубов. Реализует алкоголь и свинину, однако доля харамного дохода не превышает 5%. Низкая долговая нагрузка — позитивный фактор. Необходима очистка дохода.',
+   rt:'Шабакаи клубҳои яклухтфурӯшист. Алкоголь ва гӯшти хук мефурӯшад, аммо саҳми даромади ҳаром аз 5% зиёд нест. Бори қарзии паст — омили мусбист. Тозакунии даромад зарур аст.',
+   cr:{b:'warn',d:'pass',i:'pass',h:'warn'}},
+  {tk:'BRK.B',nr:'Berkshire Hathaway',nt:'Berkshire Hathaway',sr:'Конгломерат',st:'Конгломерат',sts:'d',debt:15,haram:8.2,intr:7.1,
+   rr:'Berkshire Hathaway владеет долями в банках, страховых компаниях и производителях алкоголя. Процентный доход и харамный доход превышают пороги AAOIFI.',
+   rt:'Berkshire Hathaway дар бонкҳо, ширкатҳои суғуртавӣ ва истеҳсолкунандагони алкоголь саҳм дорад. Даромади фоизӣ ва даромади ҳаром аз ҳудудҳои AAOIFI зиёданд.',
+   cr:{b:'warn',d:'pass',i:'fail',h:'fail'}},
+  {tk:'XOM',nr:'ExxonMobil',nt:'ExxonMobil',sr:'Энергетика',st:'Энергетика',sts:'d',debt:12,haram:0,intr:0.6,
+   rr:'Занимается добычей нефти и газа. По большинству критериев AAOIFI в норме. Однако ряд шариатских учёных выражает озабоченность экологическим ущербом от деятельности.',
+   rt:'Ба истихроҷи нафт ва газ машғул аст. Мувофиқи аксари меъёрҳои AAOIFI дар ҳолати мӯътадил. Аммо баъзе олимони шариат нигаронии зарари экологиро изҳор мекунанд.',
+   cr:{b:'warn',d:'pass',i:'pass',h:'pass'}},
+  {tk:'CVX',nr:'Chevron',nt:'Chevron',sr:'Энергетика',st:'Энергетика',sts:'d',debt:10,haram:0,intr:0.5,
+   rr:'Международная нефтегазовая компания. Финансово отвечает критериям AAOIFI, но, как и ExxonMobil, вызывает дискуссию среди учёных относительно экологической этики.',
+   rt:'Ширкати нафту гази байналмилалист. Аз лиҳози молиявӣ ба меъёрҳои AAOIFI ҷавобгӯст, аммо монанди ExxonMobil дар байни олимон баҳс ба вуҷуд меорад.',
+   cr:{b:'warn',d:'pass',i:'pass',h:'pass'}},
+  {tk:'T',nr:'AT&T',nt:'AT&T',sr:'Телекоммуникации',st:'Телекоммуникатсия',sts:'d',debt:55,haram:0,intr:0.4,
+   rr:'AT&T несёт огромную долговую нагрузку (55% от рыночной капитализации), значительно превышающую допустимый предел AAOIFI в 30%. Основной бизнес дозволен, но критерий долга нарушен.',
+   rt:'AT&T бори азими қарзӣ дорад (55% аз капитализатсияи бозорӣ), ки ба таври назаррас аз ҳадди 30% AAOIFI зиёд аст. Тиҷорати асосӣ иҷозатдодашуда, аммо меъёри қарз вайрон шудааст.',
+   cr:{b:'pass',d:'fail',i:'pass',h:'pass'}},
+
+  // ── ХАРАМ (4) ──
+  {tk:'JPM',nr:'JPMorgan Chase',nt:'JPMorgan Chase',sr:'Банкинг',st:'Бонкдорӣ',sts:'r',debt:null,haram:95,intr:68,
+   rr:'Крупнейший банк США. Основная деятельность — кредитование под процент (риба), прямо запрещённое шариатом. Инвестиции в коммерческие банки недопустимы по всем мазхабам.',
+   rt:'Бузургтарин бонки ИМА. Фаъолияти асосӣ — қарздиҳӣ бо фоиз (риба), ки шариат онро мустақиман манъ мекунад. Сармоягузорӣ дар бонкҳои тиҷоратӣ мувофиқи ҳамаи мазҳабҳо ғайриқабул аст.',
+   cr:{b:'fail',d:'fail',i:'fail',h:'fail'}},
+  {tk:'MCD',nr:"McDonald's",nt:"McDonald's",sr:'Фаст-фуд',st:'Хӯроки зуд',sts:'r',debt:68,haram:60,intr:0.3,
+   rr:"McDonald's реализует продукцию из свинины и мясо нехаляльного убоя как основную часть меню. Значительная часть выручки поступает от харамных продуктов. Долговая нагрузка критически высока (68%).",
+   rt:"McDonald's гӯшти хук ва гӯшти ғайриҳалолро ҳамчун қисми асосии меню мефурӯшад. Қисми зиёди даромад аз маҳсулоти ҳаром меояд. Бори қарзӣ ба таври интиқодӣ баланд аст (68%).",
+   cr:{b:'fail',d:'fail',i:'pass',h:'fail'}},
+  {tk:'NFLX',nr:'Netflix',nt:'Netflix',sr:'Медиа / Стриминг',st:'Медиа / Стриминг',sts:'r',debt:25,haram:35,intr:0.5,
+   rr:'Netflix распространяет значительный объём контента для взрослых, материалов об азартных играх и контент, запрещённый шариатом. По консенсусу шариатских учёных — харам.',
+   rt:'Netflix ҳаҷми зиёди мундариҷаи барои калонсолон, маводи қимор ва мундариҷаи манъшуда аз тарафи шариатро паҳн мекунад. Мувофиқи иттифоқи олимони шариат — ҳаром.',
+   cr:{b:'fail',d:'pass',i:'pass',h:'fail'}},
+  {tk:'BA',nr:'Boeing',nt:'Boeing',sr:'Авиация / Оборона',st:'Авиатсия / Мудофиа',sts:'r',debt:85,haram:40,intr:1.2,
+   rr:'Boeing — крупный производитель военного оружия, включая системы вооружения. Значительная доля выручки от оборонных контрактов на производство оружия. Большинство учёных считают инвестиции недопустимыми.',
+   rt:'Boeing истеҳсолкунандаи бузурги силоҳи ҳарбист, аз ҷумла системаҳои силоҳ. Саҳми зиёди даромад аз қарордодҳои мудофиавии истеҳсоли силоҳ. Аксари олимон чунин сармоягузориро ғайриқабул меҳисобанд.',
+   cr:{b:'fail',d:'fail',i:'pass',h:'fail'}},
+];
+
+// ═══════════════════ STATE ═══════════════════
+let lang='ru', stsFilt='all', secFilt='all', q='';
+
+// ═══════════════════ HELPERS ═══════════════════
+const t = k => (TR[lang]||TR.ru)[k] || k;
+function mclass(v, thr){
+  if(v===null) return 'bd';
+  if(v < thr*.65) return 'ok';
+  if(v < thr) return 'wn';
+  return 'bd';
+}
+function ico(st){ return {pass:'✓',fail:'✕',warn:'~'}[st]; }
+function icoCls(st){ return {pass:'pass',fail:'fail',warn:'warn'}[st]; }
+function stsLabel(s){ return {h:t('st_halal'),d:t('st_doubt'),r:t('st_haram')}[s]; }
+
+// ═══════════════════ RENDER STATS ═══════════════════
+function renderStats(){
+  const h=DB.filter(s=>s.sts==='h').length;
+  const d=DB.filter(s=>s.sts==='d').length;
+  const r=DB.filter(s=>s.sts==='r').length;
+  document.getElementById('stats').innerHTML=`
+    <div class="chip h"><span class="dot"></span>${h} ${t('s_halal')}</div>
+    <div class="chip d"><span class="dot"></span>${d} ${t('s_doubt')}</div>
+    <div class="chip r"><span class="dot"></span>${r} ${t('s_haram')}</div>`;
+}
+
+// ═══════════════════ RENDER SECTORS ═══════════════════
+function renderSectors(){
+  const key = lang==='tj'?'st':'sr';
+  const secs=[...new Set(DB.map(s=>s[key]))].sort();
+  const sel=document.getElementById('secsel');
+  const prev=sel.value;
+  sel.innerHTML=`<option value="all">${t('sec_all')}</option>`;
+  secs.forEach(s=>{
+    const o=document.createElement('option');
+    o.value=s; o.textContent=s; sel.appendChild(o);
+  });
+  sel.value=secs.includes(prev)?prev:'all';
+}
+
+// ═══════════════════ RENDER FILTERS ═══════════════════
+function renderFilters(){
+  const defs=[['all','f_all','fa'],['h','f_halal','fh'],['d','f_doubtful','fd'],['r','f_haram','fr']];
+  document.getElementById('sfilt').innerHTML=defs.map(([v,k,cls])=>`
+    <button class="fbtn${stsFilt===v?' '+cls:''}" data-v="${v}">${t(k)}</button>`).join('');
+  document.getElementById('sfilt').querySelectorAll('button').forEach(btn=>{
+    btn.onclick=()=>{ stsFilt=btn.dataset.v; render(); };
+  });
+}
+
+// ═══════════════════ FILTER ═══════════════════
+function filtered(){
+  const nk=lang==='tj'?'nt':'nr';
+  const sk=lang==='tj'?'st':'sr';
+  const qq=q.toLowerCase().trim();
+  return DB.filter(s=>{
+    if(stsFilt!=='all'&&s.sts!==stsFilt) return false;
+    if(secFilt!=='all'&&s[sk]!==secFilt) return false;
+    if(qq&&!s[nk].toLowerCase().includes(qq)&&!s.tk.toLowerCase().includes(qq)) return false;
+    return true;
+  });
+}
+
+// ═══════════════════ RENDER CARD ═══════════════════
+function cardHTML(s){
+  const nk=lang==='tj'?'nt':'nr';
+  const sk=lang==='tj'?'st':'sr';
+  const rk=lang==='tj'?'rt':'rr';
+  const dd=s.debt!==null?`${s.debt}%`:'N/A';
+  const dc=s.debt!==null?mclass(s.debt,30):'bd';
+  return `<div class="card ${s.sts}" id="c-${s.tk}">
+  <div class="chd">
+    <div class="cleft">
+      <div class="ico">${s.tk.slice(0,2)}</div>
+      <div><div class="cname">${s[nk]}</div><div class="ctick">${s.tk}</div></div>
+    </div>
+    <div class="sbadge ${s.sts}"><span class="sdot"></span>${stsLabel(s.sts)}</div>
+  </div>
+  <div class="csec"><span class="stag">${s[sk]}</span></div>
+  <div class="cmets">
+    <div class="met"><span class="mlbl">${t('m_debt')}</span><span class="mval ${dc}">${dd}</span></div>
+    <div class="met"><span class="mlbl">${t('m_haram')}</span><span class="mval ${mclass(s.haram,5)}">${s.haram}%</span></div>
+    <div class="met"><span class="mlbl">${t('m_int')}</span><span class="mval ${mclass(s.intr,5)}">${s.intr}%</span></div>
+  </div>
+  <div class="ctog" onclick="toggle('${s.tk}')">
+    <span class="ttxt">${t('more')}</span><span class="togico">▼</span>
+  </div>
+  <div class="cdet">
+    <div class="dlbl">${t('lbl_reason')}</div>
+    <p class="dtxt">${s[rk]}</p>
+    <div class="clist">
+      <div class="dlbl" style="margin-top:14px">${t('lbl_crit')}</div>
+      <div class="ci"><span class="cico ${icoCls(s.cr.b)}">${ico(s.cr.b)}</span><span class="ctxt">${t('c1')}</span></div>
+      <div class="ci"><span class="cico ${icoCls(s.cr.d)}">${ico(s.cr.d)}</span><span class="ctxt">${t('c2')} <b>(${dd})</b></span></div>
+      <div class="ci"><span class="cico ${icoCls(s.cr.i)}">${ico(s.cr.i)}</span><span class="ctxt">${t('c3')} <b>(${s.intr}%)</b></span></div>
+      <div class="ci"><span class="cico ${icoCls(s.cr.h)}">${ico(s.cr.h)}</span><span class="ctxt">${t('c4')} <b>(${s.haram}%)</b></span></div>
+    </div>
+  </div>
+</div>`;
+}
+
+function toggle(tk){
+  const card=document.getElementById('c-'+tk);
+  if(!card) return;
+  const open=card.classList.toggle('open');
+  card.querySelector('.ttxt').textContent=open?t('less'):t('more');
+}
+
+// ═══════════════════ FULL RENDER ═══════════════════
+function render(){
+  renderStats();
+  renderSectors();
+  renderFilters();
+  applyI18n();
+  const list=filtered();
+  const grid=document.getElementById('grid');
+  const empty=document.getElementById('empty');
+  document.getElementById('cnt').textContent=`${t('cnt_pre')} ${list.length} ${t('cnt_suf')}`;
+  if(list.length===0){ grid.innerHTML=''; empty.style.display='block'; }
+  else{ empty.style.display='none'; grid.innerHTML=list.map(cardHTML).join(''); }
+}
+
+// ═══════════════════ I18N ═══════════════════
+function applyI18n(){
+  document.querySelectorAll('[data-t]').forEach(el=>{ el.textContent=t(el.dataset.t); });
+  document.getElementById('srch').placeholder=t('srch_ph');
+}
+
+// ═══════════════════ LANG SWITCH ═══════════════════
+function setLang(l){
+  lang=l;
+  secFilt='all';
+  document.getElementById('btnRu').classList.toggle('on',l==='ru');
+  document.getElementById('btnTj').classList.toggle('on',l==='tj');
+  document.documentElement.lang=l==='tj'?'tg':'ru';
+  render();
+}
+
+// ═══════════════════ EVENTS ═══════════════════
+document.getElementById('srch').addEventListener('input',e=>{ q=e.target.value; render(); });
+document.getElementById('secsel').addEventListener('change',e=>{ secFilt=e.target.value; render(); });
+
+// ═══════════════════ INIT ═══════════════════
+render();
+</script>
+</body>
+</html>
