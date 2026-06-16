@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - claude/tajik-economics-site-vq7xf9
+      - claude/halalstocks-screener-pqn4s7
   workflow_dispatch:
 
 permissions:
