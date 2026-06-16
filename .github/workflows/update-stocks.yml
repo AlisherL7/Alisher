@@ -1,0 +1,39 @@
+name: Update HalalStocks Data (Quarterly)
+
+on:
+  schedule:
+    # Runs on 1st day of Jan, Apr, Jul, Oct at 06:00 UTC
+    - cron: '0 6 1 1,4,7,10 *'
+  workflow_dispatch:  # allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: claude/tajik-economics-site-vq7xf9
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Shariah screener
+        run: python scripts/screener.py
+
+      - name: Commit updated data
+        run: |
+          git config user.name "HalalStocks Bot"
+          git config user.email "bot@halalstocks.io"
+          git add data/stocks.json
+          git diff --staged --quiet || git commit -m "auto: quarterly Shariah screening update $(date +%Y-%m-%d)"
+          git push origin claude/tajik-economics-site-vq7xf9
