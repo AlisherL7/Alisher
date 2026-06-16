@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Гайд по GitHub проектам</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      line-height: 1.7;
+    }
+    .hero {
+      background: linear-gradient(135deg, #161b22 0%, #0d1117 100%);
+      border-bottom: 1px solid #30363d;
+      padding: 60px 20px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #58a6ff;
+      margin-bottom: 12px;
+    }
+    .hero p {
+      color: #8b949e;
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+    .basics {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 40px;
+    }
+    .basics h2 {
+      color: #f0f6fc;
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .step-list { list-style: none; }
+    .step-list li {
+      padding: 12px 0;
+      border-bottom: 1px solid #21262d;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .step-list li:last-child { border-bottom: none; }
+    .step-num {
+      background: #58a6ff;
+      color: #0d1117;
+      font-weight: 700;
+      font-size: 0.85rem;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    code {
+      background: #21262d;
+      color: #79c0ff;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+    }
+    .projects-grid {
+      display: grid;
+      gap: 24px;
+    }
+    .project-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .project-card:hover { border-color: #58a6ff; }
+    .card-header {
+      padding: 24px 28px 20px;
+      border-bottom: 1px solid #21262d;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .card-title { font-size: 1.25rem; font-weight: 700; color: #f0f6fc; }
+    .card-subtitle { color: #8b949e; font-size: 0.9rem; margin-top: 4px; }
+    .stars {
+      background: #21262d;
+      border: 1px solid #30363d;
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.85rem;
+      color: #e3b341;
+      white-space: nowrap;
+    }
+    .card-body { padding: 24px 28px; }
+    .card-body h3 {
+      color: #58a6ff;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+      margin-top: 20px;
+    }
+    .card-body h3:first-child { margin-top: 0; }
+    .card-body p { color: #c9d1d9; margin-bottom: 10px; }
+    .cmd-block {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 12px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.88rem;
+      color: #7ee787;
+    }
+    .cmd-block .comment { color: #6e7681; }
+    .earning-tag {
+      display: inline-block;
+      background: #1a2f1a;
+      border: 1px solid #3fb950;
+      color: #3fb950;
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .tag {
+      background: #21262d;
+      border: 1px solid #30363d;
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.82rem;
+      color: #8b949e;
+    }
+    .tip-box {
+      background: #1c2128;
+      border-left: 4px solid #58a6ff;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin: 14px 0;
+      color: #c9d1d9;
+      font-size: 0.93rem;
+    }
+    .warning-box {
+      background: #2d1f00;
+      border-left: 4px solid #e3b341;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin: 14px 0;
+      color: #c9d1d9;
+      font-size: 0.93rem;
+    }
+    .link {
+      color: #58a6ff;
+      text-decoration: none;
+    }
+    .link:hover { text-decoration: underline; }
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: #6e7681;
+      border-top: 1px solid #21262d;
+      margin-top: 60px;
+    }
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 1.6rem; }
+      .card-header { flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>&#128640; GitHub Open-Source Проекты</h1>
+  <p>Пошаговый гайд — как запустить готовые проекты с GitHub и зарабатывать на них</p>
+</div>
+
+<div class="container">
+
+  <!-- ОСНОВЫ -->
+  <div class="basics">
+    <h2>&#128218; Шаг 0 — Что нужно знать сначала</h2>
+    <ul class="step-list">
+      <li>
+        <span class="step-num">1</span>
+        <div>
+          <strong>Зарегистрируйся на GitHub</strong> — <a class="link" href="https://github.com" target="_blank">github.com</a>. Это бесплатно. Здесь хранятся все проекты.
+        </div>
+      </li>
+      <li>
+        <span class="step-num">2</span>
+        <div>
+          <strong>Установи Git</strong> на свой компьютер — <a class="link" href="https://git-scm.com/downloads" target="_blank">git-scm.com/downloads</a>. Это программа для скачивания кода.
+        </div>
+      </li>
+      <li>
+        <span class="step-num">3</span>
+        <div>
+          <strong>Fork (форк)</strong> — это твоя личная копия чужого проекта. Нажми кнопку <code>Fork</code> на странице репозитория в GitHub — и проект появится в твоём аккаунте.
+        </div>
+      </li>
+      <li>
+        <span class="step-num">4</span>
+        <div>
+          <strong>Clone (клонирование)</strong> — скачать код на свой компьютер.<br/>
+          <div class="cmd-block">
+            git clone https://github.com/ТВО_ИМЯ/НАЗВАНИЕ_ПРОЕКТА
+          </div>
+        </div>
+      </li>
+      <li>
+        <span class="step-num">5</span>
+        <div>
+          <strong>Хостинг для запуска</strong> — тебе нужен сервер. Самый простой старт: <a class="link" href="https://railway.app" target="_blank">Railway</a> или <a class="link" href="https://render.com" target="_blank">Render</a> — оба бесплатны для начала. Для серьёзных проектов — <a class="link" href="https://www.digitalocean.com" target="_blank">DigitalOcean</a> (~$6/мес).
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ПРОЕКТЫ -->
+  <div class="projects-grid">
+
+    <!-- CAL.DIY -->
+    <div class="project-card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">&#128197; Cal.diy</div>
+          <div class="card-subtitle">Аналог Calendly — сервис записи на встречи</div>
+        </div>
+        <span class="stars">&#11088; 45k stars</span>
+      </div>
+      <div class="card-body">
+        <h3>Что это такое</h3>
+        <p>Calendly берёт $12–16/мес с каждого пользователя. Cal.diy — тот же функционал, но open-source. Ты ставишь его, делаешь white-label (своё название, свой домен) и продаёшь доступ специалистам: стоматологам, юристам, репетиторам.</p>
+
+        <div class="earning-tag">&#128176; Потенциал: 5 000–15 000 ₽/клиент в месяц</div>
+
+        <h3>Как запустить</h3>
+        <div class="cmd-block">
+          <span class="comment"># 1. Открой в браузере:</span><br/>
+          https://github.com/calcom/cal.com<br/><br/>
+          <span class="comment"># 2. Нажми Fork (правый верхний угол)</span><br/><br/>
+          <span class="comment"># 3. Скачай к себе на компьютер:</span><br/>
+          git clone https://github.com/ТВОЙusername/cal.com<br/>
+          cd cal.com<br/><br/>
+          <span class="comment"># 4. Установи зависимости:</span><br/>
+          npm install<br/><br/>
+          <span class="comment"># 5. Скопируй файл настроек:</span><br/>
+          cp .env.example .env<br/><br/>
+          <span class="comment"># 6. Запусти локально для теста:</span><br/>
+          npm run dev
+        </div>
+
+        <div class="tip-box">
+          &#128161; <strong>Самый лёгкий деплой:</strong> Зайди на <a class="link" href="https://railway.app" target="_blank">Railway.app</a>, нажми "New Project" → "Deploy from GitHub" → выбери свой форк Cal.com. Railway сам всё настроит за 5 минут.
+        </div>
+
+        <h3>Как зарабатывать</h3>
+        <p>Напиши в Direct стоматологам/юристам. Предложи: «Сделаю вам страницу онлайн-записи с вашим логотипом за 3 000 ₽ + 2 000 ₽/мес обслуживание». У тебя затраты — $6/мес хостинг, доход с 10 клиентов — 20 000 ₽/мес.</p>
+
+        <div class="tag-row">
+          <span class="tag">Node.js</span>
+          <span class="tag">TypeScript</span>
+          <span class="tag">PostgreSQL</span>
+          <span class="tag">Next.js</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- GHOST -->
+    <div class="project-card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">&#128395; Ghost</div>
+          <div class="card-subtitle">Платформа для блога с платными подписками</div>
+        </div>
+        <span class="stars">&#11088; 53k stars</span>
+      </div>
+      <div class="card-body">
+        <h3>Что это такое</h3>
+        <p>Ghost — движок для блога с встроенной монетизацией. Как Boosty или Substack, но ты сам владелец — никаких комиссий платформе. Подписчики платят напрямую тебе через Stripe.</p>
+
+        <div class="earning-tag">&#128176; 1 000 подписчиков × 300 ₽ = 300 000 ₽/мес</div>
+
+        <h3>Как запустить (самый простой способ)</h3>
+        <div class="cmd-block">
+          <span class="comment"># Способ 1 — через Docker (рекомендуется):</span><br/>
+          docker run -d --name ghost \
+          &nbsp;&nbsp;-e url=https://твойдомен.ru \
+          &nbsp;&nbsp;-p 2368:2368 \
+          &nbsp;&nbsp;ghost:latest<br/><br/>
+          <span class="comment"># Способ 2 — установка через npm:</span><br/>
+          npm install -g ghost-cli<br/>
+          ghost install
+        </div>
+
+        <div class="tip-box">
+          &#128161; <strong>Проще всего:</strong> Digital Ocean есть готовый «1-Click Ghost Droplet» — нажал кнопку, через 3 минуты твой Ghost уже работает. Стоит $6/мес.
+        </div>
+
+        <h3>Настройка платежей (Stripe)</h3>
+        <div class="cmd-block">
+          <span class="comment"># В панели Ghost Admin:</span><br/>
+          Settings → Membership → Connect Stripe account<br/><br/>
+          <span class="comment"># Создай тарифы подписки</span><br/>
+          Settings → Membership → Tiers → Add tier<br/>
+          <span class="comment"># Пример: «Базовый» 200 ₽/мес, «Про» 500 ₽/мес</span>
+        </div>
+
+        <h3>Как зарабатывать</h3>
+        <p>Пиши полезный контент в своей нише (финансы, психология, бизнес). Часть постов — бесплатно, лучшие — только для подписчиков. Продвигай в Telegram и Instagram.</p>
+
+        <div class="tag-row">
+          <span class="tag">Node.js</span>
+          <span class="tag">MySQL</span>
+          <span class="tag">Handlebars</span>
+          <span class="tag">Docker</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPABASE -->
+    <div class="project-card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">&#9889; Supabase</div>
+          <div class="card-subtitle">База данных + API + авторизация за минуты</div>
+        </div>
+        <span class="stars">&#11088; 104k stars</span>
+      </div>
+      <div class="card-body">
+        <h3>Что это такое</h3>
+        <p>Supabase — это Firebase, но open-source. Даёт тебе базу данных PostgreSQL, авторизацию пользователей, хранилище файлов и автоматическое API. Идеально для создания SaaS-приложений без знания бэкенда.</p>
+
+        <div class="earning-tag">&#128176; Собери приложение за выходные → продавай по 2 500 ₽/мес</div>
+
+        <h3>Самый быстрый старт</h3>
+        <div class="cmd-block">
+          <span class="comment"># Вариант А — облако (бесплатно для старта):</span><br/>
+          1. Зайди на supabase.com<br/>
+          2. Sign up → New Project<br/>
+          3. Получаешь URL и ключи API<br/>
+          4. Используй в своём приложении<br/><br/>
+          <span class="comment"># Вариант Б — self-hosted (полный контроль):</span><br/>
+          git clone https://github.com/supabase/supabase<br/>
+          cd supabase/docker<br/>
+          cp .env.example .env<br/>
+          docker compose up -d
+        </div>
+
+        <h3>Пример использования в коде</h3>
+        <div class="cmd-block">
+          <span class="comment"># Установи SDK:</span><br/>
+          npm install @supabase/supabase-js<br/><br/>
+          <span class="comment"># В своём приложении:</span><br/>
+          import { createClient } from '@supabase/supabase-js'<br/><br/>
+          const supabase = createClient(<br/>
+          &nbsp;&nbsp;'https://xxxxxx.supabase.co',<br/>
+          &nbsp;&nbsp;'твой_публичный_ключ'<br/>
+          )<br/><br/>
+          <span class="comment"># Получить данные из таблицы:</span><br/>
+          const { data } = await supabase<br/>
+          &nbsp;&nbsp;.from('products').select('*')
+        </div>
+
+        <div class="tip-box">
+          &#128161; <strong>Идея для бизнеса:</strong> Сделай простое SaaS-приложение (например, CRM для малого бизнеса, трекер задач, планировщик контента). Supabase берёт на себя всю техническую часть — тебе остаётся только фронтенд.
+        </div>
+
+        <div class="tag-row">
+          <span class="tag">PostgreSQL</span>
+          <span class="tag">Docker</span>
+          <span class="tag">REST API</span>
+          <span class="tag">JavaScript</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- LISTMONK -->
+    <div class="project-card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">&#128140; Listmonk</div>
+          <div class="card-subtitle">Сервис email-рассылок — Mailchimp без абонентки</div>
+        </div>
+        <span class="stars">&#11088; 21k stars</span>
+      </div>
+      <div class="card-body">
+        <h3>Что это такое</h3>
+        <p>Mailchimp стоит 10 000–50 000 ₽/мес при большой базе. Listmonk ставишь на свой сервер (~500 ₽/мес) и делаешь неограниченные рассылки. Можешь продавать услуги рассылок другим бизнесам.</p>
+
+        <div class="earning-tag">&#128176; Клиенты платят 2 000–5 000 ₽/мес, твои расходы — 500 ₽/мес</div>
+
+        <h3>Запуск через Docker (5 минут)</h3>
+        <div class="cmd-block">
+          <span class="comment"># 1. Скачай docker-compose файл:</span><br/>
+          curl -LO https://github.com/knadh/listmonk/raw/master/docker-compose.yml<br/><br/>
+          <span class="comment"># 2. Запусти:</span><br/>
+          docker compose up -d<br/><br/>
+          <span class="comment"># 3. Открой в браузере:</span><br/>
+          http://localhost:9000<br/><br/>
+          <span class="comment"># Логин по умолчанию: listmonk / listmonk</span>
+        </div>
+
+        <h3>Настройка SMTP (для отправки писем)</h3>
+        <div class="cmd-block">
+          <span class="comment"># В панели Listmonk:</span><br/>
+          Settings → SMTP → Add new SMTP server<br/><br/>
+          <span class="comment"># Используй один из сервисов:</span><br/>
+          - Amazon SES ($0.10 за 1000 писем) — самый дешёвый<br/>
+          - Brevo (бесплатно до 300 писем/день)<br/>
+          - Postmark (лучшая доставляемость)
+        </div>
+
+        <div class="warning-box">
+          &#9888;&#65039; <strong>Важно:</strong> Для рассылок нужен свой домен с настроенными SPF, DKIM и DMARC записями. Иначе письма попадут в спам. Настрой это через панель управления своим доменом.
+        </div>
+
+        <h3>Как зарабатывать</h3>
+        <p>Найди малый бизнес (магазины, рестораны, салоны), которые платят за Mailchimp или не делают рассылок вообще. Предложи вести их email-маркетинг. Стоимость для тебя = $6 сервер + $1-2 на SMTP. Продаёшь за 3 000–5 000 ₽/мес.</p>
+
+        <div class="tag-row">
+          <span class="tag">Go</span>
+          <span class="tag">PostgreSQL</span>
+          <span class="tag">Docker</span>
+          <span class="tag">Vue.js</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEDUSA -->
+    <div class="project-card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">&#128722; Medusa</div>
+          <div class="card-subtitle">Интернет-магазин без комиссий — альтернатива Shopify</div>
+        </div>
+        <span class="stars">&#11088; 34k stars</span>
+      </div>
+      <div class="card-body">
+        <h3>Что это такое</h3>
+        <p>Shopify берёт 2% с каждой продажи + $29–79/мес. Medusa — бесплатен, open-source, и все деньги остаются тебе. Идеально для создания магазинов под ключ для других бизнесов.</p>
+
+        <div class="earning-tag">&#128176; Создавай магазины клиентам за 30 000–100 000 ₽</div>
+
+        <h3>Как запустить</h3>
+        <div class="cmd-block">
+          <span class="comment"># 1. Установи Medusa CLI:</span><br/>
+          npm install -g @medusajs/medusa-cli<br/><br/>
+          <span class="comment"># 2. Создай новый проект:</span><br/>
+          medusa new my-store --seed<br/><br/>
+          <span class="comment"># 3. Перейди в папку и запусти:</span><br/>
+          cd my-store<br/>
+          medusa develop<br/><br/>
+          <span class="comment"># 4. Бэкенд работает на:</span><br/>
+          http://localhost:9000<br/>
+          <span class="comment"># Панель администратора:</span><br/>
+          http://localhost:7001
+        </div>
+
+        <h3>Подключение платежей</h3>
+        <div class="cmd-block">
+          <span class="comment"># Stripe (международные платежи):</span><br/>
+          npm install @medusajs/payment-stripe<br/><br/>
+          <span class="comment"># В файле medusa-config.js добавь:</span><br/>
+          modules: [\{<br/>
+          &nbsp;&nbsp;resolve: "@medusajs/payment-stripe",<br/>
+          &nbsp;&nbsp;options: \{ apiKey: process.env.STRIPE_API_KEY \}<br/>
+          \}]
+        </div>
+
+        <div class="tip-box">
+          &#128161; <strong>Стратегия:</strong> Найди малый бизнес с Instagram-магазином, который устал принимать заказы в DM. Предложи полноценный сайт-магазин на Medusa. Бери 50 000 ₽ за создание + 5 000 ₽/мес за поддержку.
+        </div>
+
+        <div class="tag-row">
+          <span class="tag">Node.js</span>
+          <span class="tag">TypeScript</span>
+          <span class="tag">PostgreSQL</span>
+          <span class="tag">React</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /projects-grid -->
+
+  <!-- ИТОГОВЫЙ ЧЕК-ЛИСТ -->
+  <div class="basics" style="margin-top: 40px;">
+    <h2>&#9989; Что нужно для старта — чек-лист</h2>
+    <ul class="step-list">
+      <li>
+        <span class="step-num">&#10003;</span>
+        <div><strong>Аккаунт GitHub</strong> — зарегистрироваться на github.com (бесплатно)</div>
+      </li>
+      <li>
+        <span class="step-num">&#10003;</span>
+        <div><strong>Сервер</strong> — начни с <a class="link" href="https://railway.app" target="_blank">Railway</a> (бесплатный план) или DigitalOcean ($6/мес)</div>
+      </li>
+      <li>
+        <span class="step-num">&#10003;</span>
+        <div><strong>Домен</strong> — купи на <a class="link" href="https://reg.ru" target="_blank">reg.ru</a> или namecheap.com (~600 ₽/год)</div>
+      </li>
+      <li>
+        <span class="step-num">&#10003;</span>
+        <div><strong>Node.js</strong> — установить с nodejs.org (нужен для большинства проектов)</div>
+      </li>
+      <li>
+        <span class="step-num">&#10003;</span>
+        <div><strong>Docker</strong> — установить с docker.com (самый простой способ запуска)</div>
+      </li>
+      <li>
+        <span class="step-num">&#10003;</span>
+        <div><strong>Stripe аккаунт</strong> — для приёма платежей на stripe.com (или ЮKassa для РФ)</div>
+      </li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  <p>Создано с помощью Claude AI &bull; Все проекты бесплатны и открыты на GitHub</p>
+</footer>
+
+</body>
+</html>
