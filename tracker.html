@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Трекер задач</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    .app { width: 100%; max-width: 580px; }
+    header { text-align: center; margin-bottom: 36px; }
+    header h1 { font-size: 2rem; font-weight: 800; color: #58a6ff; margin-bottom: 8px; }
+    .stats { color: #8b949e; font-size: 0.95rem; }
+    .progress-bar {
+      height: 4px;
+      background: #21262d;
+      border-radius: 99px;
+      margin-top: 12px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #238636, #3fb950);
+      border-radius: 99px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+    .input-area { display: flex; gap: 10px; margin-bottom: 16px; }
+    input[type="text"] {
+      flex: 1;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 13px 16px;
+      color: #e6edf3;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus { border-color: #58a6ff; }
+    input[type="text"]::placeholder { color: #6e7681; }
+    .btn-add {
+      background: #238636;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 13px 22px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .btn-add:hover { background: #2ea043; }
+    .filters { display: flex; gap: 8px; margin-bottom: 20px; }
+    .filter-btn {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 20px;
+      padding: 6px 16px;
+      color: #8b949e;
+      font-size: 0.86rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn.active { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+    .filter-btn:hover:not(.active) { border-color: #58a6ff; color: #e6edf3; }
+    .task-list { list-style: none; }
+    .task-item {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: border-color 0.2s;
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .task-item:hover { border-color: #30363d88; }
+    .task-item.done { opacity: 0.45; }
+    .task-item.done .task-text { text-decoration: line-through; color: #6e7681; }
+    .checkbox {
+      width: 22px; height: 22px;
+      border: 2px solid #30363d;
+      border-radius: 50%;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .checkbox:hover { border-color: #3fb950; }
+    .task-item.done .checkbox { background: #238636; border-color: #238636; }
+    .check-icon { display: none; color: #fff; font-size: 0.75rem; font-weight: 700; }
+    .task-item.done .check-icon { display: block; }
+    .task-text {
+      flex: 1; font-size: 0.97rem;
+      color: #e6edf3; cursor: pointer;
+      word-break: break-word; line-height: 1.5;
+    }
+    .btn-del {
+      background: none; border: none;
+      color: #6e7681; cursor: pointer;
+      font-size: 1rem; padding: 4px 6px;
+      border-radius: 4px; transition: color 0.2s;
+      flex-shrink: 0; opacity: 0;
+      transition: opacity 0.15s, color 0.2s;
+    }
+    .task-item:hover .btn-del { opacity: 1; }
+    .btn-del:hover { color: #f85149; }
+    .empty {
+      text-align: center; color: #6e7681;
+      padding: 48px 0; font-size: 0.95rem;
+    }
+    .empty-icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .footer-row {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-top: 16px;
+      padding-top: 12px; border-top: 1px solid #21262d;
+    }
+    .remaining { color: #6e7681; font-size: 0.85rem; }
+    .btn-clear {
+      background: none; border: none;
+      color: #6e7681; font-size: 0.85rem;
+      cursor: pointer; transition: color 0.2s; padding: 0;
+    }
+    .btn-clear:hover { color: #f85149; }
+    @media (max-width: 480px) {
+      header h1 { font-size: 1.6rem; }
+      .btn-del { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>✅ Мои задачи</h1>
+    <div class="stats" id="stats">Добавь свою первую задачу</div>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+  </header>
+
+  <div class="input-area">
+    <input type="text" id="taskInput" placeholder="Что нужно сделать?" maxlength="200" autofocus />
+    <button class="btn-add" onclick="addTask()">+ Добавить</button>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active" onclick="setFilter('all', this)">Все</button>
+    <button class="filter-btn" onclick="setFilter('active', this)">Активные</button>
+    <button class="filter-btn" onclick="setFilter('done', this)">Выполненные</button>
+  </div>
+
+  <ul class="task-list" id="taskList"></ul>
+
+  <div class="footer-row" id="footerRow" style="display:none;">
+    <span class="remaining" id="remaining"></span>
+    <button class="btn-clear" onclick="clearDone()">Удалить выполненные</button>
+  </div>
+</div>
+
+<script>
+  let tasks = JSON.parse(localStorage.getItem('alisher_tasks') || '[]');
+  let filter = 'all';
+
+  document.getElementById('taskInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addTask();
+  });
+
+  function save() {
+    localStorage.setItem('alisher_tasks', JSON.stringify(tasks));
+  }
+
+  function addTask() {
+    const input = document.getElementById('taskInput');
+    const text = input.value.trim();
+    if (!text) return;
+    tasks.unshift({ id: Date.now(), text, done: false });
+    input.value = '';
+    save();
+    render();
+  }
+
+  function toggle(id) {
+    const t = tasks.find(t => t.id === id);
+    if (t) { t.done = !t.done; save(); render(); }
+  }
+
+  function remove(id) {
+    tasks = tasks.filter(t => t.id !== id);
+    save(); render();
+  }
+
+  function clearDone() {
+    tasks = tasks.filter(t => !t.done);
+    save(); render();
+  }
+
+  function setFilter(f, btn) {
+    filter = f;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render();
+  }
+
+  function esc(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function render() {
+    const total = tasks.length;
+    const done  = tasks.filter(t => t.done).length;
+    const active = total - done;
+
+    const stats    = document.getElementById('stats');
+    const progress = document.getElementById('progress');
+    const remaining = document.getElementById('remaining');
+    const footer   = document.getElementById('footerRow');
+
+    if (total === 0) {
+      stats.textContent = 'Добавь свою первую задачу';
+      progress.style.width = '0%';
+    } else {
+      stats.textContent = `${done} из ${total} выполнено`;
+      progress.style.width = (done / total * 100) + '%';
+    }
+
+    footer.style.display = total > 0 ? 'flex' : 'none';
+    remaining.textContent = active === 0 ? 'Всё выполнено 🎉' : `Осталось: ${active}`;
+
+    const filtered = tasks.filter(t => {
+      if (filter === 'active') return !t.done;
+      if (filter === 'done')   return  t.done;
+      return true;
+    });
+
+    const list = document.getElementById('taskList');
+
+    if (filtered.length === 0) {
+      list.innerHTML = `<div class="empty"><div class="empty-icon">${filter === 'done' ? '🎯' : '📋'}</div>${filter === 'done' ? 'Нет выполненных задач' : 'Нет активных задач'}</div>`;
+      return;
+    }
+
+    list.innerHTML = filtered.map(t => `
+      <li class="task-item ${t.done ? 'done' : ''}">
+        <div class="checkbox" onclick="toggle(${t.id})">
+          <span class="check-icon">✓</span>
+        </div>
+        <span class="task-text" onclick="toggle(${t.id})">${esc(t.text)}</span>
+        <button class="btn-del" onclick="remove(${t.id})" title="Удалить">✕</button>
+      </li>
+    `).join('');
+  }
+
+  render();
+</script>
+</body>
+</html>

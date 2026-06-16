@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alisher — Портфолио</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      line-height: 1.7;
+    }
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 20px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, #1a2744 0%, #0d1117 70%);
+      position: relative;
+      overflow: hidden;
+    }
+    .glow {
+      position: absolute;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #1f6feb15, transparent 70%);
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .avatar {
+      width: 96px; height: 96px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1f6feb, #79c0ff);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.6rem;
+      margin-bottom: 24px;
+      border: 3px solid #21262d;
+      box-shadow: 0 0 40px #1f6feb40;
+      position: relative; z-index: 1;
+    }
+    .hero-name {
+      font-size: 3.2rem; font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #f0f6fc 30%, #79c0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative; z-index: 1;
+      margin-bottom: 10px;
+    }
+    .hero-role {
+      font-size: 1.1rem; color: #8b949e;
+      margin-bottom: 20px;
+      position: relative; z-index: 1;
+    }
+    .hero-bio {
+      max-width: 480px; color: #c9d1d9;
+      font-size: 1rem; margin-bottom: 40px;
+      position: relative; z-index: 1;
+    }
+    .hero-links {
+      display: flex; gap: 12px;
+      flex-wrap: wrap; justify-content: center;
+      position: relative; z-index: 1;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 11px 22px; border-radius: 8px;
+      text-decoration: none; font-size: 0.95rem;
+      font-weight: 600; transition: all 0.2s;
+      cursor: pointer;
+    }
+    .btn-primary { background: #1f6feb; color: #fff; border: 1px solid #1f6feb; }
+    .btn-primary:hover { background: #388bfd; border-color: #388bfd; transform: translateY(-1px); }
+    .btn-outline { background: transparent; color: #e6edf3; border: 1px solid #30363d; }
+    .btn-outline:hover { border-color: #58a6ff; color: #58a6ff; transform: translateY(-1px); }
+    /* DIVIDER */
+    hr { border: none; border-top: 1px solid #21262d; }
+    /* SECTIONS */
+    .section { padding: 80px 20px; max-width: 860px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.78rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: #58a6ff; margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 1.7rem; font-weight: 800;
+      color: #f0f6fc; margin-bottom: 6px;
+    }
+    .section-sub { color: #8b949e; margin-bottom: 40px; }
+    /* SKILLS */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+    }
+    .skill {
+      background: #161b22; border: 1px solid #30363d;
+      border-radius: 10px; padding: 20px 12px;
+      text-align: center;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .skill:hover { border-color: #58a6ff; transform: translateY(-2px); }
+    .skill-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .skill-name { font-size: 0.85rem; color: #c9d1d9; font-weight: 500; }
+    /* PROJECTS */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 16px;
+    }
+    .proj {
+      background: #161b22; border: 1px solid #30363d;
+      border-radius: 12px; padding: 24px;
+      text-decoration: none; color: inherit; display: block;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .proj:hover { border-color: #58a6ff; transform: translateY(-2px); }
+    .proj-title { font-size: 1.05rem; font-weight: 700; color: #f0f6fc; margin-bottom: 8px; }
+    .proj-desc { color: #8b949e; font-size: 0.9rem; margin-bottom: 14px; line-height: 1.5; }
+    .proj-tag {
+      display: inline-block;
+      background: #1f6feb15; color: #79c0ff;
+      border: 1px solid #1f6feb30;
+      border-radius: 20px; padding: 3px 10px;
+      font-size: 0.78rem; font-weight: 500;
+    }
+    /* CONTACT */
+    .contact-box {
+      background: #161b22; border: 1px solid #30363d;
+      border-radius: 16px; padding: 48px 40px;
+      text-align: center;
+    }
+    .contact-box h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 10px; }
+    .contact-box p { color: #8b949e; margin-bottom: 28px; }
+    .contact-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    footer {
+      text-align: center; padding: 28px;
+      color: #6e7681; font-size: 0.85rem;
+      border-top: 1px solid #21262d;
+    }
+    @media (max-width: 600px) {
+      .hero-name { font-size: 2.2rem; }
+      .contact-box { padding: 30px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="glow"></div>
+  <div class="avatar">👋</div>
+  <h1 class="hero-name">Alisher</h1>
+  <p class="hero-role">Предприниматель · Финансы · Технологии</p>
+  <p class="hero-bio">
+    Изучаю современные технологии и применяю их в бизнесе.
+    Интересуюсь open-source проектами, финансами и экономикой.
+  </p>
+  <div class="hero-links">
+    <a class="btn btn-primary" href="https://github.com/AlisherL7" target="_blank">⬡ GitHub</a>
+    <a class="btn btn-outline" href="#projects">Мои проекты ↓</a>
+  </div>
+</section>
+
+<hr />
+
+<!-- НАВЫКИ -->
+<div class="section">
+  <div class="section-label">Чем занимаюсь</div>
+  <div class="section-title">Интересы и навыки</div>
+  <div class="section-sub">Направления, которые я изучаю и развиваю</div>
+  <div class="skills-grid">
+    <div class="skill"><div class="skill-icon">📊</div><div class="skill-name">Финансы</div></div>
+    <div class="skill"><div class="skill-icon">📈</div><div class="skill-name">Экономика</div></div>
+    <div class="skill"><div class="skill-icon">💻</div><div class="skill-name">GitHub</div></div>
+    <div class="skill"><div class="skill-icon">🚀</div><div class="skill-name">Open Source</div></div>
+    <div class="skill"><div class="skill-icon">🌐</div><div class="skill-name">Веб-сайты</div></div>
+    <div class="skill"><div class="skill-icon">🤖</div><div class="skill-name">AI</div></div>
+  </div>
+</div>
+
+<hr />
+
+<!-- ПРОЕКТЫ -->
+<div class="section" id="projects">
+  <div class="section-label">Портфолио</div>
+  <div class="section-title">Мои проекты</div>
+  <div class="section-sub">Что я строю и изучаю</div>
+  <div class="projects-grid">
+    <a class="proj" href="https://github.com/AlisherL7/Alisher" target="_blank">
+      <div class="proj-title">📚 Обучающая платформа</div>
+      <div class="proj-desc">Интерактивные тесты и словари по экономике и финансам</div>
+      <span class="proj-tag">HTML · JavaScript</span>
+    </a>
+    <a class="proj" href="tracker.html">
+      <div class="proj-title">✅ Трекер задач</div>
+      <div class="proj-desc">Приложение для управления задачами с сохранением в браузере</div>
+      <span class="proj-tag">Vanilla JS · localStorage</span>
+    </a>
+    <div class="proj" style="opacity:0.45; cursor:default;">
+      <div class="proj-title">🔜 В разработке</div>
+      <div class="proj-desc">Следующий проект появится здесь совсем скоро</div>
+      <span class="proj-tag">Coming soon</span>
+    </div>
+  </div>
+</div>
+
+<hr />
+
+<!-- КОНТАКТЫ -->
+<div class="section">
+  <div class="contact-box">
+    <h3>Давай познакомимся 👋</h3>
+    <p>Открыт для общения, сотрудничества и новых идей</p>
+    <div class="contact-links">
+      <a class="btn btn-primary" href="https://github.com/AlisherL7" target="_blank">GitHub</a>
+    </div>
+  </div>
+</div>
+
+<footer>Сделано с ❤️ и Claude AI · 2026</footer>
+
+</body>
+</html>
