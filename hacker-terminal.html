@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ALISHER_KARIMOV — SYSTEM ACCESS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #000; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes barGrow {
+      from { width: 0%; }
+      to   { width: var(--target-width, 100%); }
+    }
+    @keyframes scanPing {
+      0%   { width: 0%; }
+      50%  { width: 100%; }
+      100% { width: 0%; }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+    .fade-in  { animation: fadeIn 0.4s ease forwards; }
+    .slide-up { animation: slideUp 0.4s ease forwards; }
+
+    /* scanline overlay for retro feel */
+    .scanline::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 2px,
+        rgba(0,0,0,0.15) 2px,
+        rgba(0,0,0,0.15) 4px
+      );
+      pointer-events: none;
+      z-index: 5;
+    }
+  </style>
+</head>
+<body class="scanline">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useEffect, useRef, useState } = React;
+
+    const USER       = "ALISHER_KARIMOV";
+    const SESSION_ID = "X7F3#9K2@L1M6";
+    const TIMESTAMP  = new Date().toISOString().slice(0, 19).replace("T", " ");
+
+    /* ── tiny motion shim ── */
+    function MotionDiv({ children, className = "", style = {}, initial = {}, animate = {}, transition = {}, ...rest }) {
+      const ref = useRef(null);
+      useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        // apply initial state immediately
+        if (initial.opacity !== undefined) el.style.opacity = initial.opacity;
+        if (initial.y       !== undefined) el.style.transform = `translateY(${initial.y}px)`;
+        const delay    = (transition.delay    || 0) * 1000;
+        const duration = (transition.duration || 0.3) * 1000;
+        const timer = setTimeout(() => {
+          el.style.transition = `opacity ${duration}ms ease, transform ${duration}ms ease`;
+          if (animate.opacity !== undefined) el.style.opacity   = animate.opacity;
+          if (animate.y       !== undefined) el.style.transform = "translateY(0)";
+        }, delay);
+        return () => clearTimeout(timer);
+      }, []);
+      return <div ref={ref} className={className} style={style} {...rest}>{children}</div>;
+    }
+
+    /* ── glitch typing text ── */
+    function GlitchText({ text, speed = 50 }) {
+      const [shown, setShown]   = useState("");
+      const [glitch, setGlitch] = useState(false);
+      useEffect(() => {
+        let i = 0;
+        const t = setInterval(() => {
+          if (i < text.length) { setShown(text.slice(0, ++i)); }
+          else {
+            clearInterval(t);
+            const g = setInterval(() => {
+              if (Math.random() > 0.95) {
+                setGlitch(true);
+                setTimeout(() => setGlitch(false), 100);
+              }
+            }, 150);
+            return () => clearInterval(g);
+          }
+        }, speed);
+        return () => clearInterval(t);
+      }, [text, speed]);
+      return (
+        <span className={glitch ? "text-red-500" : "text-green-400"}>
+          {shown}
+          {glitch && <span className="text-red-500">|</span>}
+        </span>
+      );
+    }
+
+    /* ── terminal line ── */
+    function TerminalLine({ text, type = "normal", delay = 0 }) {
+      const colors = {
+        normal:  "text-green-400",
+        error:   "text-red-500",
+        warning: "text-yellow-400",
+        info:    "text-blue-400",
+        success: "text-green-300",
+        command: "text-purple-400",
+      };
+      return (
+        <MotionDiv
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay, duration: 0.15 }}
+          className={`font-mono text-sm leading-6 ${colors[type] || colors.normal}`}
+        >
+          {text}
+        </MotionDiv>
+      );
+    }
+
+    /* ── animated progress bar ── */
+    function ProgressBar({ progress, label, color = "bg-green-500" }) {
+      const barRef = useRef(null);
+      useEffect(() => {
+        if (!barRef.current) return;
+        barRef.current.style.setProperty("--target-width", `${progress}%`);
+        barRef.current.style.animation = "barGrow 1.5s ease forwards";
+      }, [progress]);
+      return (
+        <div className="my-2">
+          <div className="flex justify-between text-xs text-white/60 mb-1">
+            <span>{label}</span><span>{Math.round(progress)}%</span>
+          </div>
+          <div className="h-2 bg-gray-800 rounded overflow-hidden">
+            <div ref={barRef} className={`h-full ${color}`} style={{ width: 0 }} />
+          </div>
+        </div>
+      );
+    }
+
+    /* ── matrix rain ── */
+    function MatrixRain() {
+      const canvasRef = useRef(null);
+      useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx    = canvas.getContext("2d");
+        const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+        resize();
+        window.addEventListener("resize", resize);
+
+        const chars   = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        const fs      = 14;
+        let cols      = Math.floor(canvas.width / fs);
+        let drops     = Array(cols).fill(1);
+
+        let id;
+        const draw = () => {
+          cols  = Math.floor(canvas.width / fs);
+          if (drops.length !== cols) drops = Array(cols).fill(1);
+          ctx.fillStyle = "rgba(0,0,0,0.05)";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = "#0f0";
+          ctx.font      = `${fs}px monospace`;
+          for (let i = 0; i < drops.length; i++) {
+            ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * fs, drops[i] * fs);
+            if (drops[i] * fs > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
+          }
+          id = requestAnimationFrame(draw);
+        };
+        draw();
+        return () => { cancelAnimationFrame(id); window.removeEventListener("resize", resize); };
+      }, []);
+      return <canvas ref={canvasRef} className="fixed inset-0 opacity-20" style={{ zIndex: -1 }} />;
+    }
+
+    /* ── helpers ── */
+    const POSITIVE = ["LEADER","CREATIVE","INTELLIGENT","AMBITIOUS","CHARISMATIC","INNOVATIVE","ANALYTICAL"];
+    const NEGATIVE = ["STUBBORN","IMPATIENT","SECRETIVE","PERFECTIONIST","RESTLESS"];
+    function pickTraits() {
+      const pos = [...POSITIVE].sort(() => Math.random() - .5).slice(0, 3);
+      const neg = [...NEGATIVE].sort(() => Math.random() - .5).slice(0, 2);
+      return [...pos, ...neg].sort(() => Math.random() - .5);
+    }
+    function randIP() {
+      return Array.from({length: 4}, () => Math.floor(Math.random() * 256)).join(".");
+    }
+    function randIPs() { return Array.from({length: 5}, randIP).join(" | "); }
+
+    /* ── main terminal ── */
+    function Terminal() {
+      const [stage,    setStage]    = useState(0);
+      const [progress, setProgress] = useState(0);
+      const [scanning, setScanning] = useState(false);
+
+      const traits = useRef(pickTraits());
+      const ips    = useRef(randIPs());
+
+      useEffect(() => {
+        const schedule = [
+          [1000,  () => { setStage(1); setProgress(14); }],
+          [2000,  () => { setStage(2); setProgress(28); }],
+          [3000,  () => { setStage(3); setProgress(42); }],
+          [2000,  () => { setStage(4); setProgress(57); }],
+          [1500,  () => { setStage(5); setProgress(71); }],
+          [2000,  () => { setStage(6); setProgress(85); }],
+          [3000,  () => { setStage(7); setProgress(100);}],
+        ];
+        let elapsed = 0;
+        const timers = schedule.map(([ms, fn]) => { elapsed += ms; return setTimeout(fn, elapsed); });
+        const scanTimer = setTimeout(() => setScanning(true), 4000);
+        return () => { timers.forEach(clearTimeout); clearTimeout(scanTimer); };
+      }, []);
+
+      return (
+        <div className="relative min-h-screen bg-black text-green-400 font-mono overflow-x-hidden p-4 md:p-8">
+          <MatrixRain />
+
+          <div className="relative max-w-4xl mx-auto" style={{ zIndex: 10 }}>
+
+            {/* header */}
+            <div className="mb-6">
+              <TerminalLine text={`[${TIMESTAMP}] SYSTEM INITIALIZED`}        type="info"    delay={0.0} />
+              <TerminalLine text={`[${TIMESTAMP}] SESSION: ${SESSION_ID}`}    type="info"    delay={0.1} />
+              <TerminalLine text={`[${TIMESTAMP}] USER: ${USER}`}             type="warning" delay={0.2} />
+              <TerminalLine text=""                                                           delay={0.3} />
+              <TerminalLine text="========================================" type="normal" delay={0.4} />
+              <TerminalLine text="  *** SECURE CONNECTION ESTABLISHED ***" type="success" delay={0.5} />
+              <TerminalLine text="========================================" type="normal" delay={0.6} />
+              <TerminalLine text=""                                                        delay={0.7} />
+            </div>
+
+            {/* stage 1 */}
+            {stage >= 1 && (
+              <div className="mb-4">
+                <TerminalLine text="[SYSTEM] Initializing neural interface..."  type="normal"  delay={0} />
+                <TerminalLine text="[SYSTEM] Loading personality matrix..."     type="normal"  delay={0.1} />
+                <ProgressBar  progress={progress} label="NEURAL INTERFACE" color="bg-green-500" />
+              </div>
+            )}
+
+            {/* stage 2 */}
+            {stage >= 2 && (
+              <div className="mb-4">
+                <TerminalLine text="[SCANNER] Searching for user signature..."         type="command" delay={0}   />
+                <TerminalLine text={`[SCANNER] FOUND: ${USER}`}                        type="success" delay={0.1} />
+                <TerminalLine text="[SCANNER] Analyzing digital footprint..."          type="command" delay={0.2} />
+                <TerminalLine text={`[NETWORK] TRACING: ${ips.current}`}               type="info"    delay={0.3} />
+              </div>
+            )}
+
+            {/* stage 3 */}
+            {stage >= 3 && (
+              <div className="mb-4">
+                <TerminalLine text="[BIO-SCAN] DNA sequence detected..."    type="warning" delay={0}   />
+                <TerminalLine text="[BIO-SCAN] Genetic markers: UNIQUE"     type="success" delay={0.1} />
+                <TerminalLine text="[BIO-SCAN] Cognitive patterns: ADVANCED" type="success" delay={0.2} />
+                <TerminalLine text=""                                                       delay={0.3} />
+              </div>
+            )}
+
+            {/* stage 4 — traits */}
+            {stage >= 4 && (
+              <div className="mb-4">
+                <TerminalLine text="[ANALYZER] Personality traits detected:" type="info" delay={0} />
+                {traits.current.map((t, i) => (
+                  <TerminalLine
+                    key={i}
+                    text={`  >> ${t}`}
+                    type={POSITIVE.includes(t) ? "success" : "warning"}
+                    delay={0.1 + i * 0.1}
+                  />
+                ))}
+                <TerminalLine text="" delay={0.8} />
+              </div>
+            )}
+
+            {/* stage 5 */}
+            {stage >= 5 && (
+              <div className="mb-4">
+                <TerminalLine text="[MEMORY] Scanning past experiences..."  type="command" delay={0}   />
+                <TerminalLine text="[MEMORY] Key events: CLASSIFIED"        type="warning" delay={0.1} />
+                <TerminalLine text="[MEMORY] Emotional patterns: COMPLEX"   type="info"    delay={0.2} />
+                <TerminalLine text=""                                                       delay={0.3} />
+              </div>
+            )}
+
+            {/* stage 6 */}
+            {stage >= 6 && (
+              <div className="mb-4">
+                <TerminalLine text="[ORACLE] Future probability analysis..."           type="command" delay={0}   />
+                <TerminalLine text="[ORACLE] SUCCESS RATE: 92.7%"                      type="success" delay={0.1} />
+                <TerminalLine text="[ORACLE] WARNING: UNEXPECTED OPPORTUNITY IN 3 DAYS" type="warning" delay={0.2} />
+                <TerminalLine text=""                                                                  delay={0.3} />
+              </div>
+            )}
+
+            {/* stage 7 — final */}
+            {stage >= 7 && (
+              <MotionDiv
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+                className="border border-green-500 rounded p-4 mb-4"
+              >
+                <TerminalLine text="========================================" type="normal"  delay={0}   />
+                <TerminalLine text="  *** ANALYSIS COMPLETE ***"              type="success" delay={0.1} />
+                <TerminalLine text="========================================" type="normal"  delay={0.2} />
+                <TerminalLine text=""                                                        delay={0.3} />
+                <TerminalLine text={`  USER: ${USER}`}       type="info"    delay={0.4} />
+                <TerminalLine text="  STATUS: APPROVED"      type="success" delay={0.5} />
+                <TerminalLine text="  LEVEL: ADMINISTRATOR"  type="success" delay={0.6} />
+                <TerminalLine text="  ACCESS: GRANTED"       type="success" delay={0.7} />
+                <TerminalLine text=""                                        delay={0.8} />
+                <TerminalLine text="  >>> SYSTEM MESSAGE: <<<"              type="command" delay={0.9} />
+                <TerminalLine text="  You have been selected for a special mission." type="warning" delay={1.0} />
+                <TerminalLine text="  Your unique code: ALISHER_2026_X7F3"           type="info"    delay={1.1} />
+                <TerminalLine text="  Do not share this with anyone."                type="error"   delay={1.2} />
+                <TerminalLine text="========================================"         type="normal"  delay={1.3} />
+              </MotionDiv>
+            )}
+
+            {/* scanning widget */}
+            {scanning && (
+              <MotionDiv
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.4 }}
+                className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-96"
+                style={{ zIndex: 20 }}
+              >
+                <div className="bg-black/90 backdrop-blur border border-green-500 rounded p-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full" style={{ animation: "pulse 1s infinite" }} />
+                    <span className="text-sm">SCANNING: {USER}</span>
+                    <div className="flex-1 h-1 bg-gray-700 rounded overflow-hidden">
+                      <div className="h-full bg-green-500" style={{ animation: "scanPing 2s ease-in-out infinite" }} />
+                    </div>
+                  </div>
+                  <div className="mt-2 text-xs text-white/60">
+                    <p>MEMORY: 98% | DNA: 100% | PERSONALITY: 95%</p>
+                  </div>
+                </div>
+              </MotionDiv>
+            )}
+
+            {/* secret footer */}
+            <MotionDiv
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 9, duration: 1 }}
+              className="text-center mt-16 mb-8"
+            >
+              <p className="text-xs text-white/40">[SYSTEM] This simulation was created just for you, Alisher.</p>
+              <p className="text-xs text-white/40">[SYSTEM] Session will self-destruct in 00:05:00</p>
+            </MotionDiv>
+
+          </div>
+        </div>
+      );
+    }
+
+    function App() { return <Terminal />; }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+</html>
