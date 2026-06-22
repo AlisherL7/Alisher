@@ -4,388 +4,488 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ALISHER_KARIMOV — SYSTEM ACCESS</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; background: #000; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
+    body {
+      background: #000;
+      color: #4ade80;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes barGrow {
-      from { width: 0%; }
-      to   { width: var(--target-width, 100%); }
-    }
-    @keyframes scanPing {
-      0%   { width: 0%; }
-      50%  { width: 100%; }
-      100% { width: 0%; }
-    }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0; }
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.4; }
-    }
-    .fade-in  { animation: fadeIn 0.4s ease forwards; }
-    .slide-up { animation: slideUp 0.4s ease forwards; }
 
-    /* scanline overlay for retro feel */
-    .scanline::after {
+    /* scanline overlay */
+    body::after {
       content: "";
       position: fixed;
       inset: 0;
       background: repeating-linear-gradient(
         to bottom,
-        transparent 0px,
-        transparent 2px,
-        rgba(0,0,0,0.15) 2px,
-        rgba(0,0,0,0.15) 4px
+        transparent 0px, transparent 2px,
+        rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 4px
       );
       pointer-events: none;
-      z-index: 5;
+      z-index: 100;
+    }
+
+    canvas#matrix {
+      position: fixed;
+      inset: 0;
+      opacity: 0.18;
+      z-index: 0;
+    }
+
+    #app {
+      position: relative;
+      z-index: 10;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+    }
+
+    /* terminal lines */
+    .line {
+      line-height: 1.7;
+      opacity: 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .line.show { opacity: 1; }
+
+    .c-green   { color: #4ade80; }
+    .c-green2  { color: #86efac; }
+    .c-blue    { color: #60a5fa; }
+    .c-yellow  { color: #facc15; }
+    .c-red     { color: #f87171; }
+    .c-purple  { color: #c084fc; }
+
+    /* glitch */
+    @keyframes glitch {
+      0%,100% { color: #4ade80; text-shadow: none; }
+      50%      { color: #f87171; text-shadow: 2px 0 #f87171, -2px 0 #60a5fa; }
+    }
+    .glitch { animation: glitch 0.12s infinite; }
+
+    /* progress bar */
+    .progress-wrap {
+      margin: 8px 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .progress-wrap.show { opacity: 1; }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 4px;
+    }
+    .progress-track {
+      height: 6px;
+      background: #1f2937;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #4ade80;
+      width: 0%;
+      transition: width 1.5s ease;
+      border-radius: 3px;
+    }
+
+    /* final box */
+    #final-box {
+      border: 1px solid #4ade80;
+      border-radius: 6px;
+      padding: 16px;
+      margin-top: 12px;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    #final-box.show { opacity: 1; }
+
+    /* scanning widget */
+    #scan-widget {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      width: 320px;
+      background: rgba(0,0,0,0.92);
+      border: 1px solid #4ade80;
+      border-radius: 8px;
+      padding: 12px;
+      z-index: 50;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.4s, transform 0.4s;
+    }
+    #scan-widget.show { opacity: 1; transform: translateY(0); }
+
+    .scan-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .scan-dot {
+      width: 8px; height: 8px;
+      background: #4ade80;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    @keyframes dotPulse {
+      0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+    }
+    .scan-dot { animation: dotPulse 1s infinite; }
+
+    .scan-bar-track {
+      flex: 1;
+      height: 4px;
+      background: #374151;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    @keyframes scanMove {
+      0%   { transform: translateX(-100%); }
+      50%  { transform: translateX(0%); }
+      100% { transform: translateX(100%); }
+    }
+    .scan-bar-fill {
+      height: 100%;
+      width: 100%;
+      background: #4ade80;
+      animation: scanMove 2s ease-in-out infinite;
+    }
+    .scan-stats {
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 8px;
+    }
+
+    /* cursor blink */
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+    #cursor { display: inline-block; animation: blink 0.8s infinite; }
+
+    /* footer */
+    #footer {
+      text-align: center;
+      margin-top: 60px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+      opacity: 0;
+      transition: opacity 1s;
+      line-height: 2;
+    }
+    #footer.show { opacity: 1; }
+
+    @media (max-width: 480px) {
+      #scan-widget { left: 12px; right: 12px; width: auto; }
     }
   </style>
 </head>
-<body class="scanline">
-  <div id="root"></div>
+<body>
 
-  <script type="text/babel">
-    const { useEffect, useRef, useState } = React;
+<canvas id="matrix"></canvas>
 
-    const USER       = "ALISHER_KARIMOV";
-    const SESSION_ID = "X7F3#9K2@L1M6";
-    const TIMESTAMP  = new Date().toISOString().slice(0, 19).replace("T", " ");
+<div id="app">
+  <div id="output"></div>
+  <span id="cursor">▮</span>
+  <div id="final-box"></div>
+  <div id="footer">
+    <p>[SYSTEM] This simulation was created just for you, Alisher.</p>
+    <p>[SYSTEM] Session will self-destruct in 00:05:00</p>
+  </div>
+</div>
 
-    /* ── tiny motion shim ── */
-    function MotionDiv({ children, className = "", style = {}, initial = {}, animate = {}, transition = {}, ...rest }) {
-      const ref = useRef(null);
-      useEffect(() => {
-        const el = ref.current;
-        if (!el) return;
-        // apply initial state immediately
-        if (initial.opacity !== undefined) el.style.opacity = initial.opacity;
-        if (initial.y       !== undefined) el.style.transform = `translateY(${initial.y}px)`;
-        const delay    = (transition.delay    || 0) * 1000;
-        const duration = (transition.duration || 0.3) * 1000;
-        const timer = setTimeout(() => {
-          el.style.transition = `opacity ${duration}ms ease, transform ${duration}ms ease`;
-          if (animate.opacity !== undefined) el.style.opacity   = animate.opacity;
-          if (animate.y       !== undefined) el.style.transform = "translateY(0)";
-        }, delay);
-        return () => clearTimeout(timer);
-      }, []);
-      return <div ref={ref} className={className} style={style} {...rest}>{children}</div>;
+<div id="scan-widget">
+  <div class="scan-row">
+    <div class="scan-dot"></div>
+    <span style="font-size:13px;">SCANNING: ALISHER_KARIMOV</span>
+    <div class="scan-bar-track"><div class="scan-bar-fill"></div></div>
+  </div>
+  <div class="scan-stats">MEMORY: 98% &nbsp;|&nbsp; DNA: 100% &nbsp;|&nbsp; PERSONALITY: 95%</div>
+</div>
+
+<script>
+/* ── Matrix Rain ── */
+(function() {
+  const canvas = document.getElementById('matrix');
+  const ctx    = canvas.getContext('2d');
+  const chars  = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const fs     = 14;
+  let cols, drops, animId;
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    cols  = Math.floor(canvas.width / fs);
+    drops = Array(cols).fill(1);
+  }
+
+  function draw() {
+    ctx.fillStyle = 'rgba(0,0,0,0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#00ff41';
+    ctx.font = fs + 'px monospace';
+    for (let i = 0; i < drops.length; i++) {
+      const ch = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(ch, i * fs, drops[i] * fs);
+      if (drops[i] * fs > canvas.height && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
     }
+    animId = requestAnimationFrame(draw);
+  }
 
-    /* ── glitch typing text ── */
-    function GlitchText({ text, speed = 50 }) {
-      const [shown, setShown]   = useState("");
-      const [glitch, setGlitch] = useState(false);
-      useEffect(() => {
-        let i = 0;
-        const t = setInterval(() => {
-          if (i < text.length) { setShown(text.slice(0, ++i)); }
-          else {
-            clearInterval(t);
-            const g = setInterval(() => {
-              if (Math.random() > 0.95) {
-                setGlitch(true);
-                setTimeout(() => setGlitch(false), 100);
-              }
-            }, 150);
-            return () => clearInterval(g);
-          }
-        }, speed);
-        return () => clearInterval(t);
-      }, [text, speed]);
-      return (
-        <span className={glitch ? "text-red-500" : "text-green-400"}>
-          {shown}
-          {glitch && <span className="text-red-500">|</span>}
-        </span>
-      );
+  resize();
+  window.addEventListener('resize', resize);
+  draw();
+})();
+
+/* ── Terminal Engine ── */
+const USER       = 'ALISHER_KARIMOV';
+const SESSION_ID = 'X7F3#9K2@L1M6';
+const NOW        = new Date().toISOString().slice(0,19).replace('T',' ');
+const out        = document.getElementById('output');
+const finalBox   = document.getElementById('final-box');
+const footer     = document.getElementById('footer');
+const scanWidget = document.getElementById('scan-widget');
+
+// queue of actions: {type, ...}
+const queue = [];
+let running = false;
+
+function enqueue(item) { queue.push(item); if (!running) processQueue(); }
+
+function processQueue() {
+  if (!queue.length) { running = false; return; }
+  running = true;
+  const item = queue.shift();
+
+  if (item.type === 'line') {
+    printLine(item.text, item.cls, item.typeSpeed || 0, () => processQueue());
+  } else if (item.type === 'blank') {
+    const d = document.createElement('div');
+    d.style.height = '6px';
+    out.appendChild(d);
+    processQueue();
+  } else if (item.type === 'delay') {
+    setTimeout(() => processQueue(), item.ms);
+  } else if (item.type === 'progress') {
+    showProgress(item.label, item.pct, () => processQueue());
+  } else if (item.type === 'final') {
+    showFinal(() => processQueue());
+  } else if (item.type === 'scan') {
+    scanWidget.classList.add('show');
+    processQueue();
+  } else if (item.type === 'footer') {
+    footer.classList.add('show');
+    running = false;
+  }
+}
+
+function printLine(text, cls, speed, cb) {
+  const div = document.createElement('div');
+  div.className = 'line show ' + (cls || 'c-green');
+  out.appendChild(div);
+  div.scrollIntoView({ block: 'end', behavior: 'smooth' });
+
+  if (!speed) {
+    div.textContent = text;
+    cb();
+    return;
+  }
+
+  let i = 0;
+  function tick() {
+    div.textContent = text.slice(0, ++i);
+    div.scrollIntoView({ block: 'end', behavior: 'smooth' });
+    if (i < text.length) setTimeout(tick, speed);
+    else {
+      // random glitch after typing
+      let glitchCount = 0;
+      const g = setInterval(() => {
+        if (Math.random() > 0.93) {
+          div.classList.add('glitch');
+          setTimeout(() => div.classList.remove('glitch'), 100);
+          glitchCount++;
+        }
+        if (glitchCount > 2) clearInterval(g);
+      }, 200);
+      cb();
     }
+  }
+  tick();
+}
 
-    /* ── terminal line ── */
-    function TerminalLine({ text, type = "normal", delay = 0 }) {
-      const colors = {
-        normal:  "text-green-400",
-        error:   "text-red-500",
-        warning: "text-yellow-400",
-        info:    "text-blue-400",
-        success: "text-green-300",
-        command: "text-purple-400",
-      };
-      return (
-        <MotionDiv
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay, duration: 0.15 }}
-          className={`font-mono text-sm leading-6 ${colors[type] || colors.normal}`}
-        >
-          {text}
-        </MotionDiv>
-      );
+function showProgress(label, pct, cb) {
+  const wrap = document.createElement('div');
+  wrap.className = 'progress-wrap';
+  wrap.innerHTML = `
+    <div class="progress-label"><span>${label}</span><span>${pct}%</span></div>
+    <div class="progress-track"><div class="progress-fill" id="pf-${label.replace(/\s/g,'')}"></div></div>
+  `;
+  out.appendChild(wrap);
+  requestAnimationFrame(() => {
+    wrap.classList.add('show');
+    setTimeout(() => {
+      const fill = wrap.querySelector('.progress-fill');
+      fill.style.width = pct + '%';
+      setTimeout(cb, 1600);
+    }, 50);
+  });
+}
+
+function showFinal(cb) {
+  const lines = [
+    { t: '========================================', cls: 'c-green'  },
+    { t: '  *** ANALYSIS COMPLETE ***',              cls: 'c-green2' },
+    { t: '========================================', cls: 'c-green'  },
+    { t: '',                                          cls: ''         },
+    { t: `  USER: ${USER}`,                           cls: 'c-blue'   },
+    { t: '  STATUS: APPROVED',                        cls: 'c-green2' },
+    { t: '  LEVEL: ADMINISTRATOR',                    cls: 'c-green2' },
+    { t: '  ACCESS: GRANTED',                         cls: 'c-green2' },
+    { t: '',                                          cls: ''         },
+    { t: '  >>> SYSTEM MESSAGE: <<<',                 cls: 'c-purple' },
+    { t: '  You have been selected for a special mission.', cls: 'c-yellow' },
+    { t: '  Your unique code: ALISHER_2026_X7F3',    cls: 'c-blue'   },
+    { t: '  Do not share this with anyone.',          cls: 'c-red'    },
+    { t: '========================================', cls: 'c-green'  },
+  ];
+
+  finalBox.classList.add('show');
+
+  let i = 0;
+  function next() {
+    if (i >= lines.length) { cb(); return; }
+    const l = lines[i++];
+    if (!l.t) {
+      const d = document.createElement('div'); d.style.height = '6px';
+      finalBox.appendChild(d);
+      setTimeout(next, 50);
+      return;
     }
+    const div = document.createElement('div');
+    div.className = 'line show ' + l.cls;
+    div.textContent = l.t;
+    finalBox.appendChild(div);
+    setTimeout(next, 120);
+  }
+  next();
+}
 
-    /* ── animated progress bar ── */
-    function ProgressBar({ progress, label, color = "bg-green-500" }) {
-      const barRef = useRef(null);
-      useEffect(() => {
-        if (!barRef.current) return;
-        barRef.current.style.setProperty("--target-width", `${progress}%`);
-        barRef.current.style.animation = "barGrow 1.5s ease forwards";
-      }, [progress]);
-      return (
-        <div className="my-2">
-          <div className="flex justify-between text-xs text-white/60 mb-1">
-            <span>{label}</span><span>{Math.round(progress)}%</span>
-          </div>
-          <div className="h-2 bg-gray-800 rounded overflow-hidden">
-            <div ref={barRef} className={`h-full ${color}`} style={{ width: 0 }} />
-          </div>
-        </div>
-      );
-    }
+/* ── Random helpers ── */
+function randIP() { return Array.from({length:4}, () => Math.floor(Math.random()*256)).join('.'); }
+function randIPs() { return [randIP(), randIP(), randIP()].join(' | '); }
 
-    /* ── matrix rain ── */
-    function MatrixRain() {
-      const canvasRef = useRef(null);
-      useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx    = canvas.getContext("2d");
-        const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
-        resize();
-        window.addEventListener("resize", resize);
+const POSITIVE = ['LEADER','CREATIVE','INTELLIGENT','AMBITIOUS','CHARISMATIC','INNOVATIVE','ANALYTICAL'];
+const NEGATIVE = ['STUBBORN','IMPATIENT','SECRETIVE','PERFECTIONIST','RESTLESS'];
+function pickTraits() {
+  const pos = [...POSITIVE].sort(()=>Math.random()-.5).slice(0,3);
+  const neg = [...NEGATIVE].sort(()=>Math.random()-.5).slice(0,2);
+  return [...pos,...neg].sort(()=>Math.random()-.5);
+}
+const traits = pickTraits();
+const ips    = randIPs();
 
-        const chars   = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        const fs      = 14;
-        let cols      = Math.floor(canvas.width / fs);
-        let drops     = Array(cols).fill(1);
+/* ── Build script ── */
+function L(text, cls, speed) { enqueue({ type:'line', text, cls, typeSpeed: speed||0 }); }
+function B() { enqueue({ type:'blank' }); }
+function D(ms) { enqueue({ type:'delay', ms }); }
+function P(label, pct) { enqueue({ type:'progress', label, pct }); }
 
-        let id;
-        const draw = () => {
-          cols  = Math.floor(canvas.width / fs);
-          if (drops.length !== cols) drops = Array(cols).fill(1);
-          ctx.fillStyle = "rgba(0,0,0,0.05)";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          ctx.fillStyle = "#0f0";
-          ctx.font      = `${fs}px monospace`;
-          for (let i = 0; i < drops.length; i++) {
-            ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * fs, drops[i] * fs);
-            if (drops[i] * fs > canvas.height && Math.random() > 0.975) drops[i] = 0;
-            drops[i]++;
-          }
-          id = requestAnimationFrame(draw);
-        };
-        draw();
-        return () => { cancelAnimationFrame(id); window.removeEventListener("resize", resize); };
-      }, []);
-      return <canvas ref={canvasRef} className="fixed inset-0 opacity-20" style={{ zIndex: -1 }} />;
-    }
+// Header
+L(`[${NOW}] SYSTEM INITIALIZED`,        'c-blue');
+L(`[${NOW}] SESSION: ${SESSION_ID}`,    'c-blue');
+L(`[${NOW}] USER: ${USER}`,             'c-yellow');
+B();
+L('========================================');
+L('  *** SECURE CONNECTION ESTABLISHED ***', 'c-green2');
+L('========================================');
+B();
 
-    /* ── helpers ── */
-    const POSITIVE = ["LEADER","CREATIVE","INTELLIGENT","AMBITIOUS","CHARISMATIC","INNOVATIVE","ANALYTICAL"];
-    const NEGATIVE = ["STUBBORN","IMPATIENT","SECRETIVE","PERFECTIONIST","RESTLESS"];
-    function pickTraits() {
-      const pos = [...POSITIVE].sort(() => Math.random() - .5).slice(0, 3);
-      const neg = [...NEGATIVE].sort(() => Math.random() - .5).slice(0, 2);
-      return [...pos, ...neg].sort(() => Math.random() - .5);
-    }
-    function randIP() {
-      return Array.from({length: 4}, () => Math.floor(Math.random() * 256)).join(".");
-    }
-    function randIPs() { return Array.from({length: 5}, randIP).join(" | "); }
+D(800);
 
-    /* ── main terminal ── */
-    function Terminal() {
-      const [stage,    setStage]    = useState(0);
-      const [progress, setProgress] = useState(0);
-      const [scanning, setScanning] = useState(false);
+// Stage 1
+L('[SYSTEM] Initializing neural interface...', 'c-green',  28);
+D(300);
+L('[SYSTEM] Loading personality matrix...',    'c-green',  28);
+D(200);
+P('NEURAL INTERFACE', 35);
 
-      const traits = useRef(pickTraits());
-      const ips    = useRef(randIPs());
+D(1200);
 
-      useEffect(() => {
-        const schedule = [
-          [1000,  () => { setStage(1); setProgress(14); }],
-          [2000,  () => { setStage(2); setProgress(28); }],
-          [3000,  () => { setStage(3); setProgress(42); }],
-          [2000,  () => { setStage(4); setProgress(57); }],
-          [1500,  () => { setStage(5); setProgress(71); }],
-          [2000,  () => { setStage(6); setProgress(85); }],
-          [3000,  () => { setStage(7); setProgress(100);}],
-        ];
-        let elapsed = 0;
-        const timers = schedule.map(([ms, fn]) => { elapsed += ms; return setTimeout(fn, elapsed); });
-        const scanTimer = setTimeout(() => setScanning(true), 4000);
-        return () => { timers.forEach(clearTimeout); clearTimeout(scanTimer); };
-      }, []);
+// Stage 2
+L('[SCANNER] Searching for user signature...', 'c-purple', 24);
+D(400);
+L(`[SCANNER] FOUND: ${USER}`,                 'c-green2', 20);
+D(200);
+L('[SCANNER] Analyzing digital footprint...',  'c-purple', 24);
+D(200);
+L(`[NETWORK] TRACING: ${ips}`,                'c-blue',   16);
+B();
 
-      return (
-        <div className="relative min-h-screen bg-black text-green-400 font-mono overflow-x-hidden p-4 md:p-8">
-          <MatrixRain />
+D(1200);
 
-          <div className="relative max-w-4xl mx-auto" style={{ zIndex: 10 }}>
+// Stage 3
+L('[BIO-SCAN] DNA sequence detected...',     'c-yellow', 24);
+D(300);
+L('[BIO-SCAN] Genetic markers: UNIQUE',      'c-green2', 20);
+D(200);
+L('[BIO-SCAN] Cognitive patterns: ADVANCED', 'c-green2', 20);
+B();
+P('DNA ANALYSIS', 72);
 
-            {/* header */}
-            <div className="mb-6">
-              <TerminalLine text={`[${TIMESTAMP}] SYSTEM INITIALIZED`}        type="info"    delay={0.0} />
-              <TerminalLine text={`[${TIMESTAMP}] SESSION: ${SESSION_ID}`}    type="info"    delay={0.1} />
-              <TerminalLine text={`[${TIMESTAMP}] USER: ${USER}`}             type="warning" delay={0.2} />
-              <TerminalLine text=""                                                           delay={0.3} />
-              <TerminalLine text="========================================" type="normal" delay={0.4} />
-              <TerminalLine text="  *** SECURE CONNECTION ESTABLISHED ***" type="success" delay={0.5} />
-              <TerminalLine text="========================================" type="normal" delay={0.6} />
-              <TerminalLine text=""                                                        delay={0.7} />
-            </div>
+D(1000);
 
-            {/* stage 1 */}
-            {stage >= 1 && (
-              <div className="mb-4">
-                <TerminalLine text="[SYSTEM] Initializing neural interface..."  type="normal"  delay={0} />
-                <TerminalLine text="[SYSTEM] Loading personality matrix..."     type="normal"  delay={0.1} />
-                <ProgressBar  progress={progress} label="NEURAL INTERFACE" color="bg-green-500" />
-              </div>
-            )}
+// Stage 4
+L('[ANALYZER] Personality traits detected:', 'c-blue', 24);
+D(200);
+traits.forEach(t => {
+  const cls = POSITIVE.includes(t) ? 'c-green2' : 'c-yellow';
+  L(`  >> ${t}`, cls, 22);
+  enqueue({ type:'delay', ms: 180 });
+});
+B();
 
-            {/* stage 2 */}
-            {stage >= 2 && (
-              <div className="mb-4">
-                <TerminalLine text="[SCANNER] Searching for user signature..."         type="command" delay={0}   />
-                <TerminalLine text={`[SCANNER] FOUND: ${USER}`}                        type="success" delay={0.1} />
-                <TerminalLine text="[SCANNER] Analyzing digital footprint..."          type="command" delay={0.2} />
-                <TerminalLine text={`[NETWORK] TRACING: ${ips.current}`}               type="info"    delay={0.3} />
-              </div>
-            )}
+D(1000);
 
-            {/* stage 3 */}
-            {stage >= 3 && (
-              <div className="mb-4">
-                <TerminalLine text="[BIO-SCAN] DNA sequence detected..."    type="warning" delay={0}   />
-                <TerminalLine text="[BIO-SCAN] Genetic markers: UNIQUE"     type="success" delay={0.1} />
-                <TerminalLine text="[BIO-SCAN] Cognitive patterns: ADVANCED" type="success" delay={0.2} />
-                <TerminalLine text=""                                                       delay={0.3} />
-              </div>
-            )}
+// Stage 5
+L('[MEMORY] Scanning past experiences...', 'c-purple', 24);
+D(300);
+L('[MEMORY] Key events: CLASSIFIED',       'c-yellow', 20);
+D(200);
+L('[MEMORY] Emotional patterns: COMPLEX',  'c-blue',   20);
+B();
+P('MEMORY SCAN', 89);
 
-            {/* stage 4 — traits */}
-            {stage >= 4 && (
-              <div className="mb-4">
-                <TerminalLine text="[ANALYZER] Personality traits detected:" type="info" delay={0} />
-                {traits.current.map((t, i) => (
-                  <TerminalLine
-                    key={i}
-                    text={`  >> ${t}`}
-                    type={POSITIVE.includes(t) ? "success" : "warning"}
-                    delay={0.1 + i * 0.1}
-                  />
-                ))}
-                <TerminalLine text="" delay={0.8} />
-              </div>
-            )}
+D(1000);
 
-            {/* stage 5 */}
-            {stage >= 5 && (
-              <div className="mb-4">
-                <TerminalLine text="[MEMORY] Scanning past experiences..."  type="command" delay={0}   />
-                <TerminalLine text="[MEMORY] Key events: CLASSIFIED"        type="warning" delay={0.1} />
-                <TerminalLine text="[MEMORY] Emotional patterns: COMPLEX"   type="info"    delay={0.2} />
-                <TerminalLine text=""                                                       delay={0.3} />
-              </div>
-            )}
+// Stage 6
+L('[ORACLE] Future probability analysis...', 'c-purple', 24);
+D(400);
+L('[ORACLE] SUCCESS RATE: 92.7%',           'c-green2', 20);
+D(300);
+L('[ORACLE] WARNING: UNEXPECTED OPPORTUNITY IN 3 DAYS', 'c-yellow', 18);
+B();
+P('PREDICTION ENGINE', 100);
 
-            {/* stage 6 */}
-            {stage >= 6 && (
-              <div className="mb-4">
-                <TerminalLine text="[ORACLE] Future probability analysis..."           type="command" delay={0}   />
-                <TerminalLine text="[ORACLE] SUCCESS RATE: 92.7%"                      type="success" delay={0.1} />
-                <TerminalLine text="[ORACLE] WARNING: UNEXPECTED OPPORTUNITY IN 3 DAYS" type="warning" delay={0.2} />
-                <TerminalLine text=""                                                                  delay={0.3} />
-              </div>
-            )}
+D(1200);
 
-            {/* stage 7 — final */}
-            {stage >= 7 && (
-              <MotionDiv
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-                className="border border-green-500 rounded p-4 mb-4"
-              >
-                <TerminalLine text="========================================" type="normal"  delay={0}   />
-                <TerminalLine text="  *** ANALYSIS COMPLETE ***"              type="success" delay={0.1} />
-                <TerminalLine text="========================================" type="normal"  delay={0.2} />
-                <TerminalLine text=""                                                        delay={0.3} />
-                <TerminalLine text={`  USER: ${USER}`}       type="info"    delay={0.4} />
-                <TerminalLine text="  STATUS: APPROVED"      type="success" delay={0.5} />
-                <TerminalLine text="  LEVEL: ADMINISTRATOR"  type="success" delay={0.6} />
-                <TerminalLine text="  ACCESS: GRANTED"       type="success" delay={0.7} />
-                <TerminalLine text=""                                        delay={0.8} />
-                <TerminalLine text="  >>> SYSTEM MESSAGE: <<<"              type="command" delay={0.9} />
-                <TerminalLine text="  You have been selected for a special mission." type="warning" delay={1.0} />
-                <TerminalLine text="  Your unique code: ALISHER_2026_X7F3"           type="info"    delay={1.1} />
-                <TerminalLine text="  Do not share this with anyone."                type="error"   delay={1.2} />
-                <TerminalLine text="========================================"         type="normal"  delay={1.3} />
-              </MotionDiv>
-            )}
+// Show scan widget
+enqueue({ type:'scan' });
 
-            {/* scanning widget */}
-            {scanning && (
-              <MotionDiv
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.4 }}
-                className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-96"
-                style={{ zIndex: 20 }}
-              >
-                <div className="bg-black/90 backdrop-blur border border-green-500 rounded p-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full" style={{ animation: "pulse 1s infinite" }} />
-                    <span className="text-sm">SCANNING: {USER}</span>
-                    <div className="flex-1 h-1 bg-gray-700 rounded overflow-hidden">
-                      <div className="h-full bg-green-500" style={{ animation: "scanPing 2s ease-in-out infinite" }} />
-                    </div>
-                  </div>
-                  <div className="mt-2 text-xs text-white/60">
-                    <p>MEMORY: 98% | DNA: 100% | PERSONALITY: 95%</p>
-                  </div>
-                </div>
-              </MotionDiv>
-            )}
+D(500);
 
-            {/* secret footer */}
-            <MotionDiv
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 9, duration: 1 }}
-              className="text-center mt-16 mb-8"
-            >
-              <p className="text-xs text-white/40">[SYSTEM] This simulation was created just for you, Alisher.</p>
-              <p className="text-xs text-white/40">[SYSTEM] Session will self-destruct in 00:05:00</p>
-            </MotionDiv>
+// Stage 7 - final
+enqueue({ type:'final' });
 
-          </div>
-        </div>
-      );
-    }
+D(1500);
 
-    function App() { return <Terminal />; }
-
-    const root = ReactDOM.createRoot(document.getElementById("root"));
-    root.render(<App />);
-  </script>
+// Footer
+enqueue({ type:'footer' });
+</script>
 </body>
 </html>
