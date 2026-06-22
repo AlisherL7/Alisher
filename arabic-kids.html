@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>حروفي ✨ — Учим арабский!</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box; margin: 0; padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none; -webkit-user-select: none;
+    }
+
+    :root { --c1: #FF6B6B; --c2: #FF8E53; }
+
+    body {
+      font-family: 'Geeza Pro', 'Arabic Typesetting', 'Amiri', Arial, sans-serif;
+      height: 100dvh; height: 100vh;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: space-between;
+      background: linear-gradient(135deg, var(--c1), var(--c2));
+      transition: background 0.7s ease;
+      padding: 16px 16px 20px;
+      gap: 10px;
+    }
+
+    /* ── floating bubbles bg ── */
+    .bubble {
+      position: fixed;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      animation: rise linear infinite;
+      pointer-events: none;
+    }
+    @keyframes rise {
+      0%   { transform: translateY(110vh) scale(0.5); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 0.8; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
+    /* ── START screen ── */
+    #startScreen {
+      position: fixed; inset: 0; z-index: 200;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 24px;
+      transition: opacity 0.5s, visibility 0.5s;
+    }
+    #startScreen.hidden { opacity: 0; visibility: hidden; }
+
+    .start-title {
+      font-size: clamp(36px, 10vw, 64px);
+      color: white;
+      text-align: center;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      line-height: 1.3;
+      direction: rtl;
+    }
+    .start-sub {
+      font-size: clamp(16px, 4vw, 22px);
+      color: rgba(255,255,255,0.85);
+      text-align: center;
+    }
+    .start-btn {
+      margin-top: 12px;
+      padding: 20px 56px;
+      background: white;
+      color: #764ba2;
+      border: none;
+      border-radius: 50px;
+      font-size: clamp(22px, 6vw, 32px);
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+      animation: pulse 1.6s ease-in-out infinite;
+      font-family: inherit;
+    }
+    @keyframes pulse {
+      0%,100% { transform: scale(1); box-shadow: 0 8px 30px rgba(0,0,0,0.25); }
+      50%      { transform: scale(1.06); box-shadow: 0 12px 40px rgba(0,0,0,0.35); }
+    }
+
+    /* ── progress header ── */
+    .header {
+      width: 100%;
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px;
+    }
+    .progress-pill {
+      background: rgba(255,255,255,0.28);
+      border-radius: 20px;
+      padding: 6px 20px;
+      color: white;
+      font-size: clamp(15px, 4vw, 20px);
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .star-icon { font-size: 22px; }
+
+    /* ── main card area ── */
+    .main {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    /* ── BIG letter ── */
+    .letter-wrap {
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .letter {
+      font-size: clamp(130px, 28vw, 200px);
+      color: white;
+      line-height: 1;
+      text-shadow:
+        0 6px 0 rgba(0,0,0,0.15),
+        0 10px 30px rgba(0,0,0,0.25);
+      display: block;
+      direction: rtl;
+    }
+
+    /* ── letter name ── */
+    .letter-name {
+      font-size: clamp(26px, 6.5vw, 44px);
+      color: rgba(255,255,255,0.97);
+      font-weight: bold;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      direction: rtl;
+      text-align: center;
+    }
+
+    /* ── emoji ── */
+    .emoji-wrap {
+      font-size: clamp(64px, 16vw, 100px);
+      cursor: pointer;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+      line-height: 1.1;
+    }
+
+    /* ── word chip ── */
+    .word-chip {
+      background: rgba(255,255,255,0.25);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-radius: 30px;
+      padding: 8px 28px;
+      font-size: clamp(22px, 5.5vw, 34px);
+      color: white;
+      direction: rtl;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+
+    /* ── navigation ── */
+    .nav {
+      width: 100%;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px;
+    }
+    .nav-btn {
+      width: 68px; height: 68px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.28);
+      border: 3px solid rgba(255,255,255,0.55);
+      color: white;
+      font-size: 26px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: transform 0.12s, background 0.12s;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .nav-btn:active  { transform: scale(0.85); background: rgba(255,255,255,0.45); }
+    .nav-btn:disabled { opacity: 0.28; pointer-events: none; }
+
+    .sound-btn {
+      flex: 1;
+      height: 56px;
+      border-radius: 28px;
+      background: rgba(255,255,255,0.28);
+      border: 3px solid rgba(255,255,255,0.55);
+      color: white;
+      font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: transform 0.12s, background 0.12s;
+    }
+    .sound-btn:active { transform: scale(0.93); background: rgba(255,255,255,0.45); }
+
+    /* ── animations ── */
+    @keyframes bounceIn {
+      0%   { transform: scale(0.3) rotate(-15deg); opacity: 0; }
+      50%  { transform: scale(1.18) rotate(6deg); }
+      70%  { transform: scale(0.93) rotate(-3deg); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    @keyframes slideFromRight {
+      from { transform: translateX(110vw) rotate(8deg); opacity: 0; }
+      to   { transform: translateX(0) rotate(0); opacity: 1; }
+    }
+    @keyframes slideFromLeft {
+      from { transform: translateX(-110vw) rotate(-8deg); opacity: 0; }
+      to   { transform: translateX(0) rotate(0); opacity: 1; }
+    }
+    @keyframes tada {
+      0%,100% { transform: scale(1) rotate(0); }
+      15%      { transform: scale(1.2) rotate(-8deg); }
+      30%      { transform: scale(1.2) rotate(8deg); }
+      45%      { transform: scale(1.1) rotate(-5deg); }
+      60%      { transform: scale(1.1) rotate(5deg); }
+      75%      { transform: scale(1.05) rotate(-2deg); }
+    }
+    @keyframes soundPulse {
+      0%,100% { transform: scale(1); }
+      50%      { transform: scale(1.18); }
+    }
+    .anim-right  { animation: slideFromRight 0.42s cubic-bezier(.25,.46,.45,.94) both; }
+    .anim-left   { animation: slideFromLeft  0.42s cubic-bezier(.25,.46,.45,.94) both; }
+    .anim-bounce { animation: bounceIn 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+    .anim-tada   { animation: tada 0.55s ease both; }
+    .anim-sound  { animation: soundPulse 0.45s ease infinite; }
+
+    /* ── sparkle particle ── */
+    .spark {
+      position: fixed;
+      pointer-events: none;
+      z-index: 999;
+      animation: sparkFly 0.9s ease forwards;
+      font-size: 22px;
+    }
+    @keyframes sparkFly {
+      0%   { transform: translate(-50%,-50%) scale(1.2); opacity: 1; }
+      100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0); opacity: 0; }
+    }
+
+    /* ── celebration overlay ── */
+    #celebration {
+      position: fixed; inset: 0; z-index: 300;
+      background: rgba(0,0,0,0.55);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 20px;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.4s, visibility 0.4s;
+    }
+    #celebration.show { opacity: 1; visibility: visible; }
+    .cel-text {
+      font-size: clamp(40px, 14vw, 80px);
+      color: white;
+      text-align: center;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      direction: rtl;
+      line-height: 1.3;
+      animation: tada 0.7s ease 0.3s both;
+    }
+    .cel-btn {
+      padding: 16px 48px;
+      background: white;
+      color: #5F27CD;
+      border: none; border-radius: 50px;
+      font-size: 22px; font-weight: bold;
+      cursor: pointer;
+      font-family: inherit;
+      direction: rtl;
+    }
+
+    /* no voice warning */
+    #noVoice {
+      position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,0.7); color: white;
+      padding: 10px 20px; border-radius: 12px;
+      font-size: 13px; text-align: center;
+      opacity: 0; transition: opacity 0.3s;
+      z-index: 100; white-space: nowrap;
+      pointer-events: none;
+    }
+    #noVoice.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<!-- START SCREEN -->
+<div id="startScreen">
+  <div class="start-title">حروفي ✨<br><span style="font-size:0.6em">Арабские буквы</span></div>
+  <div class="start-sub">для детей · 28 букв · с озвучкой</div>
+  <button class="start-btn" id="startBtn">▶ Начать!</button>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <span class="star-icon">⭐</span>
+  <div class="progress-pill" id="progressPill">١ / ٢٨</div>
+  <span class="star-icon">⭐</span>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main" id="main">
+  <div class="letter-wrap" id="letterWrap">
+    <span class="letter" id="letterChar">ا</span>
+  </div>
+  <div class="letter-name" id="letterName">ألف</div>
+  <div class="emoji-wrap" id="letterEmoji">🦁</div>
+  <div class="word-chip" id="letterWord">أسد</div>
+</div>
+
+<!-- NAVIGATION -->
+<div class="nav">
+  <button class="nav-btn" id="prevBtn" disabled>◀</button>
+  <button class="sound-btn" id="soundBtn">
+    <span id="soundIcon">🔊</span>
+    <span>Послушать</span>
+  </button>
+  <button class="nav-btn" id="nextBtn">▶</button>
+</div>
+
+<!-- CELEBRATION -->
+<div id="celebration">
+  <div class="cel-text">🎉 أحسنت! 🎉<br><span style="font-size:0.55em">Молодец! Все 28 букв!</span></div>
+  <button class="cel-btn" id="restartBtn">🔄 Ещё раз!</button>
+</div>
+
+<div id="noVoice">Арабский голос не найден.<br>Установите арабский TTS в настройках.</div>
+
+<script>
+/* ── Data: 28 Arabic letters ── */
+const LETTERS = [
+  { l:'ا', name:'ألِف',  word:'أَسَد',    emoji:'🦁', color:['#FF6B6B','#FF8E53'] },
+  { l:'ب', name:'بَاء',  word:'بَطَّة',   emoji:'🦆', color:['#FF9F43','#FFDA79'] },
+  { l:'ت', name:'تَاء',  word:'تُفَّاح',  emoji:'🍎', color:['#00B894','#55EFC4'] },
+  { l:'ث', name:'ثَاء',  word:'ثَعْلَب',  emoji:'🦊', color:['#E55039','#F39C12'] },
+  { l:'ج', name:'جِيم',  word:'جَمَل',    emoji:'🐪', color:['#48DBFB','#0ABDE3'] },
+  { l:'ح', name:'حَاء',  word:'حِصَان',   emoji:'🐴', color:['#54A0FF','#2E86DE'] },
+  { l:'خ', name:'خَاء',  word:'خَرُوف',   emoji:'🐑', color:['#A29BFE','#6C5CE7'] },
+  { l:'د', name:'دَال',  word:'دُبّ',     emoji:'🐻', color:['#FF9F43','#E17055'] },
+  { l:'ذ', name:'ذَال',  word:'ذَرَة',    emoji:'🌽', color:['#74B9FF','#0984E3'] },
+  { l:'ر', name:'رَاء',  word:'رَبِيع',   emoji:'🌷', color:['#FF6B6B','#D63031'] },
+  { l:'ز', name:'زَاي',  word:'زَهْرَة',  emoji:'🌸', color:['#FD79A8','#E84393'] },
+  { l:'س', name:'سِين',  word:'سَمَكَة',  emoji:'🐟', color:['#48DBFB','#00CEC9'] },
+  { l:'ش', name:'شِين',  word:'شَمْس',    emoji:'☀️', color:['#FECA57','#F0932B'] },
+  { l:'ص', name:'صَاد',  word:'صَقْر',    emoji:'🦅', color:['#54A0FF','#0984E3'] },
+  { l:'ض', name:'ضَاد',  word:'ضُفْدَع',  emoji:'🐸', color:['#00B894','#009432'] },
+  { l:'ط', name:'طَاء',  word:'طَمَاطِم', emoji:'🍅', color:['#FF6B6B','#B71540'] },
+  { l:'ظ', name:'ظَاء',  word:'ظَبْي',    emoji:'🦌', color:['#A29BFE','#5F27CD'] },
+  { l:'ع', name:'عَيْن', word:'عِنَب',    emoji:'🍇', color:['#6C5CE7','#A29BFE'] },
+  { l:'غ', name:'غَيْن', word:'غَابَة',   emoji:'🌳', color:['#00B894','#27AE60'] },
+  { l:'ف', name:'فَاء',  word:'فَرَاشَة', emoji:'🦋', color:['#FD79A8','#6C5CE7'] },
+  { l:'ق', name:'قَاف',  word:'قِطَّة',   emoji:'🐱', color:['#FDCB6E','#E17055'] },
+  { l:'ك', name:'كَاف',  word:'كَلْب',    emoji:'🐶', color:['#74B9FF','#2E86DE'] },
+  { l:'ل', name:'لَام',  word:'لَيْمُون', emoji:'🍋', color:['#FECA57','#F9CA24'] },
+  { l:'م', name:'مِيم',  word:'مَوْز',    emoji:'🍌', color:['#FF9F43','#FDCB6E'] },
+  { l:'ن', name:'نُون',  word:'نَجْمَة',  emoji:'⭐', color:['#54A0FF','#5352ED'] },
+  { l:'ه', name:'هَاء',  word:'هِلَال',   emoji:'🌙', color:['#1A237E','#42A5F5'] },
+  { l:'و', name:'وَاو',  word:'وَرْدَة',  emoji:'🌹', color:['#FF6B6B','#C0392B'] },
+  { l:'ي', name:'يَاء',  word:'يَد',      emoji:'🤚', color:['#FF9F43','#EE5A24'] },
+];
+
+/* ── Arabic numeral converter ── */
+const AR = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+const toAr = n => String(n).split('').map(d => AR[+d]).join('');
+
+/* ── DOM refs ── */
+const body         = document.body;
+const main         = document.getElementById('main');
+const letterChar   = document.getElementById('letterChar');
+const letterName   = document.getElementById('letterName');
+const letterEmoji  = document.getElementById('letterEmoji');
+const letterWord   = document.getElementById('letterWord');
+const progressPill = document.getElementById('progressPill');
+const prevBtn      = document.getElementById('prevBtn');
+const nextBtn      = document.getElementById('nextBtn');
+const soundBtn     = document.getElementById('soundBtn');
+const soundIcon    = document.getElementById('soundIcon');
+const startScreen  = document.getElementById('startScreen');
+const celebration  = document.getElementById('celebration');
+const noVoice      = document.getElementById('noVoice');
+
+/* ── State ── */
+let idx       = 0;
+let arabicVoice = null;
+let speaking  = false;
+
+/* ── Voices ── */
+function loadVoices() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  arabicVoice  = voices.find(v => v.lang.startsWith('ar')) || null;
+}
+if (window.speechSynthesis) {
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+/* ── Speak ── */
+function speak(text, onDone) {
+  if (!window.speechSynthesis) { onDone && onDone(); return; }
+  window.speechSynthesis.cancel();
+  speaking = true;
+  soundIcon.textContent = '🔈';
+  soundBtn.classList.add('anim-sound');
+
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang  = 'ar-SA';
+  u.rate  = 0.62;
+  u.pitch = 1.15;
+  if (arabicVoice) u.voice = arabicVoice;
+
+  u.onend = u.onerror = () => {
+    speaking = false;
+    soundIcon.textContent = '🔊';
+    soundBtn.classList.remove('anim-sound');
+    onDone && onDone();
+  };
+  window.speechSynthesis.speak(u);
+}
+
+function speakCurrent() {
+  const d = LETTERS[idx];
+  speak(d.name, () => {
+    setTimeout(() => speak(d.word), 550);
+  });
+}
+
+/* ── Render letter ── */
+function render(dir) {
+  const d = LETTERS[idx];
+
+  // background
+  body.style.background = `linear-gradient(135deg, ${d.color[0]}, ${d.color[1]})`;
+
+  // slide animation
+  main.style.animation = 'none';
+  void main.offsetHeight;
+  main.style.animation = dir === 'right'
+    ? 'slideFromRight 0.42s cubic-bezier(.25,.46,.45,.94) both'
+    : dir === 'left'
+    ? 'slideFromLeft  0.42s cubic-bezier(.25,.46,.45,.94) both'
+    : 'bounceIn 0.5s cubic-bezier(.36,.07,.19,.97) both';
+
+  letterChar.textContent  = d.l;
+  letterName.textContent  = d.name;
+  letterEmoji.textContent = d.emoji;
+  letterWord.textContent  = d.word;
+  progressPill.textContent = `${toAr(idx + 1)} / ${toAr(28)}`;
+
+  prevBtn.disabled = idx === 0;
+  nextBtn.disabled = idx === LETTERS.length - 1;
+}
+
+/* ── Navigation ── */
+function goTo(newIdx, dir) {
+  if (newIdx < 0 || newIdx >= LETTERS.length) return;
+  const direction = dir || (newIdx > idx ? 'right' : 'left');
+  idx = newIdx;
+  render(direction);
+  speakCurrent();
+
+  if (idx === LETTERS.length - 1) {
+    setTimeout(showCelebration, 4000);
+  }
+}
+
+prevBtn.onclick = () => goTo(idx - 1);
+nextBtn.onclick = () => goTo(idx + 1);
+soundBtn.onclick = speakCurrent;
+
+/* ── Tap letter → sparkles + sound ── */
+document.getElementById('letterWrap').onclick = e => {
+  spawnSparks(e.clientX, e.clientY, 10);
+  letterChar.style.animation = 'none';
+  void letterChar.offsetHeight;
+  letterChar.style.animation = 'tada 0.55s ease both';
+  speakCurrent();
+};
+
+document.getElementById('letterEmoji').onclick = e => {
+  spawnSparks(e.clientX, e.clientY, 6);
+  speakCurrent();
+};
+
+/* ── Sparkle particles ── */
+const SPARKS = ['⭐','✨','🌟','💫','🎉','🌈','💥'];
+function spawnSparks(cx, cy, count) {
+  for (let i = 0; i < count; i++) {
+    const el  = document.createElement('div');
+    el.className = 'spark';
+    const angle = (i / count) * 360 + Math.random() * 30;
+    const dist  = 70 + Math.random() * 90;
+    const rad   = angle * Math.PI / 180;
+    el.style.cssText = `
+      left:${cx}px; top:${cy}px;
+      --tx:${Math.cos(rad)*dist}px;
+      --ty:${Math.sin(rad)*dist}px;
+      font-size:${18+Math.random()*14}px;
+      animation-delay:${Math.random()*0.15}s;
+    `;
+    el.textContent = SPARKS[Math.floor(Math.random() * SPARKS.length)];
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1100);
+  }
+}
+
+/* ── Swipe support ── */
+let touchX = 0, touchY = 0;
+document.addEventListener('touchstart', e => {
+  touchX = e.touches[0].clientX;
+  touchY = e.touches[0].clientY;
+}, { passive: true });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchX;
+  const dy = e.changedTouches[0].clientY - touchY;
+  if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
+    if (dx < 0) goTo(idx + 1);
+    else         goTo(idx - 1);
+  }
+}, { passive: true });
+
+/* ── Keyboard (for parent) ── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') goTo(idx + 1);
+  if (e.key === 'ArrowLeft')  goTo(idx - 1);
+  if (e.key === ' ')          speakCurrent();
+});
+
+/* ── Celebration ── */
+function showCelebration() {
+  celebration.classList.add('show');
+  for (let i = 0; i < 5; i++) {
+    setTimeout(() => {
+      spawnSparks(
+        60 + Math.random() * (window.innerWidth - 120),
+        60 + Math.random() * (window.innerHeight - 120),
+        12
+      );
+    }, i * 400);
+  }
+}
+document.getElementById('restartBtn').onclick = () => {
+  celebration.classList.remove('show');
+  goTo(0, 'none');
+};
+
+/* ── Floating bubbles ── */
+for (let i = 0; i < 10; i++) {
+  const b = document.createElement('div');
+  b.className = 'bubble';
+  const size = 20 + Math.random() * 60;
+  b.style.cssText = `
+    left:${Math.random()*100}vw;
+    width:${size}px; height:${size}px;
+    animation-duration:${6+Math.random()*8}s;
+    animation-delay:${Math.random()*6}s;
+  `;
+  document.body.appendChild(b);
+}
+
+/* ── START button ── */
+document.getElementById('startBtn').onclick = () => {
+  startScreen.classList.add('hidden');
+  render('none');
+
+  // iOS requires user gesture before speech — this click IS the gesture
+  setTimeout(speakCurrent, 600);
+
+  // Check if Arabic voice is available after voices load
+  setTimeout(() => {
+    loadVoices();
+    if (!arabicVoice) {
+      noVoice.classList.add('show');
+      setTimeout(() => noVoice.classList.remove('show'), 5000);
+    }
+  }, 1500);
+};
+
+// Initial render (silent, waiting for start button)
+render('none');
+</script>
+</body>
+</html>
