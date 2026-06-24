@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>ПУЛЬС</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#030306;--s1:#08080f;--s2:#0d0d18;
+  --b:rgba(255,255,255,0.06);
+  --t:#f1f5f9;--m:#3a4a60;--d:#1a2030;
+  --a:#3b82f6;--ag:rgba(59,130,246,0.14);
+  --gr:#22c55e;--ye:#f59e0b;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg)}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;-webkit-font-smoothing:antialiased;color:var(--t)}
+
+/* ── screens ─────────────────────────────────── */
+.sc{position:fixed;inset:0;opacity:0;pointer-events:none;transition:opacity .5s cubic-bezier(.4,0,.2,1)}
+.sc.on{opacity:1;pointer-events:all}
+
+/* ── CHECK-IN ────────────────────────────────── */
+#ci{
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0 28px 52px;
+}
+
+.ci-kicker{
+  font-size:11px;letter-spacing:3.5px;color:var(--m);text-transform:uppercase;
+  margin-bottom:10px;
+}
+.ci-headline{
+  font-size:48px;font-weight:700;letter-spacing:-2px;line-height:1.05;
+  margin-bottom:56px;
+}
+.ci-headline span{color:var(--a)}
+
+/* Energy */
+.blk{margin-bottom:38px}
+.blk-lbl{font-size:10px;letter-spacing:3px;color:var(--m);text-transform:uppercase;margin-bottom:14px}
+
+.bars{display:flex;gap:7px;align-items:flex-end;height:64px}
+.bar{
+  flex:1;border-radius:5px 5px 3px 3px;background:var(--d);cursor:pointer;
+  transition:background .25s,transform .2s cubic-bezier(.34,1.56,.64,1);
+}
+.bar:nth-child(1){height:28%} .bar:nth-child(2){height:45%}
+.bar:nth-child(3){height:62%} .bar:nth-child(4){height:80%}
+.bar:nth-child(5){height:100%}
+.bar.on{background:var(--a)}
+.bar:active{transform:scaleY(1.05)}
+
+/* Mood */
+.track{position:relative;height:44px;display:flex;align-items:center;cursor:pointer}
+.track-line{position:absolute;left:0;right:0;height:2px;background:var(--d);border-radius:1px}
+.track-fill{position:absolute;left:0;height:2px;background:linear-gradient(90deg,var(--ye),var(--gr));border-radius:1px}
+.knob{
+  position:absolute;width:32px;height:32px;
+  background:var(--t);border-radius:50%;
+  transform:translateX(-50%);
+  box-shadow:0 0 0 3px var(--bg),0 0 0 5px rgba(255,255,255,.15);
+  transition:box-shadow .2s;cursor:grab;
+}
+.knob:active,.knob.drag{cursor:grabbing;box-shadow:0 0 0 3px var(--bg),0 0 0 9px rgba(255,255,255,.12)}
+.track-ends{display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:var(--m);letter-spacing:1.5px}
+
+/* Word */
+.word-inp{
+  background:none;border:none;border-bottom:1px solid var(--d);
+  color:var(--t);font-size:22px;font-weight:300;font-family:inherit;
+  width:100%;padding:10px 0;outline:none;letter-spacing:.5px;
+  transition:border-color .25s;
+}
+.word-inp:focus{border-bottom-color:rgba(255,255,255,.25)}
+.word-inp::placeholder{color:var(--m)}
+
+/* Submit */
+.submit{
+  margin-top:44px;width:100%;padding:20px;
+  background:var(--a);border:none;border-radius:18px;
+  color:#fff;font-size:15px;font-weight:700;letter-spacing:2px;
+  font-family:inherit;cursor:pointer;
+  transition:opacity .2s,transform .15s;
+}
+.submit:active{transform:scale(.98);opacity:.85}
+.submit:disabled{opacity:.4}
+
+/* ── DASHBOARD ───────────────────────────────── */
+#db{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:58px 0 48px}
+
+.db-top{padding:0 24px 28px}
+.db-brand{font-size:11px;font-weight:700;letter-spacing:5px;color:var(--m);text-transform:uppercase}
+.db-num{font-size:64px;font-weight:700;letter-spacing:-3px;line-height:1;margin-top:6px}
+.db-num-unit{font-size:18px;font-weight:400;letter-spacing:0;color:var(--m);margin-left:4px}
+.db-sub{font-size:13px;color:var(--m);margin-top:4px;letter-spacing:.3px}
+
+/* Graph */
+.gw{padding:0 0 4px}
+.g-lbl{padding:0 24px;font-size:10px;letter-spacing:2.5px;color:var(--m);text-transform:uppercase;margin-bottom:14px}
+#gsvg{width:100%;display:block;overflow:visible}
+
+/* Cards row */
+.cw{padding:18px 16px 0;display:flex;gap:10px}
+.stat{flex:1;background:var(--s1);border-radius:18px;padding:16px;border:1px solid var(--b)}
+.stat-lbl{font-size:10px;letter-spacing:2px;color:var(--m);text-transform:uppercase;margin-bottom:8px}
+.stat-val{font-size:28px;font-weight:700;letter-spacing:-1px;line-height:1}
+.mini-bars{display:flex;gap:3px;align-items:flex-end;height:18px;margin-top:10px}
+.mb{flex:1;border-radius:2px;background:var(--d)}
+.mb:nth-child(1){height:20%} .mb:nth-child(2){height:40%}
+.mb:nth-child(3){height:60%} .mb:nth-child(4){height:80%} .mb:nth-child(5){height:100%}
+.mb.on{background:var(--a)}
+.mini-mood{height:3px;background:var(--d);border-radius:2px;overflow:hidden;margin-top:10px}
+.mini-mood-f{height:100%;background:linear-gradient(90deg,var(--ye),var(--gr));border-radius:2px}
+
+/* Insight */
+.ins{
+  margin:12px 16px 0;
+  background:var(--ag);border:1px solid rgba(59,130,246,.18);
+  border-radius:18px;padding:20px;
+}
+.ins-pre{font-size:10px;letter-spacing:3px;color:var(--a);text-transform:uppercase;margin-bottom:10px}
+.ins-txt{font-size:17px;font-weight:500;line-height:1.55;letter-spacing:-.2px}
+
+/* Word display */
+.word-show{
+  margin:12px 16px 0;padding:18px 20px;
+  background:var(--s1);border:1px solid var(--b);border-radius:18px;
+  font-size:18px;font-weight:300;color:var(--m);letter-spacing:1px;font-style:italic;
+}
+
+/* Action btn */
+.act{
+  display:block;margin:12px 16px 0;padding:18px;
+  background:var(--s1);border:1px solid var(--b);border-radius:16px;
+  color:var(--a);font-size:14px;font-weight:700;letter-spacing:2px;
+  font-family:inherit;cursor:pointer;text-align:center;
+  transition:background .2s;
+}
+.act:active{background:var(--d)}
+.act.go{background:var(--a);color:#fff;border-color:transparent}
+
+/* History */
+.hw{margin:12px 16px 0;background:var(--s1);border:1px solid var(--b);border-radius:18px;padding:20px}
+.hw-lbl{font-size:10px;letter-spacing:2.5px;color:var(--m);text-transform:uppercase;margin-bottom:14px}
+.hr{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b)}
+.hr:last-child{border:none}
+.hr-date{font-size:12px;color:var(--m);width:56px;flex-shrink:0;letter-spacing:.3px}
+.hr-bars{display:flex;gap:2px;align-items:flex-end;height:14px;width:38px;flex-shrink:0}
+.hb{flex:1;border-radius:1px;background:var(--d)}
+.hb:nth-child(1){height:20%} .hb:nth-child(2){height:40%}
+.hb:nth-child(3){height:60%} .hb:nth-child(4){height:80%} .hb:nth-child(5){height:100%}
+.hb.on{background:var(--a)}
+.hr-mbar{flex:1;height:3px;background:var(--d);border-radius:2px;overflow:hidden}
+.hr-mf{height:100%;background:linear-gradient(90deg,var(--ye),var(--gr));border-radius:2px}
+.hr-w{font-size:12px;color:var(--m);max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-style:italic}
+
+/* empty */
+.empty{text-align:center;padding:28px 0;color:var(--m);font-size:13px;letter-spacing:.5px}
+
+/* Success flash */
+#flash{
+  position:fixed;inset:0;background:var(--a);
+  opacity:0;pointer-events:none;
+  transition:opacity .15s;z-index:99;
+  display:flex;align-items:center;justify-content:center;
+}
+#flash-txt{font-size:20px;font-weight:700;letter-spacing:3px;color:#fff;opacity:0;transition:opacity .2s}
+</style>
+</head>
+<body>
+
+<!-- CHECK-IN -->
+<div class="sc" id="ci">
+  <div class="ci-kicker">Ежедневный</div>
+  <div class="ci-headline">Какой<br>твой <span>сигнал</span><br>сегодня?</div>
+
+  <div class="blk">
+    <div class="blk-lbl">Энергия</div>
+    <div class="bars" id="ebars">
+      <div class="bar" data-v="1"></div>
+      <div class="bar" data-v="2"></div>
+      <div class="bar" data-v="3"></div>
+      <div class="bar" data-v="4"></div>
+      <div class="bar" data-v="5"></div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-lbl">Настроение</div>
+    <div class="track" id="mtrack">
+      <div class="track-line"></div>
+      <div class="track-fill" id="mfill" style="width:50%"></div>
+      <div class="knob" id="knob" style="left:50%"></div>
+    </div>
+    <div class="track-ends"><span>ТЯЖЕЛО</span><span>ОТЛИЧНО</span></div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-lbl">Одно слово&nbsp;<span style="opacity:.4;font-size:9px">НЕОБЯЗАТЕЛЬНО</span></div>
+    <input class="word-inp" id="winp" placeholder="опишись..." maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="off">
+  </div>
+
+  <button class="submit" id="sbtn" onclick="submit()">ЗАПИСАТЬ</button>
+</div>
+
+<!-- DASHBOARD -->
+<div class="sc" id="db">
+  <div class="db-top">
+    <div class="db-brand">ПУЛЬС</div>
+    <div class="db-num" id="d-streak">0<span class="db-num-unit">д</span></div>
+    <div class="db-sub" id="d-sub">подряд</div>
+  </div>
+
+  <div class="gw">
+    <div class="g-lbl">Сигнал · 30 дней</div>
+    <svg id="gsvg" height="100"></svg>
+  </div>
+
+  <div class="cw">
+    <div class="stat">
+      <div class="stat-lbl">Энергия</div>
+      <div class="stat-val" id="d-e">—</div>
+      <div class="mini-bars" id="d-ebars">
+        <div class="mb"></div><div class="mb"></div><div class="mb"></div>
+        <div class="mb"></div><div class="mb"></div>
+      </div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl">Настроение</div>
+      <div class="stat-val" id="d-m">—</div>
+      <div class="mini-mood"><div class="mini-mood-f" id="d-mf" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="ins">
+    <div class="ins-pre">Инсайт</div>
+    <div class="ins-txt" id="ins-txt">Начни вести — и я расскажу тебе о тебе кое-что интересное.</div>
+  </div>
+
+  <div class="word-show hidden" id="d-word"></div>
+
+  <button class="act" id="d-act" onclick="goCI()"></button>
+
+  <div class="hw">
+    <div class="hw-lbl">История</div>
+    <div id="hlist"></div>
+  </div>
+</div>
+
+<!-- Success flash -->
+<div id="flash"><div id="flash-txt">ЗАПИСАНО</div></div>
+
+<script>
+// ── DB ───────────────────────────────────────────────────────
+const g=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}};
+const s=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+let entries=g('pls',[]);
+const save=()=>s('pls',entries);
+
+// ── CI state ─────────────────────────────────────────────────
+let energy=3,mood=.5,dragging=false;
+
+// Bars
+document.getElementById('ebars').addEventListener('click',e=>{
+  const b=e.target.closest('.bar');if(!b)return;
+  energy=+b.dataset.v;updBars();
+});
+function updBars(){
+  document.querySelectorAll('#ebars .bar').forEach(b=>{
+    b.classList.toggle('on',+b.dataset.v<=energy);
+  });
+}
+updBars();
+
+// Mood knob
+const mtrack=document.getElementById('mtrack');
+const mfill=document.getElementById('mfill');
+const knob=document.getElementById('knob');
+
+function setMood(cx){
+  const r=mtrack.getBoundingClientRect();
+  mood=Math.max(0,Math.min(1,(cx-r.left)/r.width));
+  const p=mood*100+'%';
+  knob.style.left=p;mfill.style.width=p;
+}
+knob.addEventListener('touchstart',e=>{dragging=true;e.preventDefault();knob.classList.add('drag')},{passive:false});
+document.addEventListener('touchmove',e=>{if(dragging){setMood(e.touches[0].clientX);e.preventDefault();}},{passive:false});
+document.addEventListener('touchend',()=>{dragging=false;knob.classList.remove('drag')});
+knob.addEventListener('mousedown',()=>{dragging=true;knob.classList.add('drag')});
+document.addEventListener('mousemove',e=>{if(dragging)setMood(e.clientX)});
+document.addEventListener('mouseup',()=>{dragging=false;knob.classList.remove('drag')});
+mtrack.addEventListener('click',e=>{if(!dragging)setMood(e.clientX)});
+
+// ── Screens ──────────────────────────────────────────────────
+function show(id){
+  document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));
+  requestAnimationFrame(()=>document.getElementById(id).classList.add('on'));
+}
+
+// ── Today ────────────────────────────────────────────────────
+const today=()=>new Date().toISOString().slice(0,10);
+const todayE=()=>entries.find(e=>e.date===today());
+
+// ── Submit ───────────────────────────────────────────────────
+function submit(){
+  const word=document.getElementById('winp').value.trim();
+  const t=today();
+  entries=entries.filter(e=>e.date!==t);
+  entries.push({date:t,energy,mood,word});
+  entries.sort((a,b)=>a.date.localeCompare(b.date));
+  save();
+
+  // Flash animation
+  const fl=document.getElementById('flash');
+  const ft=document.getElementById('flash-txt');
+  fl.style.opacity=1;fl.style.pointerEvents='all';
+  ft.style.opacity=1;
+  if(navigator.vibrate)navigator.vibrate([60,40,60]);
+  setTimeout(()=>{
+    fl.style.opacity=0;ft.style.opacity=0;
+    fl.style.pointerEvents='none';
+    buildDash();show('db');
+  },600);
+}
+
+function goCI(){
+  energy=3;mood=.5;updBars();setMood(mtrack.getBoundingClientRect().left+mtrack.getBoundingClientRect().width*.5);
+  document.getElementById('winp').value='';
+  show('ci');
+}
+
+// ── Dashboard ────────────────────────────────────────────────
+function buildDash(){
+  const te=todayE();
+
+  // Streak
+  let streak=0,cur=new Date();
+  while(true){
+    const ds=cur.toISOString().slice(0,10);
+    if(entries.find(e=>e.date===ds)){streak++;cur.setDate(cur.getDate()-1);}
+    else break;
+  }
+  document.getElementById('d-streak').innerHTML=streak+'<span class="db-num-unit">д</span>';
+  document.getElementById('d-sub').textContent=streak===0?'ещё нет записей':streak===1?'первый день':pday(streak)+' подряд';
+
+  // Today stats
+  const eEl=document.getElementById('d-e');
+  const mEl=document.getElementById('d-m');
+  const mf=document.getElementById('d-mf');
+  const dw=document.getElementById('d-word');
+  const act=document.getElementById('d-act');
+
+  if(te){
+    eEl.textContent=te.energy+'/5';
+    mEl.textContent=Math.round(te.mood*100)+'%';
+    mf.style.width=Math.round(te.mood*100)+'%';
+    document.querySelectorAll('#d-ebars .mb').forEach((b,i)=>b.classList.toggle('on',i<te.energy));
+    if(te.word){dw.textContent='"'+te.word+'"';dw.classList.remove('hidden');}
+    else dw.classList.add('hidden');
+    act.textContent='ИЗМЕНИТЬ ЗАПИСЬ';act.classList.remove('go');
+  } else {
+    eEl.textContent='—';mEl.textContent='—';mf.style.width='0%';
+    document.querySelectorAll('#d-ebars .mb').forEach(b=>b.classList.remove('on'));
+    dw.classList.add('hidden');
+    act.textContent='СДЕЛАТЬ ЗАПИСЬ СЕГОДНЯ';act.classList.add('go');
+  }
+
+  buildGraph();buildInsight(streak,te);buildHist();
+}
+
+// ── Graph ────────────────────────────────────────────────────
+function buildGraph(){
+  const svg=document.getElementById('gsvg');
+  const W=window.innerWidth,H=100;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.setAttribute('width',W);
+
+  // 30 day slots
+  const days=[];
+  for(let i=29;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    days.push(d.toISOString().slice(0,10));
+  }
+
+  const pts=days.map((ds,i)=>{
+    const e=entries.find(x=>x.date===ds);
+    const x=(i/29)*(W-48)+24;
+    return e ? {x,y:H-8-((e.energy/5)*(H-24)),e:true,en:e.energy,mo:e.mood} : {x,y:null,e:false};
+  });
+
+  const valid=pts.filter(p=>p.y!==null);
+  if(valid.length<2){
+    svg.innerHTML=`<text x="${W/2}" y="55" text-anchor="middle" fill="#1a2030" font-size="12" font-family="-apple-system,sans-serif" letter-spacing="2">НЕТ ДАННЫХ</text>`;
+    return;
+  }
+
+  // Smooth bezier
+  let line=`M${valid[0].x} ${valid[0].y}`;
+  for(let i=1;i<valid.length;i++){
+    const p=valid[i-1],c=valid[i],mx=(p.x+c.x)/2;
+    line+=` C${mx} ${p.y},${mx} ${c.y},${c.x} ${c.y}`;
+  }
+  const last=valid[valid.length-1],first=valid[0];
+  const area=line+` L${last.x} ${H} L${first.x} ${H} Z`;
+  const gid='g'+Math.random().toString(36).slice(2);
+  const lastPt=valid[valid.length-1];
+  const col=lastPt.en>=4?'#22c55e':lastPt.en>=3?'#3b82f6':lastPt.en>=2?'#f59e0b':'#ef4444';
+
+  svg.innerHTML=`<defs>
+    <linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${col}" stop-opacity=".2"/>
+      <stop offset="100%" stop-color="${col}" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <path d="${area}" fill="url(#${gid})"/>
+  <path d="${line}" fill="none" stroke="${col}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="${lastPt.x}" cy="${lastPt.y}" r="4" fill="${col}"/>
+  <circle cx="${lastPt.x}" cy="${lastPt.y}" r="9" fill="${col}" opacity=".18"/>`;
+}
+
+// ── Insights ─────────────────────────────────────────────────
+function buildInsight(streak,te){
+  const el=document.getElementById('ins-txt');
+  if(entries.length<2){el.textContent='Запиши ещё пару дней — и я начну видеть паттерны.';return;}
+
+  const last7=entries.slice(-7);
+  const prev7=entries.slice(-14,-7);
+  const avgE7=avg(last7.map(e=>e.energy));
+  const avgM7=avg(last7.map(e=>e.mood));
+  const avgEP=prev7.length?avg(prev7.map(e=>e.energy)):null;
+
+  const dayN=['вс','пн','вт','ср','чт','пт','сб'];
+  const byDay=[0,1,2,3,4,5,6].map(d=>{
+    const de=entries.filter(e=>new Date(e.date+'T00:00:00').getDay()===d);
+    return{d,avg:de.length?avg(de.map(x=>x.energy)):0,n:de.length};
+  }).filter(x=>x.n>=2);
+  const best=byDay.length?byDay.reduce((a,b)=>b.avg>a.avg?b:a,byDay[0]):null;
+
+  const pool=[];
+  if(streak>=7) pool.push(`${streak} дней подряд. Это уже не случайность — это привычка.`);
+  else if(streak>=3) pool.push(`${streak} дня подряд. Хорошее начало. Не останавливайся.`);
+
+  if(avgEP!==null){
+    const d=avgE7-avgEP;
+    if(d>=0.6) pool.push(`Твоя энергия выросла за неделю. Что-то работает — не меняй.`);
+    if(d<=-0.6) pool.push(`Энергия падает последние 7 дней. Что изменилось?`);
+  }
+
+  if(avgM7>=.72) pool.push(`Настроение держится высоко — ${Math.round(avgM7*100)}% за 7 дней. Редкость.`);
+  if(avgM7<=.33) pool.push(`Тяжёлая неделя по настроению. Такое бывает. Запиши — это уже помогает.`);
+
+  if(best) pool.push(`${dayN[best.d].toUpperCase()} — стабильно твой лучший день. Ставь важное именно на него.`);
+
+  if(entries.length>=5){
+    const maxE=Math.max(...entries.map(e=>e.energy));
+    const minE=Math.min(...entries.map(e=>e.energy));
+    if(maxE-minE>=3) pool.push(`Разброс энергии у тебя высокий: от ${minE} до ${maxE}. Интересно что это зависит от?`);
+  }
+
+  if(te&&te.energy===5) pool.push(`Сегодня максимальная энергия. Используй этот день на сложные задачи.`);
+  if(te&&te.energy===1) pool.push(`Сегодня на нуле — это нормально. Дай себе восстановиться.`);
+
+  if(!pool.length) pool.push(`Средняя энергия за 7 дней: ${avgE7.toFixed(1)}/5. Продолжай отслеживать.`);
+
+  el.textContent=pool[Math.floor(Math.random()*pool.length)];
+}
+
+function avg(a){return a.length?a.reduce((s,x)=>s+x,0)/a.length:0}
+
+// ── History ──────────────────────────────────────────────────
+function buildHist(){
+  const el=document.getElementById('hlist');
+  if(!entries.length){el.innerHTML='<div class="empty">Записей пока нет</div>';return;}
+  const dayN=['вс','пн','вт','ср','чт','пт','сб'];
+  const monN=['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+  el.innerHTML=[...entries].reverse().slice(0,14).map(e=>{
+    const d=new Date(e.date+'T00:00:00');
+    const lbl=dayN[d.getDay()]+' '+d.getDate()+' '+monN[d.getMonth()];
+    const bars=[1,2,3,4,5].map(v=>`<div class="hb${v<=e.energy?' on':''}"></div>`).join('');
+    return`<div class="hr">
+      <div class="hr-date">${lbl}</div>
+      <div class="hr-bars">${bars}</div>
+      <div class="hr-mbar"><div class="hr-mf" style="width:${Math.round(e.mood*100)}%"></div></div>
+      <div class="hr-w">${e.word||''}</div>
+    </div>`;
+  }).join('');
+}
+
+function pday(n){
+  if(n%10===1&&n%100!==11)return'день';
+  if([2,3,4].includes(n%10)&&![12,13,14].includes(n%100))return'дня';
+  return'дней';
+}
+
+// ── Init ─────────────────────────────────────────────────────
+buildDash();
+show(todayE()?'db':'ci');
+</script>
+</body>
+</html>
