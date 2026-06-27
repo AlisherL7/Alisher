@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Тело и Космос — научный доклад о настоящих связях в организме</title>
+<meta name="description" content="Научный доклад: какие связи между органами и телом реальны и доказаны, а какие — миф. Отражённая боль, дерматомы, ось кишечник–мозг, зубы и сердце, и мостик к космосу." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#070b18; --bg2:#0d1530; --panel:rgba(20,28,56,.6);
+    --border:rgba(120,150,255,.18); --text:#e7ecff; --muted:#9aa6d4;
+    --accent:#7c9cff; --accent2:#b78bff; --good:#34d399; --bad:#ff6b8a; --warn:#ffd166;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; font-family:'Manrope',system-ui,sans-serif; color:var(--text);
+    background:radial-gradient(1200px 700px at 80% -10%, #1a2350 0%, transparent 60%),
+               radial-gradient(900px 600px at 0% 10%, #2a1747 0%, transparent 55%),
+               var(--bg);
+    line-height:1.65; overflow-x:hidden;
+  }
+  /* звёзды */
+  #stars{position:fixed; inset:0; z-index:0; pointer-events:none}
+  .container{max-width:920px; margin:0 auto; padding:0 22px; position:relative; z-index:1}
+
+  header.hero{padding:84px 0 48px; text-align:center; position:relative; z-index:1}
+  .badge{display:inline-block; font-size:13px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--accent); border:1px solid var(--border); border-radius:100px; padding:6px 16px; margin-bottom:22px}
+  h1{font-size:clamp(34px,6vw,58px); line-height:1.05; margin:0 0 16px; font-weight:800;
+    background:linear-gradient(120deg,#fff,#a9bcff 55%,#caa9ff); -webkit-background-clip:text;
+    background-clip:text; color:transparent}
+  .lead{font-size:clamp(16px,2.2vw,20px); color:var(--muted); max-width:680px; margin:0 auto}
+
+  .section{padding:46px 0; position:relative; z-index:1}
+  h2{font-size:clamp(24px,3.4vw,34px); margin:0 0 8px; font-weight:800}
+  h2 .num{color:var(--accent2); font-weight:700; margin-right:10px}
+  .sub{color:var(--muted); margin:0 0 26px; font-size:17px}
+
+  .panel{background:var(--panel); border:1px solid var(--border); border-radius:18px;
+    padding:24px 26px; backdrop-filter:blur(8px); margin:16px 0}
+  .panel h3{margin:0 0 8px; font-size:20px}
+  .panel p{margin:0 0 6px; color:#d6ddff}
+
+  .verdict{display:inline-flex; align-items:center; gap:8px; font-weight:700; font-size:13px;
+    padding:5px 12px; border-radius:100px; margin-bottom:10px}
+  .v-good{background:rgba(52,211,153,.12); color:var(--good); border:1px solid rgba(52,211,153,.35)}
+  .v-bad{background:rgba(255,107,138,.12); color:var(--bad); border:1px solid rgba(255,107,138,.35)}
+  .v-warn{background:rgba(255,209,102,.12); color:var(--warn); border:1px solid rgba(255,209,102,.35)}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px}
+
+  /* интерактив: миф-метр */
+  .myth{cursor:pointer; transition:transform .15s ease, border-color .2s}
+  .myth:hover{transform:translateY(-3px); border-color:var(--accent)}
+  .myth .reveal{max-height:0; overflow:hidden; transition:max-height .35s ease; color:var(--muted)}
+  .myth.open .reveal{max-height:320px; margin-top:10px}
+  .myth .q{display:flex; justify-content:space-between; align-items:center; gap:12px}
+  .myth .q b{font-size:17px}
+  .chev{transition:transform .3s; color:var(--accent)}
+  .myth.open .chev{transform:rotate(180deg)}
+
+  .scale{display:flex; align-items:center; gap:10px; margin-top:12px; font-size:14px; color:var(--muted)}
+  .bar{flex:1; height:8px; border-radius:100px; background:linear-gradient(90deg,var(--bad),var(--warn),var(--good))}
+  .dot{width:16px; height:16px; border-radius:50%; background:#fff; box-shadow:0 0 12px #fff;
+    border:2px solid var(--bg); position:relative; top:0}
+
+  ul.clean{margin:8px 0 0; padding-left:20px; color:#d6ddff}
+  ul.clean li{margin:4px 0}
+
+  .cosmo{background:linear-gradient(135deg,rgba(124,156,255,.14),rgba(183,139,255,.10));
+    border:1px solid var(--border); border-radius:22px; padding:30px; text-align:center}
+
+  .refs{font-size:14px; color:var(--muted)}
+  .refs li{margin:6px 0}
+
+  footer{padding:50px 0 70px; text-align:center; color:var(--muted); font-size:14px; position:relative; z-index:1}
+  a{color:var(--accent)}
+  .pill-nav{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:26px}
+  .pill-nav a{font-size:14px; color:var(--text); text-decoration:none; border:1px solid var(--border);
+    padding:7px 14px; border-radius:100px; background:var(--panel)}
+  .pill-nav a:hover{border-color:var(--accent)}
+  .note{font-size:13px; color:var(--muted); font-style:italic}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+
+<header class="hero">
+  <div class="container">
+    <span class="badge">🪐 Научный доклад · v0.1</span>
+    <h1>Тело и Космос</h1>
+    <p class="lead">Какие связи между частями тела и внутренними органами реальны и доказаны,
+      какие — красивый миф, и почему настоящие механизмы изящнее любой эзотерики.</p>
+    <div class="pill-nav">
+      <a href="#filtr">Миф или наука</a>
+      <a href="#karty">Настоящие карты тела</a>
+      <a href="#kishka">Кишечник ↔ мозг</a>
+      <a href="#zuby">Зубы ↔ сердце</a>
+      <a href="#kosmos">Мостик к космосу</a>
+      <a href="#ist">Источники</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- 1 -->
+<section class="section" id="filtr">
+  <div class="container">
+    <h2><span class="num">01</span>Миф или наука?</h2>
+    <p class="sub">Нажми на карточку, чтобы увидеть вердикт. Главный принцип доклада:
+      связи в теле существуют — но через нервы, кровь и воспаление, а не через «меридианы».</p>
+
+    <div class="grid">
+      <div class="panel myth" data-pos="8">
+        <div class="q"><b>🦷 «Зуб напрямую связан с органом»</b><span class="chev">▾</span></div>
+        <div class="reveal">
+          <p><span class="verdict v-bad">❌ Не доказано</span></p>
+          <p>Это «меридианная карта зубов» из традиционной китайской медицины. Прямой нервной
+            связи «зуб №6 → печень» нет, контролируемые исследования её не подтверждают.
+            Но зерно правды есть — см. раздел про зубы и сердце.</p>
+        </div>
+      </div>
+
+      <div class="panel myth" data-pos="10">
+        <div class="q"><b>🦶 «Точки на стопах лечат органы»</b><span class="chev">▾</span></div>
+        <div class="reveal">
+          <p><span class="verdict v-bad">❌ Не доказано</span></p>
+          <p>Рефлексология. Систематические обзоры (Cochrane, работы E. Ernst) не находят
+            доказательств адресного лечения органов. Расслабление от массажа реально, но
+            оно общее — через нервную систему, а не «канал к печени».</p>
+        </div>
+      </div>
+
+      <div class="panel myth" data-pos="14">
+        <div class="q"><b>🧍 «Тип тела определяет характер»</b><span class="chev">▾</span></div>
+        <div class="reveal">
+          <p><span class="verdict v-bad">❌ Псевдонаука</span></p>
+          <p>Соматотипы Шелдона (эндо/мезо/эктоморф → личность) — дискредитированная теория.
+            Состав тела как наука существует; «характер по фигуре» — нет.</p>
+        </div>
+      </div>
+
+      <div class="panel myth" data-pos="90">
+        <div class="q"><b>💔 «Сердце болит — отдаёт в руку»</b><span class="chev">▾</span></div>
+        <div class="reveal">
+          <p><span class="verdict v-good">✅ Доказано</span></p>
+          <p>Отражённая боль. Сердце и кожа руки/челюсти делят один сегмент спинного мозга,
+            мозг «путает» источник. Вот это и есть настоящая связь «орган → точка на теле».</p>
+        </div>
+      </div>
+
+      <div class="panel myth" data-pos="88">
+        <div class="q"><b>🧠 «Кишечник влияет на настроение»</b><span class="chev">▾</span></div>
+        <div class="reveal">
+          <p><span class="verdict v-good">✅ Активная наука</span></p>
+          <p>Ось «кишечник–мозг». Микробиом и блуждающий нерв реально влияют на эмоции и
+            стресс. Одна из самых горячих тем нейробиологии.</p>
+        </div>
+      </div>
+
+      <div class="panel myth" data-pos="80">
+        <div class="q"><b>🫁 «Здоровье рта связано с сердцем»</b><span class="chev">▾</span></div>
+        <div class="reveal">
+          <p><span class="verdict v-warn">✅ Корреляция доказана</span></p>
+          <p>Пародонтит статистически связан с болезнями сердца и диабетом через общее
+            воспаление. Причинность пока не доказана строго (заявление AHA, 2012).</p>
+        </div>
+      </div>
+    </div>
+    <p class="note">Шкала внизу каждой открытой карточки показывает «уровень доказанности» — от мифа (слева) к твёрдой науке (справа).</p>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="section" id="karty">
+  <div class="container">
+    <h2><span class="num">02</span>Настоящие карты тела</h2>
+    <p class="sub">Идея «на теле есть точки, связанные с органами» — не выдумка. Просто настоящие
+      карты рисуются нервами, а не меридианами. Их три, и все доказаны.</p>
+
+    <div class="panel">
+      <h3>🗺️ Дерматомы</h3>
+      <p>Кожа поделена на полосы, каждая привязана к своему спинномозговому нерву. Поэтому
+        опоясывающий лишай (герпес-зостер) высыпает ровной полосой — вирус сидит в одном нервном узле.</p>
+    </div>
+    <div class="panel">
+      <h3>↪️ Отражённая боль (referred pain)</h3>
+      <p>Орган и участок кожи делят один сегмент спинного мозга, и мозг «ошибается» в адресе боли:</p>
+      <ul class="clean">
+        <li><b>Сердце</b> → левая рука, челюсть, шея</li>
+        <li><b>Диафрагма</b> → плечо (общий нерв C3–C5)</li>
+        <li><b>Печень/жёлчный</b> → правое плечо и лопатка</li>
+        <li><b>Аппендикс</b> → сначала боль вокруг пупка, потом смещается вправо вниз</li>
+      </ul>
+      <p style="margin-top:8px">Вот настоящая «карта точек органов» — и врачи пользуются ею для диагноза.</p>
+    </div>
+    <div class="panel">
+      <h3>🧠 Кортикальный гомункулус</h3>
+      <p>В коре мозга всё тело нарисовано заново — но искажённо: губы и кисти огромные,
+        спина крошечная, потому что место в коре пропорционально не размеру, а чувствительности.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="section" id="kishka">
+  <div class="container">
+    <h2><span class="num">03</span>Ось «кишечник–мозг» и блуждающий нерв</h2>
+    <p class="sub">Твои нейробиология и физиология встречаются здесь.</p>
+    <div class="panel">
+      <p>В кишечнике живут триллионы бактерий (микробиом) и собственная нервная сеть — «второй мозг»
+        (энтеральная нервная система, ~500 млн нейронов). С главным мозгом их связывает
+        <b>блуждающий нерв (n. vagus)</b> — главный «кабель» парасимпатики.</p>
+      <ul class="clean">
+        <li>~90% серотонина тела вырабатывается в кишечнике.</li>
+        <li>Микробы производят нейромедиаторы (ГАМК, дофамин-предшественники) и влияют на стресс.</li>
+        <li>Стимуляция блуждающего нерва уже применяется при депрессии и эпилепсии.</li>
+      </ul>
+      <p class="note">Это и есть научная версия «всё в теле связано» — только через измеримый нерв и молекулы.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="section" id="zuby">
+  <div class="container">
+    <h2><span class="num">04</span>Зубы как зеркало организма</h2>
+    <p class="sub">Вернёмся к видео, с которого всё началось. Где в нём правда?</p>
+    <div class="panel">
+      <p><span class="verdict v-bad">❌ Миф:</span> конкретный зуб = конкретный орган через «меридиан».</p>
+      <p><span class="verdict v-warn">✅ Правда:</span> состояние рта реально связано со здоровьем тела —
+        но через <b>воспаление и бактерии</b>, а не через каналы.</p>
+      <ul class="clean">
+        <li>При пародонтите бактерии (напр. <i>P. gingivalis</i>) попадают в кровь; их ДНК находят в атеросклеротических бляшках.</li>
+        <li>Пародонтит статистически связан с ишемией сердца, диабетом 2 типа, осложнениями беременности.</li>
+        <li>Связь двусторонняя: диабет ухудшает дёсны, дёсны ухудшают контроль сахара.</li>
+      </ul>
+      <p class="note">Важно: ассоциация ≠ причинность. AHA (2012) подтвердила связь, но не доказала, что лечение дёсен напрямую лечит сердце.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="section" id="kosmos">
+  <div class="container">
+    <h2><span class="num">05</span>Мостик к космосу 🪐</h2>
+    <div class="cosmo">
+      <h3 style="margin-top:0">От нейрона до галактической нити</h3>
+      <p style="color:#d6ddff">Твоё любимое — «сопоставлять разные науки». Вот реальное, опубликованное сопоставление:
+        астрофизик Франко Вацца и нейрохирург Альберто Фелетти (2020) сравнили
+        <b>нейронную сеть мозга</b> и <b>космическую паутину</b> из галактик.</p>
+      <p style="color:#d6ddff">Совпали распределение плотности, доля «вещества против пустоты» (~30% структуры, остальное —
+        пустота и в мозге, и во Вселенной) и характер ветвления сетей. Это не мистика, а статистическое
+        сходство процессов самоорганизации на масштабах, различающихся в 10<sup>27</sup> раз.</p>
+      <p class="note" style="color:var(--muted)">Это не значит «Вселенная — мозг». Это значит, что природа повторяет удачные узоры на любом масштабе.</p>
+    </div>
+  </div>
+</section>
+
+<!-- источники -->
+<section class="section" id="ist">
+  <div class="container">
+    <h2><span class="num">06</span>Источники (для проверки)</h2>
+    <ul class="refs">
+      <li>Vazza F., Feletti A. (2020). <i>The Quantitative Comparison Between the Neuronal Network and the Cosmic Web.</i> Frontiers in Physics.</li>
+      <li>Cryan J.F., Dinan T.G. (2012). <i>Mind-altering microorganisms: the gut microbiota and behaviour.</i> Nature Reviews Neuroscience.</li>
+      <li>American Heart Association (2012). Scientific statement: <i>Periodontal disease and atherosclerotic vascular disease.</i> Circulation.</li>
+      <li>Ernst E. (2009). <i>Is reflexology an effective intervention? A systematic review.</i> Medical Journal of Australia.</li>
+      <li>Penfield W., Boldrey E. (1937). Cortical homunculus — соматосенсорная карта коры.</li>
+    </ul>
+    <p class="note">Все источники реальны и проверяемы. Если хочешь — добавим прямые ссылки и разберём каждую работу отдельно.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p>Тело и Космос · научный доклад, собранный вместе с Claude · черновик v0.1 · 2026</p>
+    <p>Только настоящая наука. Ассоциация ≠ причинность. Это образовательный материал, не медицинский совет.</p>
+  </div>
+</footer>
+
+<script>
+// раскрытие карточек + позиционирование точки на шкале
+document.querySelectorAll('.myth').forEach(function(card){
+  // добавим шкалу
+  var pos = card.getAttribute('data-pos');
+  var scale = document.createElement('div');
+  scale.className='scale';
+  scale.innerHTML = '<span>миф</span><div class="bar"><div class="dot" style="margin-left:calc('+pos+'% - 8px)"></div></div><span>наука</span>';
+  card.querySelector('.reveal').appendChild(scale);
+
+  card.addEventListener('click', function(){ card.classList.toggle('open'); });
+});
+
+// звёздное небо
+(function(){
+  var c=document.getElementById('stars'), x=c.getContext('2d'), s=[];
+  function size(){ c.width=innerWidth; c.height=innerHeight; }
+  size(); addEventListener('resize', size);
+  for(var i=0;i<140;i++) s.push({x:Math.random(),y:Math.random(),r:Math.random()*1.4+.2,t:Math.random()*6.28,sp:Math.random()*.02+.005});
+  (function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    s.forEach(function(p){ p.t+=p.sp; var a=.4+Math.sin(p.t)*.4;
+      x.beginPath(); x.arc(p.x*c.width,p.y*c.height,p.r,0,6.28);
+      x.fillStyle='rgba(200,215,255,'+a+')'; x.fill(); });
+    requestAnimationFrame(loop);
+  })();
+})();
+</script>
+</body>
+</html>
