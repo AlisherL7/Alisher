@@ -4,60 +4,53 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#06070d">
-<title>Карта, которой нет на коже — настоящая наука о связи органов и тела</title>
-<meta name="description" content="Глубокий научный разбор: почему орган болит не там, где находится. Висцеро-соматический конвергентный нейрон, отражённая боль, дерматомы, интероцепция, ось кишечник–мозг — и честная граница между наукой и мифом. Источники из PubMed.">
+<title>Карта, которой нет на коже — сценарий о тайной связи органов и тела</title>
+<meta name="description" content="Глубокий научно-популярный сценарий: тайная карта тела, отражённая боль, конвергентный нейрон, теория ворот, интероцепция и второй мозг. С историями учёных — Хэда, Шеррингтона, Мелзака, Крейга, Дамасио, Гершона — и источниками из PubMed.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,400;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  /* "Neuro-Atlas / Bioluminescent" */
   --void:#06070d; --void2:#0a0c18; --panel:#0e1122; --panel2:#12162b;
   --line:#1b2138; --line2:#2a3354;
-  --nerve:#3fe0c5; --nerve-dim:#2a9d8f;     /* signals / nerves */
-  --pain:#ff6b6b; --pain2:#ffb454;          /* referred pain / amber */
-  --cosmos:#9b8cff;                          /* interoception / cosmos */
-  --bone:#eaedf8; --bone-dim:#9aa3c4; --ash:#646c8f; --faint:#3a425e;
+  --nerve:#3fe0c5; --nerve-dim:#2a9d8f;
+  --pain:#ff6b6b; --pain2:#ffb454;
+  --cosmos:#9b8cff;
+  --bone:#eaedf8; --bone-dim:#9aa3c4; --ash:#646c8f;
   --display:'Fraunces',serif; --body:'Inter',system-ui,sans-serif; --mono:'Space Mono',monospace;
 }
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
-body{
-  background:var(--void); color:var(--bone);
-  font-family:var(--body); font-size:18px; line-height:1.72;
-  -webkit-font-smoothing:antialiased; overflow-x:hidden;
-}
-body::after{ /* vignette */
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:200;
-  background:radial-gradient(ellipse at 50% -10%, transparent 50%, rgba(0,0,0,.55) 100%);
-}
+body{background:var(--void);color:var(--bone);font-family:var(--body);font-size:19px;line-height:1.78;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:200;
+  background:radial-gradient(ellipse at 50% -10%, transparent 50%, rgba(0,0,0,.55) 100%);}
 ::selection{background:var(--nerve);color:var(--void);}
 a{color:var(--nerve);}
 
-/* progress rail */
-.rail{position:fixed;top:0;left:0;right:0;height:2px;z-index:150;background:transparent;}
+.rail{position:fixed;top:0;left:0;right:0;height:2px;z-index:150;}
 .rail span{display:block;height:100%;width:0%;
   background:linear-gradient(90deg,var(--pain),var(--pain2),var(--nerve),var(--cosmos));
   box-shadow:0 0 14px rgba(63,224,197,.45);}
 
-/* ───────── HERO ───────── */
+/* HERO */
 .hero{min-height:100vh;position:relative;display:flex;flex-direction:column;justify-content:center;
   padding:clamp(1.5rem,5vw,5rem);overflow:hidden;border-bottom:1px solid var(--line);}
 .hero-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;}
 .hero-glow{position:absolute;inset:0;z-index:1;pointer-events:none;
   background:radial-gradient(ellipse at 72% 38%, rgba(155,140,255,.12), transparent 52%),
     radial-gradient(ellipse at 18% 78%, rgba(63,224,197,.10), transparent 48%),
-    linear-gradient(180deg, rgba(6,7,13,.55) 0%, transparent 28%, rgba(6,7,13,.78) 100%);}
+    linear-gradient(180deg, rgba(6,7,13,.55) 0%, transparent 26%, rgba(6,7,13,.82) 100%);}
 .hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
 .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.34em;text-transform:uppercase;
   color:var(--nerve);margin-bottom:2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
 .kicker::before{content:'';width:38px;height:1px;background:var(--nerve);display:inline-block;}
 .hero h1{font-family:var(--display);font-weight:900;font-size:clamp(2.5rem,8.4vw,6.4rem);
-  line-height:.97;letter-spacing:-.028em;color:var(--bone);margin-bottom:1.5rem;text-wrap:balance;}
+  line-height:.97;letter-spacing:-.028em;margin-bottom:1.5rem;text-wrap:balance;}
 .hero h1 em{font-style:italic;font-weight:400;color:var(--nerve);}
-.hero-lede{font-size:clamp(1.08rem,2.3vw,1.45rem);line-height:1.55;color:var(--bone-dim);max-width:48ch;}
+.hero-lede{font-size:clamp(1.08rem,2.3vw,1.4rem);line-height:1.6;color:var(--bone-dim);max-width:52ch;}
 .hero-lede strong{color:var(--bone);font-weight:600;}
-.hero-meta{margin-top:3.4rem;display:flex;gap:2.5rem;flex-wrap:wrap;font-family:var(--mono);
+.hero-meta{margin-top:3.2rem;display:flex;gap:2.4rem;flex-wrap:wrap;font-family:var(--mono);
   font-size:11px;letter-spacing:.1em;color:var(--ash);text-transform:uppercase;}
 .hero-meta b{color:var(--cosmos);font-weight:400;display:block;margin-top:.35rem;font-size:13px;}
 .scroll-cue{position:absolute;bottom:1.6rem;left:50%;transform:translateX(-50%);z-index:3;
@@ -66,58 +59,68 @@ a{color:var(--nerve);}
 @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(7px);}}
 .scroll-cue svg{width:14px;height:14px;stroke:var(--nerve);}
 
-/* ───────── LAYOUT ───────── */
-.wrap{max-width:760px;margin:0 auto;padding:0 clamp(1.25rem,5vw,2rem);}
-.movement{padding:clamp(3.5rem,9vw,7rem) 0;border-bottom:1px solid var(--line);position:relative;}
-.mv-head{margin-bottom:2.6rem;}
+/* LAYOUT */
+.wrap{max-width:740px;margin:0 auto;padding:0 clamp(1.25rem,5vw,2rem);}
+.movement{padding:clamp(3.5rem,9vw,6.5rem) 0;border-bottom:1px solid var(--line);position:relative;}
+.mv-head{margin-bottom:2.4rem;}
 .mv-index{font-family:var(--mono);font-size:12px;letter-spacing:.28em;color:var(--nerve-dim);
   text-transform:uppercase;display:flex;align-items:baseline;gap:1rem;margin-bottom:1.1rem;}
-.mv-index .roman{font-family:var(--display);font-style:italic;font-weight:500;font-size:1.5rem;
-  color:var(--pain);letter-spacing:0;}
-.mv-title{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,5vw,2.9rem);
+.mv-index .roman{font-family:var(--display);font-style:italic;font-weight:500;font-size:1.5rem;color:var(--pain);}
+.mv-title{font-family:var(--display);font-weight:600;font-size:clamp(1.85rem,5vw,3rem);
   line-height:1.07;letter-spacing:-.018em;color:var(--bone);text-wrap:balance;}
 
-.prose p{margin-bottom:1.45rem;color:var(--bone-dim);}
+.prose p{margin-bottom:1.5rem;color:var(--bone-dim);}
 .prose p strong{color:var(--bone);font-weight:600;}
 .prose p em{color:var(--nerve);font-style:italic;}
-.prose .lead{font-size:1.28rem;line-height:1.6;color:var(--bone);}
-.prose .lead::first-letter{font-family:var(--display);font-weight:900;font-size:4.4rem;line-height:.78;
+.prose .lead{font-size:1.3rem;line-height:1.62;color:var(--bone);}
+.prose .lead::first-letter{font-family:var(--display);font-weight:900;font-size:4.6rem;line-height:.76;
   float:left;margin:.06em .12em 0 0;color:var(--pain);}
+.prose .scene{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ash);display:block;margin:0 0 1.4rem;}
 
-/* pull numbers */
-.stat-band{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
-  background:var(--line);border:1px solid var(--line);margin:3rem 0;}
-.stat{background:var(--panel);padding:1.7rem 1.4rem;}
-.stat .n{font-family:var(--display);font-weight:900;font-size:clamp(2rem,5vw,2.9rem);line-height:1;
-  color:var(--nerve);letter-spacing:-.02em;}
-.stat .n.pain{color:var(--pain);}
-.stat .n.cos{color:var(--cosmos);}
-.stat .u{font-size:.92rem;color:var(--bone-dim);margin-top:.55rem;line-height:1.4;}
+/* book/quote epigraph */
+.epigraph{margin:3rem 0;padding:1.8rem 0 1.8rem 2rem;border-left:2px solid var(--cosmos);}
+.epigraph p{font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(1.32rem,3.4vw,1.78rem);
+  line-height:1.42;color:var(--bone);margin-bottom:1rem;text-wrap:balance;}
+.epigraph cite{font-family:var(--mono);font-style:normal;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--nerve);}
+.epigraph.book{border-left-color:var(--pain2);}
+.epigraph.book cite{color:var(--pain2);}
+
+/* inline source note */
+.src-note{display:block;margin:-.4rem 0 1.5rem;font-family:var(--mono);font-size:12px;
+  color:var(--ash);letter-spacing:.02em;line-height:1.5;}
+.src-note a{color:var(--nerve);text-decoration:none;border-bottom:1px solid var(--nerve-dim);word-break:break-all;}
 
 /* figure shell */
-.figure{margin:3.4rem 0;background:linear-gradient(180deg,var(--void2),var(--panel));
+.figure{margin:3.2rem 0;background:linear-gradient(180deg,var(--void2),var(--panel));
   border:1px solid var(--line2);border-radius:6px;overflow:hidden;}
 .figure .cap{padding:1rem 1.3rem;border-bottom:1px solid var(--line);font-family:var(--mono);
   font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--nerve);
   display:flex;justify-content:space-between;align-items:center;gap:1rem;}
 .figure .cap span{color:var(--ash);}
-.figure .foot{padding:1rem 1.3rem;border-top:1px solid var(--line);font-size:.92rem;
-  color:var(--bone-dim);font-style:italic;}
+.figure .foot{padding:1rem 1.3rem;border-top:1px solid var(--line);font-size:.92rem;color:var(--bone-dim);font-style:italic;}
 .figure-body{padding:1.4rem;}
 
-/* interactive body-map controls */
+/* flowing nerve dashes */
+.flow{stroke-dasharray:5 9;animation:flow 1.1s linear infinite;}
+@keyframes flow{to{stroke-dashoffset:-28;}}
+.flow-rev{stroke-dasharray:5 9;animation:flowrev 1.1s linear infinite;}
+@keyframes flowrev{to{stroke-dashoffset:28;}}
+.pulse-node{animation:pn 1.8s ease-in-out infinite;transform-origin:center;transform-box:fill-box;}
+@keyframes pn{0%,100%{opacity:.9;}50%{opacity:.35;}}
+
+/* interactive body map */
 .bm-ctrls{display:flex;flex-wrap:wrap;gap:.5rem;padding:0 1.3rem 1.1rem;}
-.bm-btn{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+.bm-btn{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;
   color:var(--bone-dim);background:var(--panel2);border:1px solid var(--line2);border-radius:100px;
   padding:.5rem .9rem;cursor:pointer;transition:all .2s;}
 .bm-btn:hover{border-color:var(--nerve-dim);color:var(--bone);}
 .bm-btn.on{background:rgba(63,224,197,.14);border-color:var(--nerve);color:var(--nerve);}
-.bm-readout{padding:0 1.3rem 1.2rem;font-size:1.02rem;color:var(--bone-dim);min-height:3.2em;}
+.bm-readout{padding:0 1.3rem 1.2rem;font-size:1.02rem;color:var(--bone-dim);min-height:3.4em;}
 .bm-readout b{color:var(--bone);font-weight:600;}
-.bm-readout .seg{font-family:var(--mono);font-size:12px;color:var(--pain2);letter-spacing:.05em;}
-
-/* svg node styling (driven by classes) */
-.node{transition:opacity .3s, filter .3s;opacity:.32;}
+.bm-readout .seg{font-family:var(--mono);font-size:12px;color:var(--pain2);}
+.node{transition:opacity .3s,filter .3s;opacity:.32;}
 .node.active{opacity:1;}
 .organ-c.active{filter:drop-shadow(0 0 8px var(--pain));}
 .disc-c.active{filter:drop-shadow(0 0 9px var(--pain2));}
@@ -126,71 +129,38 @@ a{color:var(--nerve);}
 .conn.active{opacity:1;stroke:var(--nerve-dim);}
 .silh{fill:none;stroke:var(--line2);stroke-width:1.2;opacity:.33;}
 
-/* flowing dashes for schematic nerves */
-.flow{stroke-dasharray:5 9;animation:flow 1.1s linear infinite;}
-@keyframes flow{to{stroke-dashoffset:-28;}}
-.flow-rev{stroke-dasharray:5 9;animation:flowrev 1.1s linear infinite;}
-@keyframes flowrev{to{stroke-dashoffset:28;}}
-.pulse-node{animation:pn 1.8s ease-in-out infinite;transform-origin:center;transform-box:fill-box;}
-@keyframes pn{0%,100%{opacity:.85;}50%{opacity:.3;}}
+/* gate control */
+.gate-lbl{font-family:var(--mono);font-size:12px;letter-spacing:.06em;}
+#gateState{font-weight:700;}
 
-/* callouts */
-.callout{margin:2.8rem 0;border:1px solid var(--line2);border-radius:6px;overflow:hidden;}
-.callout-h{padding:.85rem 1.3rem;font-family:var(--mono);font-size:11px;letter-spacing:.18em;
-  text-transform:uppercase;display:flex;align-items:center;gap:.7rem;}
-.callout.fact .callout-h{background:rgba(63,224,197,.12);color:var(--nerve);border-bottom:1px solid rgba(63,224,197,.22);}
-.callout.myth .callout-h{background:rgba(255,107,107,.13);color:var(--pain);border-bottom:1px solid rgba(255,107,107,.25);}
-.callout-b{padding:1.3rem;}
-.callout-b p{margin:0;color:var(--bone-dim);font-size:1.02rem;}
-.callout-b p+p{margin-top:.8rem;}
-
-/* epigraph */
-.epigraph{margin:3.2rem 0;padding:1.8rem 0 1.8rem 2rem;border-left:2px solid var(--cosmos);}
-.epigraph p{font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(1.35rem,3.5vw,1.85rem);
-  line-height:1.4;color:var(--bone);margin-bottom:1rem;text-wrap:balance;}
-.epigraph cite{font-family:var(--mono);font-style:normal;font-size:11px;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--nerve);}
-
-/* timeline */
-.timeline{margin:3rem 0;border-left:1px solid var(--line2);padding-left:1.6rem;}
-.t-item{position:relative;padding-bottom:2rem;}
-.t-item:last-child{padding-bottom:0;}
-.t-item::before{content:'';position:absolute;left:-1.97rem;top:.4rem;width:9px;height:9px;border-radius:50%;
-  background:var(--void);border:2px solid var(--nerve);}
-.t-year{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--nerve);margin-bottom:.3rem;}
-.t-desc{font-size:1.02rem;color:var(--bone-dim);line-height:1.5;}
-.t-desc b{color:var(--bone);font-weight:600;}
-
-/* web grid */
-.web{margin:3rem 0;display:grid;gap:1px;background:var(--line);border:1px solid var(--line);}
-.web-row{background:var(--panel);padding:1.3rem 1.4rem;display:grid;grid-template-columns:minmax(120px,170px) 1fr;
-  gap:1.3rem;align-items:baseline;}
-.web-field{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pain2);}
-.web-text{font-size:1.02rem;color:var(--bone-dim);line-height:1.5;}
-.web-text b{color:var(--bone);font-weight:600;}
+/* finale cosmos */
+.finale{position:relative;overflow:hidden;}
+.finale-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;opacity:.8;}
+.finale .wrap{position:relative;z-index:1;}
 
 /* references */
 .refs{background:var(--void2);border-top:1px solid var(--line);padding:clamp(3rem,8vw,5.5rem) 0;}
 .refs-h{font-family:var(--mono);font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--nerve);margin-bottom:.6rem;}
 .refs-sub{font-style:italic;color:var(--ash);margin-bottom:2.4rem;font-size:1rem;}
 .reflist{counter-reset:r;}
-.ref{counter-increment:r;display:grid;grid-template-columns:2.4rem 1fr;gap:1rem;padding:1.2rem 0;
+.ref{counter-increment:r;display:grid;grid-template-columns:2.4rem 1fr;gap:1rem;padding:1.1rem 0;
   border-top:1px solid var(--line);align-items:start;}
 .ref::before{content:counter(r,decimal-leading-zero);font-family:var(--mono);font-size:12px;color:var(--pain);padding-top:.3rem;}
-.ref-meta{font-size:.98rem;line-height:1.5;color:var(--bone-dim);}
+.ref-meta{font-size:.96rem;line-height:1.5;color:var(--bone-dim);}
 .ref-meta .t{color:var(--bone);font-weight:500;font-style:italic;}
 .ref-meta .j{color:var(--pain2);font-family:var(--mono);font-size:12px;}
 .ref-meta a{color:var(--nerve);text-decoration:none;font-family:var(--mono);font-size:11px;
   border-bottom:1px solid var(--nerve-dim);word-break:break-all;}
 .ref-meta a:hover{color:var(--bone);}
-.attribution{margin-top:2.6rem;padding:1.3rem 1.4rem;border:1px dashed var(--line2);border-radius:6px;
+.booklist{margin-top:2rem;font-size:.95rem;color:var(--bone-dim);line-height:1.7;}
+.booklist b{color:var(--bone);}
+.attribution{margin-top:2.4rem;padding:1.3rem 1.4rem;border:1px dashed var(--line2);border-radius:6px;
   font-style:italic;color:var(--ash);font-size:.95rem;line-height:1.6;}
-.endmark{text-align:center;padding:3.5rem 0 1rem;}
+.endmark{text-align:center;padding:3.2rem 0 1rem;}
 .endmark .glyph{font-family:var(--display);font-weight:900;font-size:1.8rem;color:var(--pain);margin-bottom:1rem;}
 .endmark p{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ash);}
 
-/* reveal */
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease;}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease;}
 .reveal.in{opacity:1;transform:none;}
 @media(prefers-reduced-motion:reduce){
   .reveal{opacity:1;transform:none;transition:none;}
@@ -198,9 +168,7 @@ a{color:var(--nerve);}
   html{scroll-behavior:auto;}
 }
 @media(max-width:620px){
-  body{font-size:17px;}
-  .web-row{grid-template-columns:1fr;gap:.5rem;}
-  .hero-meta{gap:1.5rem;}
+  body{font-size:18px;}
   .prose .lead::first-letter{font-size:3.6rem;}
 }
 </style>
@@ -213,81 +181,91 @@ a{color:var(--nerve);}
   <canvas class="hero-canvas" id="heroCanvas"></canvas>
   <div class="hero-glow"></div>
   <div class="hero-inner">
-    <div class="kicker">Научный разбор · Нейробиология тела</div>
+    <div class="kicker">Сценарий · Нейробиология тела · Выпуск 01</div>
     <h1>Карта, которой<br>нет на <em>коже</em></h1>
-    <p class="hero-lede">Тебе говорят: нажми точку на стопе — и орган заработает лучше. Прямой «канал» к печени — миф. Но идея, что <strong>точки на теле связаны с органами</strong>, скрывает настоящую науку, которая красивее любой эзотерики. У тела действительно есть карта — только нарисована она не на коже, а в спинном мозге и в коре.</p>
+    <p class="hero-lede">Тебе говорят: нажми точку на стопе — и орган заработает лучше. Это миф. Но под этим мифом спрятана настоящая карта тела, где каждый орган действительно связан с точкой на коже. Её рисовали полтора века — и ради неё один человек разрешил перерезать себе нерв. Это история о том, <strong>почему сердце кричит в руке, а ты чувствуешь себя собой.</strong></p>
     <div class="hero-meta">
-      <div>Механизм<b>Конвергентный нейрон</b></div>
-      <div>Источники<b>PubMed · Science · Physiol Rev</b></div>
-      <div>Чтение<b>≈ 18 минут</b></div>
+      <div>Жанр<b>Длинный сценарий под камеру</b></div>
+      <div>Источники<b>PubMed · книги учёных</b></div>
+      <div>Хронометраж<b>≈ 30–35 минут чтения</b></div>
     </div>
   </div>
-  <div class="scroll-cue">Листай вниз
+  <div class="scroll-cue">Начать
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
   </div>
 </header>
 
-<!-- ═══════════ I. THE QUESTION ═══════════ -->
+<!-- ═══════════ PROLOGUE ═══════════ -->
 <section class="movement">
   <div class="wrap">
     <div class="mv-head reveal">
-      <div class="mv-index"><span class="roman">I</span> С чего всё началось</div>
-      <h2 class="mv-title">Можно ли через точку на теле дотянуться до органа?</h2>
+      <div class="mv-index"><span class="roman">0</span> Пролог</div>
+      <h2 class="mv-title">Точка, которая обещает власть над телом</h2>
     </div>
     <div class="prose reveal">
-      <p class="lead">Эта идея древняя и соблазнительная: на стопе, на ладони, на зубах есть точки — каждая отвечает за свой орган. Нажми правильно — и сердце, печень, почки заработают лучше. Звучит как ключ к телу, который от нас спрятали.</p>
-      <p>Давай сразу честно. В том виде, в каком это рассказывают в роликах — «меридиан от зуба к печени», «зона на стопе лечит почку» — <strong>прямой такой связи не существует.</strong> Контролируемые исследования её не находят. Мы вернёмся к этому в конце и разберём, что именно показала наука.</p>
-      <p>Но вот что важно: <em>интуиция за этой идеей — верная.</em> Орган и участок кожи действительно могут быть связаны так, что воздействие на одно отзывается в другом. Просто связь идёт не по выдуманным «каналам», а по реальным проводам — нервам, которые сходятся в спинном мозге. И когда понимаешь, как это устроено на самом деле, картина оказывается <strong>точнее, страннее и полезнее</strong> любого мифа.</p>
-      <p>Эта связь объясняет, почему инфаркт болит в левой руке. Почему камень в почке отдаёт в пах. Почему врач, нажимая на правое плечо, проверяет жёлчный пузырь. Всё это — одна и та же наука. Давай разберём её по нитке.</p>
-    </div>
-    <div class="epigraph reveal">
-      <p>«Висцеральная боль диффузно локализована, отражается в другие ткани и относится — вместе с телесными ощущениями — к интероцепции тела».</p>
-      <cite>Jänig W., Schmerz, 2014 · обзор нейробиологии висцеральной боли</cite>
+      <span class="scene">Сцена первая. Чужие руки на твоей стопе.</span>
+      <p class="lead">Представь. Кто-то берёт твою ступню, надавливает большим пальцем чуть ниже подушечки и говорит спокойно, как о чём-то очевидном: «Вот здесь — твоё сердце. А вот тут — печень. Будешь разминать каждый день, и органы скажут тебе спасибо». И в этот момент внутри тебя что-то откликается. Не потому что это доказано. А потому что это <em>красиво.</em></p>
+      <p>Идея, что тело — это карта, на которой каждая точка ведёт к своему органу, древняя, как сама медицина. Она есть в китайских меридианах. Она есть в индийских марма-точках. В начале XX века американский врач Уильям Фицджеральд назвал её «зональной терапией» и расчертил человека на десять вертикальных полос, обещая, что давление на палец руки отзовётся где-то глубоко внутри. Из его идей выросла рефлексология, которую ты сегодня встречаешь в каждом втором ролике о здоровье.</p>
+      <p>И вот что я хочу сделать в этом выпуске. Я не буду просто говорить «это лженаука, забудьте». Это слишком легко и слишком скучно. Я хочу показать тебе кое-что поинтереснее: <strong>интуиция, спрятанная в этой идее, — верная. Связь между точкой на теле и внутренним органом существует. Она реальна, измерена и используется врачами каждый день.</strong> Просто работает она совсем не так, как тебе рассказывают на сеансе массажа стоп. И когда ты поймёшь, как именно, — а мы дойдём до этого шаг за шагом, — ты больше не сможешь смотреть на собственное тело по-старому.</p>
+      <p>Потому что у тебя действительно есть карта. Она нарисована не на коже. Она спрятана глубже — в спинном мозге и в складке коры, о которой ты, скорее всего, никогда не слышал. И эта карта объясняет, почему инфаркт чувствуется в левой руке. Почему камень в почке простреливает в пах. Почему хирург, нажимая тебе на правое плечо, на самом деле проверяет твой жёлчный пузырь. Всё это — одна история. Давай размотаем её с самого начала.</p>
     </div>
   </div>
 </section>
 
-<!-- ═══════════ II. THE CONVERGENT NEURON ═══════════ -->
+<!-- ═══════════ I. HENRY HEAD ═══════════ -->
 <section class="movement">
   <div class="wrap">
     <div class="mv-head reveal">
-      <div class="mv-index"><span class="roman">II</span> Грааль механизма</div>
-      <h2 class="mv-title">Один нейрон, который путает орган с кожей</h2>
+      <div class="mv-index"><span class="roman">I</span> Человек, который резал себя</div>
+      <h2 class="mv-title">Генри Хэд и первая карта боли</h2>
     </div>
     <div class="prose reveal">
-      <p>Вот самая красивая деталь во всей истории. В задний рог спинного мозга на каждом уровне сходятся два разных потока сигналов: один — <strong>от внутреннего органа</strong> (висцеральный), другой — <strong>от кожи и мышц</strong> того же сегмента. И часто они приходят на <em>один и тот же нейрон.</em></p>
-      <p>Его так и называют — <strong>висцеро-соматический конвергентный нейрон.</strong> «Конвергентный» — потому что на нём сходятся (converge) две линии. Для мозга у этого нейрона один «обратный адрес». А так как от кожи сигналы идут всю жизнь и постоянно, мозг по привычке считает: раз этот нейрон активен — значит, болит кожа. И «рисует» боль на поверхности тела, хотя источник — глубоко внутри.</p>
-      <p>Это и есть разгадка. <em>Орган не имеет своей отдельной «линии» в сознание.</em> Он подключается к той же линии, что и участок кожи. Поэтому боль органа всплывает «не там» — на коже, в руке, в плече. Явление называют <strong>отражённой болью</strong> (referred pain).</p>
+      <span class="scene">Сцена вторая. Лондон, 25 апреля 1903 года.</span>
+      <p>Чтобы понять связь органов и кожи, нам нужен человек, одержимый ощущениями. Его звали <strong>Генри Хэд</strong> — британский невролог конца XIX века, фигура почти литературная: он лечил пациентов, писал стихи и дружил с поэтами. Ещё в 1890-х, наблюдая больных, Хэд заметил странную закономерность. Когда у человека болел внутренний орган, на коже — далеко от этого органа — появлялась узкая полоса повышенной чувствительности. Печень — и зона на спине. Сердце — и полоса на груди и руке. Эти участки потом назвали <em>зонами Хэда.</em> Это была первая в истории научная карта, связавшая внутренности с поверхностью тела.</p>
+      <p>Но Хэду этого было мало. Он хотел понять саму природу чувствительности — и не на пациентах, а изнутри, на себе. И тогда он пошёл на то, на что не пойдёт почти никто. 25 апреля 1903 года его коллега, хирург Джеймс Шеррен, сделал надрез на предплечье Хэда и <strong>перерезал ему два кожных нерва.</strong> Сознательно. Чтобы Хэд мог в течение следующих <em>четырёх лет</em> с точностью до миллиметра и до дня записывать, как чувствительность медленно возвращается на онемевший участок кожи.</p>
+      <p>Вместе с психологом У. Х. Р. Риверсом, по выходным, в тихой комнате, с закрытыми глазами, Хэд тысячи раз позволял прикасаться к своей коже иглой, тёплым и холодным, и записывал, что чувствует. Из этого мучительного многолетнего эксперимента родилось открытие: чувствительность возвращается <strong>не сразу и не целиком, а в два слоя.</strong> Сначала — грубая, разлитая, эмоциональная боль, которую невозможно точно локализовать. Хэд назвал её <em>протопатической.</em> И только потом — тонкая, точная чувствительность, способная сказать «вот здесь, ровно тут». Её он назвал <em>эпикритической.</em></p>
+      <p>Запомни эту мысль, она нам пригодится: ощущение тела — не единое целое. В нём есть древний, грубый, эмоциональный слой — и поверх него тонкий, точный. Тело можно чувствовать <em>смутно и тревожно</em> или <em>ясно и адресно.</em> И, как мы увидим, именно грубый, древний слой отвечает за то, почему боль органа всплывает «не там».</p>
+      <p>Хэд дал нам карту — зоны на коже, связанные с органами. Но карта — это ещё не объяснение. Почему вообще орган глубоко внутри способен зажечь точку на коже? Чтобы ответить, нужен был другой человек и другая идея. Идея о том, что происходит в одном-единственном перекрёстке нервов.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ II. SHERRINGTON / CONVERGENT NEURON ═══════════ -->
+<section class="movement">
+  <div class="wrap">
+    <div class="mv-head reveal">
+      <div class="mv-index"><span class="roman">II</span> Один провод на двоих</div>
+      <h2 class="mv-title">Перекрёсток, где орган притворяется кожей</h2>
+    </div>
+    <div class="prose reveal">
+      <span class="scene">Сцена третья. Внутри спинного мозга.</span>
+      <p>В те же годы, когда Хэд резал себя, другой британец — <strong>Чарлз Шеррингтон</strong>, будущий нобелевский лауреат, — закладывал фундамент всей нейронауки. Это он придумал слово «синапс». Это он в своей великой книге <em>«Интегративная деятельность нервной системы»</em> (1906) показал главное: нервная система не просто проводит сигналы, как провода. Она их <strong>сводит вместе.</strong> Множество разных входов сходятся на одной клетке, и она решает, что с ними делать. Шеррингтон назвал это принципом «общего конечного пути» — много дорог, ведущих к одной двери.</p>
+      <p>Теперь соедини это с картой Хэда — и ты получишь разгадку. В задний рог спинного мозга, на каждом его этаже, входят два совершенно разных потока. Один идёт <strong>от внутреннего органа</strong> — сердца, печени, кишечника. Другой — <strong>от кожи и мышц</strong> того же участка тела. И вот ключевой, почти невероятный факт: очень часто оба эти потока приходят <em>на один и тот же нейрон.</em></p>
+      <p>Его называют <strong>висцеро-соматическим конвергентным нейроном.</strong> «Конвергентный» — потому что на нём сходятся, конвергируют, две линии. Представь старую телефонную линию, общую на две квартиры. Звонит одна — а трубку снимаешь, думая, что звонят тебе. У мозга ровно та же проблема. У этого нейрона <em>один обратный адрес на двоих.</em> И когда по нему приходит крик от больного органа, мозг считывает знакомый адрес и делает самый вероятный вывод: «Болит кожа». Потому что от кожи сигналы шли всю жизнь, каждый день, миллионы раз. А от сердца — впервые. Мозг ставит на привычное. И ошибается.</p>
     </div>
 
-    <!-- SIGNATURE 1: convergence neuron schematic -->
     <figure class="figure reveal">
       <div class="cap">Схема · висцеро-соматическая конвергенция <span>задний рог спинного мозга</span></div>
       <div class="figure-body">
         <svg viewBox="0 0 560 300" width="100%" role="img" aria-label="Схема конвергентного нейрона">
-          <!-- organ -->
           <g>
             <circle cx="70" cy="95" r="26" fill="none" stroke="var(--pain)" stroke-width="1.6"/>
             <path d="M70 110c0 0-13-8-13-18a7 7 0 0 1 13-3 7 7 0 0 1 13 3c0 10-13 18-13 18z" fill="var(--pain)" opacity=".75"/>
             <text x="70" y="150" text-anchor="middle" font-family="Space Mono" font-size="12" fill="var(--pain)">ОРГАН</text>
-            <text x="70" y="166" text-anchor="middle" font-family="Space Mono" font-size="10" fill="var(--ash)">висцеральный путь</text>
+            <text x="70" y="166" text-anchor="middle" font-family="Space Mono" font-size="10" fill="var(--ash)">висцеральный вход</text>
           </g>
-          <!-- skin -->
           <g>
             <rect x="44" y="200" width="52" height="34" rx="6" fill="none" stroke="var(--nerve)" stroke-width="1.6"/>
             <path d="M52 226 q18 -14 36 0" fill="none" stroke="var(--nerve)" stroke-width="1.4"/>
             <text x="70" y="258" text-anchor="middle" font-family="Space Mono" font-size="12" fill="var(--nerve)">КОЖА</text>
-            <text x="70" y="274" text-anchor="middle" font-family="Space Mono" font-size="10" fill="var(--ash)">соматический путь</text>
+            <text x="70" y="274" text-anchor="middle" font-family="Space Mono" font-size="10" fill="var(--ash)">соматический вход</text>
           </g>
-          <!-- converging afferents -->
           <path d="M100 100 C 180 110, 200 150, 252 158" fill="none" stroke="var(--pain)" stroke-width="2.2" class="flow"/>
           <path d="M100 215 C 180 200, 200 170, 252 162" fill="none" stroke="var(--nerve)" stroke-width="2.2" class="flow"/>
-          <!-- the convergent neuron -->
           <circle cx="278" cy="160" r="22" fill="rgba(255,180,84,.14)" stroke="var(--pain2)" stroke-width="2" class="pulse-node"/>
           <circle cx="278" cy="160" r="6" fill="var(--pain2)"/>
           <text x="278" y="205" text-anchor="middle" font-family="Space Mono" font-size="11" fill="var(--pain2)">КОНВЕРГЕНТНЫЙ</text>
           <text x="278" y="220" text-anchor="middle" font-family="Space Mono" font-size="11" fill="var(--pain2)">НЕЙРОН</text>
-          <!-- output to brain -->
           <path d="M300 160 C 380 160, 410 120, 470 110" fill="none" stroke="var(--cosmos)" stroke-width="2.4" class="flow"/>
           <g>
             <circle cx="500" cy="105" r="30" fill="none" stroke="var(--cosmos)" stroke-width="1.6"/>
@@ -297,51 +275,47 @@ a{color:var(--nerve);}
           </g>
         </svg>
       </div>
-      <figcaption class="foot">Сигнал органа и сигнал кожи приходят на один нейрон. У мозга — один адрес на двоих, и он по привычке «назначает» источником кожу. Так рождается отражённая боль.</figcaption>
+      <figcaption class="foot">Крик органа и сигнал кожи приходят на один нейрон. У мозга один адрес на двоих — и он «назначает» источником привычную кожу. Так рождается отражённая боль.</figcaption>
     </figure>
 
     <div class="prose reveal">
-      <p>Это не гипотеза «для красоты». По данным PubMed, обзор W. Jänig (Schmerz, 2014) описывает анатомию буквально: висцеральные афференты входят в пластины I, II и V заднего рога и переключаются на <strong>висцеро-соматические конвергентные нейроны, которые дополнительно получают вход от кожи и глубоких тканей соответствующих дерматомов и миотомов.</strong> А M.A. Giamberardino (J Rehabil Med, 2003) показывает, что отражённая боль во многом возникает из-за <em>центральной сенситизации</em> этих самых конвергентных нейронов — когда мощный поток от органа «раскачивает» нейрон, и он начинает преувеличивать сигналы кожи.</p>
+      <p>В 1961 году физиолог <strong>Теодор Рух</strong> собрал это в стройную «теорию конвергенции-проекции»: раз орган и кожа проецируются на общий нейрон, мозг проецирует боль органа обратно — на кожу. Спустя полвека нейрофизиология подтвердила анатомию буквально. По данным PubMed, обзор немецкого физиолога В. Йенига прямо описывает: висцеральные волокна входят в задний рог и переключаются на конвергентные нейроны, которые <em>«дополнительно получают вход от кожи и глубоких тканей соответствующих дерматомов и миотомов».</em> А итальянский исследователь боли Мария Адель Джамберардино показала, что отражённая боль во многом рождается из <strong>центральной сенситизации</strong> этих нейронов: мощный поток от больного органа «раскачивает» клетку, и она начинает преувеличивать сигналы с кожи — той самой кожи, что когда-то изучал на себе Генри Хэд.</p>
+      <span class="src-note">По данным PubMed: Jänig W., «Neurobiology of visceral pain», <em>Schmerz</em>, 2014 — <a href="https://doi.org/10.1007/s00482-014-1402-x" target="_blank" rel="noopener">doi.org/10.1007/s00482-014-1402-x</a>; Giamberardino MA., <em>J Rehabil Med</em>, 2003 — <a href="https://doi.org/10.1080/16501960310010205" target="_blank" rel="noopener">doi.org/10.1080/16501960310010205</a></span>
     </div>
 
-    <div class="callout fact reveal">
-      <div class="callout-h">◆ Что именно установлено</div>
-      <div class="callout-b">
-        <p>Согласно PubMed, висцеральная боль коррелирует с возбуждением спинальных висцеральных афферентов, которые сходятся с кожными на конвергентных нейронах заднего рога; их сенситизация и лежит в основе отражённой боли. Jänig W. «Neurobiology of visceral pain», Schmerz, 2014. <a href="https://doi.org/10.1007/s00482-014-1402-x" target="_blank" rel="noopener">doi.org/10.1007/s00482-014-1402-x</a></p>
-      </div>
+    <div class="epigraph reveal">
+      <p>«Висцеральная боль диффузно локализована, отражается в другие ткани и относится — вместе с телесными ощущениями — к интероцепции тела».</p>
+      <cite>Вильфрид Йениг · обзор нейробиологии висцеральной боли, 2014</cite>
     </div>
   </div>
 </section>
 
-<!-- ═══════════ III. INTERACTIVE BODY MAP ═══════════ -->
+<!-- ═══════════ III. REFERRED PAIN / INTERACTIVE MAP ═══════════ -->
 <section class="movement">
   <div class="wrap">
     <div class="mv-head reveal">
-      <div class="mv-index"><span class="roman">III</span> Настоящая карта точек</div>
-      <h2 class="mv-title">Почему орган болит не там, где находится</h2>
+      <div class="mv-index"><span class="roman">III</span> Где орган кричит</div>
+      <h2 class="mv-title">Почему сердце болит в руке</h2>
     </div>
     <div class="prose reveal">
-      <p>Вот она — настоящая «карта связи органов и точек на теле». Не выдуманная, а проверенная веками клиники. Каждый орган подключён к своему сегменту спинного мозга, и с этого же сегмента выходят нервы к определённому участку кожи. Орган и кожа делят сегмент — поэтому боль органа «выходит» именно туда.</p>
-      <p>Нажми на орган ниже — и проследи путь сигнала: <em>орган → его сегмент спинного мозга → участок кожи,</em> куда боль отражается на самом деле.</p>
+      <span class="scene">Сцена четвёртая. Приёмное отделение, три часа ночи.</span>
+      <p>Мужчина за пятьдесят входит в приёмный покой, держась за левую руку. Не за грудь — за руку. Он уверен, что потянул мышцу. Опытный врач смотрит на него три секунды и зовёт кардиолога. Потому что врач знает карту. Он знает, что <strong>сердце почти никогда не болит там, где находится.</strong> Оно кричит в левую руку, в челюсть, в шею, между лопаток — куда угодно, только не точно «в сердце». И этот крик не в том месте — не каприз, а точный, предсказуемый адрес на карте, которую мы только что разобрали.</p>
+      <p>Вот настоящая «карта точек, связанных с органами» — та, которую так грубо имитирует рефлексология. Только эта проверена не верой, а двумя веками клиники. Сердце сцеплено с сегментами на уровне верхней части груди — и делит их с кожей руки и челюсти. Диафрагма подключена высоко, к шейным сегментам, — поэтому кровь или гной под ней простреливают болью в плечо, далеко от живота. Жёлчный пузырь отдаёт под правую лопатку. Аппендикс сперва ноет вокруг пупка и только потом смещается вправо вниз. Почка простреливает из поясницы в пах.</p>
+      <p>Нажми на орган ниже — и проследи сам, как сигнал идёт по реальной карте: <em>орган → его сегмент спинного мозга → участок кожи,</em> куда боль выходит на самом деле.</p>
     </div>
 
-    <!-- SIGNATURE 2: interactive referred-pain map -->
     <figure class="figure reveal">
       <div class="cap">Интерактив · карта отражённой боли <span id="bmState">авто-обход</span></div>
       <div class="figure-body">
         <svg id="bodyMap" viewBox="0 0 440 470" width="100%" role="img" aria-label="Интерактивная карта отражённой боли">
-          <!-- faint silhouette -->
           <g class="silh">
             <circle cx="220" cy="44" r="22"/>
             <path d="M198 64 C150 76 140 92 138 120 L120 200 M242 64 C290 76 300 92 302 120 L320 200"/>
             <path d="M170 70 C150 110 150 250 165 300 L168 440 M270 70 C290 110 290 250 275 300 L272 440"/>
             <path d="M165 300 H275"/>
           </g>
-          <!-- spinal cord -->
           <rect x="206" y="78" width="28" height="300" rx="14" fill="var(--panel2)" stroke="var(--line2)" stroke-width="1"/>
           <text x="220" y="398" text-anchor="middle" font-family="Space Mono" font-size="11" fill="var(--ash)">СПИННОЙ МОЗГ</text>
-
-          <!-- connectors (organ->disc and disc->zone) -->
           <path id="po0" class="conn" d="M118 110 C 165 108, 180 105, 206 105"/>
           <path id="pz0" class="conn" d="M234 105 C 285 105, 305 102, 345 100"/>
           <path id="po1" class="conn" d="M118 168 C 165 168, 180 165, 206 165"/>
@@ -350,26 +324,18 @@ a{color:var(--nerve);}
           <path id="pz2" class="conn" d="M234 248 C 285 248, 305 250, 345 255"/>
           <path id="po3" class="conn" d="M118 322 C 165 322, 180 320, 206 320"/>
           <path id="pz3" class="conn" d="M234 320 C 285 320, 305 322, 345 322"/>
-
-          <!-- spinal segment discs -->
           <g class="node disc-c" id="d0"><circle cx="220" cy="105" r="11" fill="rgba(255,180,84,.18)" stroke="var(--pain2)" stroke-width="1.6"/></g>
           <g class="node disc-c" id="d1"><circle cx="220" cy="165" r="11" fill="rgba(255,180,84,.18)" stroke="var(--pain2)" stroke-width="1.6"/></g>
           <g class="node disc-c" id="d2"><circle cx="220" cy="248" r="11" fill="rgba(255,180,84,.18)" stroke="var(--pain2)" stroke-width="1.6"/></g>
           <g class="node disc-c" id="d3"><circle cx="220" cy="320" r="11" fill="rgba(255,180,84,.18)" stroke="var(--pain2)" stroke-width="1.6"/></g>
-
-          <!-- organ nodes (left) -->
           <g class="node organ-c" id="o0"><circle cx="92" cy="105" r="20" fill="rgba(255,107,107,.14)" stroke="var(--pain)" stroke-width="1.6"/><text x="92" y="110" text-anchor="middle" font-family="Space Mono" font-weight="700" font-size="14" fill="var(--pain)">Д</text></g>
           <g class="node organ-c" id="o1"><circle cx="92" cy="168" r="20" fill="rgba(255,107,107,.14)" stroke="var(--pain)" stroke-width="1.6"/><text x="92" y="173" text-anchor="middle" font-family="Space Mono" font-weight="700" font-size="14" fill="var(--pain)">С</text></g>
           <g class="node organ-c" id="o2"><circle cx="92" cy="250" r="20" fill="rgba(255,107,107,.14)" stroke="var(--pain)" stroke-width="1.6"/><text x="92" y="255" text-anchor="middle" font-family="Space Mono" font-weight="700" font-size="14" fill="var(--pain)">П</text></g>
           <g class="node organ-c" id="o3"><circle cx="92" cy="322" r="20" fill="rgba(255,107,107,.14)" stroke="var(--pain)" stroke-width="1.6"/><text x="92" y="327" text-anchor="middle" font-family="Space Mono" font-weight="700" font-size="14" fill="var(--pain)">А</text></g>
-
-          <!-- skin zones (right) -->
           <g class="node zone-c" id="z0"><rect x="345" y="88" width="80" height="26" rx="13" fill="rgba(63,224,197,.12)" stroke="var(--nerve)" stroke-width="1.4"/><text x="385" y="105" text-anchor="middle" font-family="Space Mono" font-size="9.5" fill="var(--nerve)">надплечье</text></g>
           <g class="node zone-c" id="z1"><rect x="345" y="192" width="86" height="26" rx="13" fill="rgba(63,224,197,.12)" stroke="var(--nerve)" stroke-width="1.4"/><text x="388" y="209" text-anchor="middle" font-family="Space Mono" font-size="9.5" fill="var(--nerve)">рука · челюсть</text></g>
           <g class="node zone-c" id="z2"><rect x="345" y="242" width="84" height="26" rx="13" fill="rgba(63,224,197,.12)" stroke="var(--nerve)" stroke-width="1.4"/><text x="387" y="259" text-anchor="middle" font-family="Space Mono" font-size="9.5" fill="var(--nerve)">прав. лопатка</text></g>
           <g class="node zone-c" id="z3"><rect x="345" y="309" width="86" height="26" rx="13" fill="rgba(63,224,197,.12)" stroke="var(--nerve)" stroke-width="1.4"/><text x="388" y="326" text-anchor="middle" font-family="Space Mono" font-size="9.5" fill="var(--nerve)">низ живота</text></g>
-
-          <!-- travelling pulse dot -->
           <circle id="bmDot" r="5" fill="#fff" opacity="0" style="filter:drop-shadow(0 0 6px #fff)"/>
         </svg>
       </div>
@@ -380,185 +346,236 @@ a{color:var(--nerve);}
         <button class="bm-btn" data-i="3">Аппендикс</button>
       </div>
       <div class="bm-readout" id="bmReadout">Выбери орган — или смотри авто-обход.</div>
-      <figcaption class="foot">Орган и участок кожи сходятся на одном сегменте спинного мозга. Это и есть «карта точек, связанных с органами» — настоящая, и врачи пользуются ею для диагноза.</figcaption>
+      <figcaption class="foot">Орган и участок кожи сходятся на одном сегменте спинного мозга. Это и есть настоящая «карта точек, связанных с органами» — ею врачи пользуются для диагноза каждый день.</figcaption>
     </figure>
-  </div>
-</section>
 
-<!-- ═══════════ IV. DERMATOMES & HISTORY ═══════════ -->
-<section class="movement">
-  <div class="wrap">
-    <div class="mv-head reveal">
-      <div class="mv-index"><span class="roman">IV</span> Карта на коже</div>
-      <h2 class="mv-title">Дерматомы: тело, разлинованное нервами</h2>
-    </div>
     <div class="prose reveal">
-      <p>Если конвергенция — это «провод», то дерматомы — это карта, которую он рисует. <strong>Дерматом</strong> — участок кожи, который обслуживается одним спинномозговым сегментом. Всё тело разбито на такие полосы: 31 пара спинномозговых нервов — 31 уровень карты.</p>
-      <p>Эта карта — не теория. Опоясывающий лишай (герпес-зостер) высыпает ровно по одному дерматому — потому что вирус сидит в одном нервном узле и выходит строго по его территории. Хирург, анестезиолог, невролог читают тело по дерматомам каждый день.</p>
-      <p>И именно потому, что орган «приписан» к сегменту, а сегмент — к дерматому, боль органа всплывает в строго определённом месте кожи. Не где попало. <em>По карте.</em></p>
-    </div>
-
-    <div class="timeline reveal">
-      <div class="t-item">
-        <div class="t-year">1890-е</div>
-        <div class="t-desc"><b>Генри Хэд</b> картирует «зоны Хэда» — участки кожной гиперчувствительности при болезнях внутренних органов. Первая научная карта связи орган↔кожа.</div>
-      </div>
-      <div class="t-item">
-        <div class="t-year">1893</div>
-        <div class="t-desc"><b>Джеймс Маккензи</b> систематически описывает висцеро-соматическую отражённую боль у пациентов.</div>
-      </div>
-      <div class="t-item">
-        <div class="t-year">1961</div>
-        <div class="t-desc"><b>Теодор Рух</b> формулирует <b>теорию конвергенции-проекции</b> — то самое объяснение, которое мы разобрали выше.</div>
-      </div>
-      <div class="t-item">
-        <div class="t-year">2000-е</div>
-        <div class="t-desc">Нейровизуализация показывает: висцеральные сигналы достигают <b>островковой коры</b> — и связывают карту тела с самим ощущением себя.</div>
-      </div>
+      <p>Видишь разницу? На сеансе рефлексологии тебе обещают связь <em>сверху вниз</em>: нажму на кожу — и пошлю команду органу. А настоящая связь работает <em>снизу вверх</em>: больной орган сам посылает крик, и он всплывает на коже. Это две противоположные стрелки. И вся клиническая медицина построена на второй из них — мы ещё вернёмся к тому, почему первая не работает.</p>
     </div>
   </div>
 </section>
 
-<!-- ═══════════ V. INTEROCEPTION ═══════════ -->
+<!-- ═══════════ IV. DERMATOMES ═══════════ -->
 <section class="movement">
   <div class="wrap">
     <div class="mv-head reveal">
-      <div class="mv-index"><span class="roman">V</span> От карты — к чувству</div>
-      <h2 class="mv-title">Интероцепция: как мозг «слышит» твои органы</h2>
+      <div class="mv-index"><span class="roman">IV</span> Тело, разлинованное нервами</div>
+      <h2 class="mv-title">Дерматомы: атлас, который носит каждый</h2>
     </div>
     <div class="prose reveal">
-      <p>Теперь поднимемся выше спинного мозга. Все эти сигналы — от сердца, кишечника, лёгких — куда-то приходят. И сходятся они в удивительном месте: <strong>островковой коре</strong> (insula), спрятанной в глубине мозга. По данным PubMed, обзор Jänig прямо называет заднюю часть островка <em>«первичной интероцептивной корой»</em> — туда через таламус приходят сигналы тела.</p>
-      <p>Способность мозга чувствовать внутреннее состояние тела — сердцебиение, голод, дыхание, наполненность — называется <strong>интероцепцией.</strong> M.P. Paulus и J.L. Stewart (Neuropharmacology, 2013) описывают островок как <em>«центральный узел нервной системы, который принимает, обрабатывает и интегрирует сигналы тела»</em> и связывают интероцепцию с вниманием, стрессом, вознаграждением.</p>
-      <p>И вот где это становится почти философией. В 2021 году группа из Института Макса Планка показала в Science: островок <strong>интегрирует телесную обратную связь, чтобы регулировать страх.</strong> Когда во время замирания сердце замедлялось, этот телесный сигнал, идущий в островок, удерживал страх в равновесии. А стимуляция блуждающего нерва это равновесие ломала. То есть <em>тело не просто слушается мозга — оно учит его, что чувствовать.</em></p>
+      <span class="scene">Сцена пятая. Карта, проступающая на коже.</span>
+      <p>Если конвергентный нейрон — это провод, то дерматомы — карта, которую он рисует. <strong>Дерматом</strong> — это участок кожи, который обслуживается одним-единственным сегментом спинного мозга. У человека 31 пара спинномозговых нервов — значит, 31 горизонтальный «этаж» карты, от шеи до крестца. Твоё тело расчерчено этими полосами прямо сейчас, ты просто их не видишь.</p>
+      <p>Но иногда карта проступает наружу — пугающе буквально. Вирус опоясывающего лишая, тот самый, что вызывает ветрянку, после болезни прячется в одном нервном узле и спит там годами. А когда иммунитет слабеет, он просыпается и выходит на кожу — строго по территории своего сегмента. Высыпания ложатся <em>ровной полосой,</em> будто кто-то провёл по телу линию и сказал: «дальше нельзя». Врачи узнают этот рисунок мгновенно: это не сыпь «где попало», это дерматом, проявленный вирусом, как фотобумага в проявителе.</p>
+      <p>Посмотри, как эта карта устроена — каждый цветной пояс здесь обслуживается своим сегментом, и именно по такой решётке тело «адресует» свои сигналы.</p>
     </div>
 
-    <div class="epigraph reveal">
+    <figure class="figure reveal">
+      <div class="cap">Анимация · дерматомы <span>31 уровень карты тела</span></div>
+      <div class="figure-body">
+        <svg viewBox="0 0 320 420" width="100%" role="img" aria-label="Карта дерматомов">
+          <defs>
+            <clipPath id="bodyClip">
+              <path d="M160 20 a26 26 0 0 1 26 26 c0 14 -8 22 -8 22 l14 6 c20 8 26 22 27 44 l6 70 c1 14 -10 16 -13 4 l-6 -52 -3 70 -4 150 c-1 12 -16 12 -17 0 l-5 -96 -5 96 c-1 12 -16 12 -17 0 l-4 -150 -3 -70 -6 52 c-3 12 -14 10 -13 -4 l6 -70 c1 -22 7 -36 27 -44 l14 -6 c0 0 -8 -8 -8 -22 a26 26 0 0 1 26 -26 z"/>
+            </clipPath>
+          </defs>
+          <!-- colored dermatome bands clipped to body -->
+          <g clip-path="url(#bodyClip)">
+            <rect x="80" y="20"  width="160" height="38" fill="#ff6b6b" opacity=".55"/>
+            <rect x="80" y="58"  width="160" height="38" fill="#ffb454" opacity=".5"/>
+            <rect x="80" y="96"  width="160" height="40" fill="#7ee0a0" opacity=".5"/>
+            <rect x="80" y="136" width="160" height="42" fill="#3fe0c5" opacity=".5"/>
+            <rect x="80" y="178" width="160" height="42" fill="#4cc2ff" opacity=".5"/>
+            <rect x="80" y="220" width="160" height="44" fill="#9b8cff" opacity=".5"/>
+            <rect x="80" y="264" width="160" height="60" fill="#c77dff" opacity=".45"/>
+            <rect x="80" y="324" width="160" height="96" fill="#ff8fb1" opacity=".4"/>
+            <!-- sweeping highlight -->
+            <rect id="dermSweep" x="80" y="20" width="160" height="30" fill="#ffffff" opacity=".22"/>
+          </g>
+          <path d="M160 20 a26 26 0 0 1 26 26 c0 14 -8 22 -8 22 l14 6 c20 8 26 22 27 44 l6 70 c1 14 -10 16 -13 4 l-6 -52 -3 70 -4 150 c-1 12 -16 12 -17 0 l-5 -96 -5 96 c-1 12 -16 12 -17 0 l-4 -150 -3 -70 -6 52 c-3 12 -14 10 -13 -4 l6 -70 c1 -22 7 -36 27 -44 l14 -6 c0 0 -8 -8 -8 -22 a26 26 0 0 1 26 -26 z"
+            fill="none" stroke="var(--line2)" stroke-width="1.5"/>
+          <g font-family="Space Mono" font-size="10" fill="var(--bone-dim)">
+            <text x="250" y="44">C · шея</text>
+            <text x="250" y="120">T · грудь</text>
+            <text x="250" y="200">T · живот</text>
+            <text x="250" y="250">L · поясница</text>
+            <text x="250" y="330">S · крестец</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption class="foot">Каждый пояс кожи привязан к своему сегменту. Опоясывающий лишай высыпает ровно по одному такому поясу — потому что вирус выходит из одного нервного узла.</figcaption>
+    </figure>
+
+    <div class="prose reveal">
+      <p>И вот почему всё сходится. Орган приписан к сегменту. Сегмент приписан к дерматому. Поэтому боль органа всплывает не «где попало», а в строго определённом месте кожи — <em>по карте.</em> Та полоса на руке, куда кричит сердце, — это просто дерматом сегмента, с которым сердце делит свой нейрон. Зоны Хэда, конвергенция Шеррингтона, проекция Руха и дерматомы — это не четыре разные истории. Это одна история, рассказанная с четырёх сторон.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ V. GATE THEORY ═══════════ -->
+<section class="movement">
+  <div class="wrap">
+    <div class="mv-head reveal">
+      <div class="mv-index"><span class="roman">V</span> Ворота в спинном мозге</div>
+      <h2 class="mv-title">Боль — это не сигнал. Это решение</h2>
+    </div>
+    <div class="prose reveal">
+      <span class="scene">Сцена шестая. 1965 год, журнал Science.</span>
+      <p>Тут история делает крутой поворот. До середины XX века все думали, что боль — это просто провод: повредил ткань → сигнал побежал в мозг → стало больно. Чем сильнее повреждение, тем сильнее боль. Просто и неверно. Потому что эта схема не объясняла очевидного: почему солдат с тяжёлым ранением иногда не чувствует боли, а человек с крошечной царапиной кричит. Почему, ударившись, мы инстинктивно <em>растираем</em> ушибленное место — и становится легче.</p>
+      <p>В 1965 году двое — психолог <strong>Рональд Мелзак</strong> и физиолог <strong>Патрик Уолл</strong> — опубликовали в Science идею, которая перевернула всё. Они назвали её <em>теорией ворот.</em> В заднем роге спинного мозга, говорили они, есть нечто вроде ворот, которые могут <strong>пропустить боль выше или придержать её.</strong> И решают это не только сигналы боли. Толстые волокна, несущие обычное прикосновение, способны эти ворота <em>прикрыть.</em> Вот почему растирание помогает: ты буквально заваливаешь ворота сигналами касания, и боли остаётся меньше места, чтобы пройти. А сверху на эти ворота давит сам мозг — твоё внимание, страх, настроение — и тоже решает, открыть их или закрыть.</p>
+    </div>
+
+    <figure class="figure reveal">
+      <div class="cap">Интерактив · теория ворот боли <span id="gateState" style="color:var(--nerve)">ВОРОТА: открыты</span></div>
+      <div class="figure-body">
+        <svg viewBox="0 0 560 240" width="100%" role="img" aria-label="Схема теории ворот">
+          <!-- pain fiber -->
+          <path d="M30 70 H 250" stroke="var(--pain)" stroke-width="3" fill="none" class="flow"/>
+          <text x="30" y="58" font-family="Space Mono" font-size="11" fill="var(--pain)">боль (тонкие волокна)</text>
+          <!-- touch fiber -->
+          <path d="M30 170 H 250" stroke="var(--nerve)" stroke-width="3" fill="none" class="flow"/>
+          <text x="30" y="194" font-family="Space Mono" font-size="11" fill="var(--nerve)">касание (толстые волокна)</text>
+          <!-- the gate -->
+          <rect id="gateDoor" x="250" y="55" width="16" height="130" rx="4" fill="var(--pain2)" opacity=".85"/>
+          <text x="258" y="210" text-anchor="middle" font-family="Space Mono" font-size="10" fill="var(--pain2)">ВОРОТА</text>
+          <!-- transmission cell -->
+          <circle cx="330" cy="120" r="20" fill="rgba(155,140,255,.14)" stroke="var(--cosmos)" stroke-width="2"/>
+          <text x="330" y="160" text-anchor="middle" font-family="Space Mono" font-size="10" fill="var(--cosmos)">Т-нейрон</text>
+          <!-- to brain -->
+          <path id="gateOut" d="M352 116 C 430 100, 470 95, 520 92" stroke="var(--cosmos)" stroke-width="2.4" fill="none" class="flow"/>
+          <g>
+            <circle cx="525" cy="90" r="22" fill="none" stroke="var(--cosmos)" stroke-width="1.5"/>
+            <path d="M515 90c0-7 5-12 10-12s10 5 10 12M520 86c2-3 8-3 10 0M520 95c2 3 8 3 10 0" fill="none" stroke="var(--cosmos)" stroke-width="1.1"/>
+            <text x="525" y="128" text-anchor="middle" font-family="Space Mono" font-size="10" fill="var(--cosmos)">МОЗГ</text>
+          </g>
+          <!-- descending control -->
+          <path d="M525 68 C 470 30, 360 40, 332 100" stroke="var(--bone-dim)" stroke-width="1.4" fill="none" stroke-dasharray="4 5" opacity=".6"/>
+          <text x="360" y="30" font-family="Space Mono" font-size="10" fill="var(--ash)">контроль сверху: внимание, страх</text>
+        </svg>
+      </div>
+      <div class="bm-ctrls">
+        <button class="bm-btn on" id="gateToggle">Закрыть ворота касанием</button>
+      </div>
+      <figcaption class="foot">Касание и сигналы из мозга могут «прикрыть ворота» и уменьшить боль. Нажми кнопку — и проследи, как поток боли к мозгу слабеет.</figcaption>
+    </figure>
+
+    <div class="prose reveal">
+      <p>Будем честны до конца — и это важная часть науки. По данным PubMed, спустя десятилетия выяснилось, что теория ворот <em>«в деталях неверна»</em>: реальные механизмы в заднем роге оказались сложнее, чем рисовали Мелзак и Уолл. Но — и это ключевое — та же ретроспектива признаёт, что их идея <strong>«преобразила наше понимание боли».</strong> Потому что она первой сказала вещь, которая теперь кажется очевидной: <em>боль — это не пассивный сигнал из тела, а активное решение нервной системы.</em> Тело предлагает — мозг распоряжается. И между ними, в спинном мозге, идёт постоянный торг.</p>
+      <span class="src-note">По данным PubMed: Mendell LM., «Constructing and deconstructing the gate theory of pain», <em>Pain</em>, 2013 — <a href="https://doi.org/10.1016/j.pain.2013.12.010" target="_blank" rel="noopener">doi.org/10.1016/j.pain.2013.12.010</a></span>
+      <p>Запомни эту мысль — «тело предлагает, мозг распоряжается». Сейчас мы поднимемся туда, где мозг принимает свои решения. И там нас ждёт самое странное открытие во всём этом выпуске.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ VI. INTEROCEPTION ═══════════ -->
+<section class="movement">
+  <div class="wrap">
+    <div class="mv-head reveal">
+      <div class="mv-index"><span class="roman">VI</span> Орган, который чувствует тебя</div>
+      <h2 class="mv-title">Островок: где тело становится «я»</h2>
+    </div>
+    <div class="prose reveal">
+      <span class="scene">Сцена седьмая. Складка коры, спрятанная глубоко в мозге.</span>
+      <p>Все сигналы, о которых мы говорили, — от сердца, кишечника, лёгких, кожи, — поднимаются вверх и сходятся в одном поразительном месте. Оно спрятано в глубине мозга, под висками, в складке, которую называют <strong>островковой корой</strong>, или просто островком (insula). По данным PubMed, обзор Йенига прямо называет заднюю часть островка <em>«первичной интероцептивной корой»</em> — именно туда тело докладывает о себе.</p>
+      <p>Способность мозга чувствовать собственное нутро — сердцебиение, голод, нехватку воздуха, наполненность желудка — называется <strong>интероцепцией.</strong> Канадско-американский нейроанатом <strong>Бад Крейг</strong> посвятил ей всю жизнь и назвал свою главную книгу гениально просто — вопросом: <em>«Как ты себя чувствуешь?»</em> Его ответ переворачивает интуицию. Островок, говорит Крейг, собирает из тысяч телесных сигналов <strong>единое чувство «материального меня»</strong> — ощущение того, что ты находишься внутри своего тела вот прямо сейчас. Не мысль. Чувство. Основа того, что ты — это ты.</p>
+      <p>За полвека до Крейга к этому же подошёл португальско-американский нейробиолог <strong>Антонио Дамасио.</strong> В своей знаменитой книге <em>«Ошибка Декарта»</em> он обрушился на старую идею «мыслю, следовательно существую». Нет, возражает Дамасио: сначала ты <em>чувствуешь</em>, и только потом мыслишь. Эмоция, по Дамасио, — это в первую очередь <strong>восприятие состояния собственного тела:</strong> сжавшегося желудка, заколотившегося сердца, перехваченного дыхания. Разум не парит над телом. Он вырастает из него. Ошибка Декарта была в том, что он оторвал одно от другого.</p>
+      <p>И вот эксперимент, от которого мурашки. В 2021 году группа из Института Макса Планка опубликовала в Science работу, где показала на мышах: островок <strong>удерживает страх в равновесии с помощью обратной связи от тела.</strong> Когда животное замирало от страха, его сердце замедлялось — и этот телесный сигнал, поднимаясь в островок, <em>гасил избыточный страх.</em> А когда учёные вмешались в связь тела и мозга, простимулировав блуждающий нерв, — равновесие сломалось. Вдумайся: не мозг командовал телом. <strong>Тело учило мозг, сколько страха можно себе позволить.</strong></p>
+      <span class="src-note">По данным PubMed: Klein A.S. et al., «Fear balance is maintained by bodily feedback to the insular cortex in mice», <em>Science</em>, 2021 — <a href="https://doi.org/10.1126/science.abj8817" target="_blank" rel="noopener">doi.org/10.1126/science.abj8817</a>; Paulus MP, Stewart JL., <em>Neuropharmacology</em>, 2013 — <a href="https://doi.org/10.1016/j.neuropharm.2013.07.002" target="_blank" rel="noopener">doi.org/10.1016/j.neuropharm.2013.07.002</a></span>
+    </div>
+
+    <div class="epigraph book reveal">
       <p>«Островковая кора интегрирует предсказательные сенсорные и интероцептивные сигналы… телесная обратная связь используется, чтобы удерживать страх в функциональном равновесии».</p>
-      <cite>Klein et al., Science, 2021</cite>
+      <cite>Klein et al. · Science, 2021</cite>
     </div>
 
-    <div class="callout fact reveal">
-      <div class="callout-h">◆ Тело → мозг, а не только наоборот</div>
-      <div class="callout-b">
-        <p>Согласно PubMed, островок выступает регулятором страха, зависящим от состояния тела: замедление сердца во время замирания даёт обратную связь, а нарушение связи тело–мозг (стимуляцией блуждающего нерва) расстраивает баланс. Klein A.S. et al., Science, 2021. <a href="https://doi.org/10.1126/science.abj8817" target="_blank" rel="noopener">doi.org/10.1126/science.abj8817</a></p>
-      </div>
+    <div class="prose reveal">
+      <p>Современная нейробиология идёт ещё дальше. Психолог <strong>Лиза Фельдман Барретт</strong> в книге <em>«Как рождаются эмоции»</em> доказывает: мозг не сидит и не ждёт сигналов от тела пассивно. Он <strong>постоянно предсказывает</strong>, что тело почувствует в следующий миг, и подгоняет реальность под прогноз. Большую часть «себя» ты не воспринимаешь — ты <em>достраиваешь.</em> И теперь вернись на минуту к отражённой боли. Помнишь, почему сердце «болит» в руке? Потому что мозг ставит на самое вероятное объяснение. Это та же машина предсказаний, только пойманная на ошибке. Твоё ощущение тела — не прямая трансляция. Это <strong>лучшая догадка мозга о том, что внутри.</strong></p>
     </div>
   </div>
 </section>
 
-<!-- ═══════════ VI. VAGUS / GUT-BRAIN ═══════════ -->
+<!-- ═══════════ VII. SECOND BRAIN / VAGUS ═══════════ -->
 <section class="movement">
   <div class="wrap">
     <div class="mv-head reveal">
-      <div class="mv-index"><span class="roman">VI</span> Второй великий канал</div>
-      <h2 class="mv-title">Блуждающий нерв и ось «кишечник–мозг»</h2>
+      <div class="mv-index"><span class="roman">VII</span> Второй мозг</div>
+      <h2 class="mv-title">Кишечник, который думает, и нерв, что почти весь слушает</h2>
     </div>
     <div class="prose reveal">
-      <p>Спинной мозг — не единственная дорога от органов к мозгу. Есть вторая, ещё более прямая: <strong>блуждающий нерв</strong> (n. vagus) — главный кабель парасимпатической системы, протянутый от ствола мозга к сердцу, лёгким и всему кишечнику.</p>
-      <p>Деталь, которая переворачивает интуицию. По данным PubMed (Bonaz et al., 2018), блуждающий нерв на <strong>80% состоит из афферентных волокон</strong> — то есть он в основном передаёт информацию <em>от тела к мозгу,</em> а не наоборот. Это улица с преимущественно односторонним движением — снизу вверх. Тело постоянно докладывает мозгу о себе.</p>
-      <p>А докладывать есть о чём. В кишечнике живут триллионы микробов. Обзор J. Cryan и коллег (Physiological Reviews, 2019) — одна из главных работ в этой области — показывает, что микробиота общается с мозгом через иммунную систему, метаболизм триптофана, блуждающий нерв и собственную нервную сеть кишечника, влияя на стресс, тревожность и даже связана с такими состояниями, как тревога, ожирение, болезни Паркинсона и Альцгеймера.</p>
+      <span class="scene">Сцена восьмая. Тридцать сантиметров ниже головы.</span>
+      <p>Спинной мозг — не единственная дорога от органов к сознанию. Есть вторая, ещё более прямая, и она ведёт в место, которое долго недооценивали. В 1998 году нейрогастроэнтеролог <strong>Майкл Гершон</strong> из Колумбийского университета выпустил книгу с дерзким названием — <em>«Второй мозг».</em> По данным PubMed, в своей научной статье он формулирует это без обиняков: кишечная нервная система, которую <em>«когда-то считали простым скоплением релейных узлов, теперь признана сложным, интегративным мозгом в собственном праве».</em></p>
+      <span class="src-note">По данным PubMed: Gershon MD., «The enteric nervous system: a second brain», <em>Hosp Pract</em>, 1999 — <a href="https://doi.org/10.3810/hp.1999.07.153" target="_blank" rel="noopener">doi.org/10.3810/hp.1999.07.153</a></span>
+      <p>В стенке твоего кишечника живёт собственная нервная сеть из сотен миллионов нейронов — больше, чем во всём спинном мозге. Она способна управлять пищеварением <em>сама,</em> без приказов сверху. И именно в кишечнике вырабатывается около 90% серотонина твоего тела — того самого вещества, что мы привыкли связывать с настроением. «Бабочки в животе» перед важным моментом, спазм перед страшным разговором, «нутром чувствую» — это не метафоры. Это твой второй мозг подаёт голос.</p>
+      <p>А над всем этим протянут <strong>блуждающий нерв</strong> (n. vagus) — главный кабель, соединяющий ствол мозга с сердцем, лёгкими и кишечником. И вот деталь, которая ломает привычную картину «мозг — начальник, тело — подчинённый». По данным PubMed (Bonaz и коллеги, 2018), блуждающий нерв на <strong>80% состоит из афферентных волокон</strong> — то есть он почти весь работает в одну сторону: <em>снизу вверх, от тела к мозгу.</em> Это не линия приказов. Это линия <em>докладов.</em> Тело почти непрерывно рассказывает мозгу о себе — а мозг отвечает лишь по тонкому, 20-процентному обратному каналу.</p>
     </div>
 
-    <!-- SIGNATURE 3: vagus signal path -->
     <figure class="figure reveal">
       <div class="cap">Схема · ось кишечник–мозг <span>80% сигналов: тело → мозг</span></div>
       <div class="figure-body">
-        <svg viewBox="0 0 560 260" width="100%" role="img" aria-label="Схема блуждающего нерва">
-          <!-- brain -->
+        <svg viewBox="0 0 560 250" width="100%" role="img" aria-label="Схема блуждающего нерва">
           <g>
-            <circle cx="90" cy="80" r="34" fill="rgba(155,140,255,.12)" stroke="var(--cosmos)" stroke-width="1.6"/>
-            <path d="M70 80c0-11 9-19 20-19s20 8 20 19M78 73c3-5 16-5 19 0M78 88c3 5 16 5 19 0" fill="none" stroke="var(--cosmos)" stroke-width="1.3"/>
-            <text x="90" y="138" text-anchor="middle" font-family="Space Mono" font-size="12" fill="var(--cosmos)">МОЗГ</text>
+            <circle cx="90" cy="78" r="34" fill="rgba(155,140,255,.12)" stroke="var(--cosmos)" stroke-width="1.6"/>
+            <path d="M70 78c0-11 9-19 20-19s20 8 20 19M78 71c3-5 16-5 19 0M78 86c3 5 16 5 19 0" fill="none" stroke="var(--cosmos)" stroke-width="1.3"/>
+            <text x="90" y="134" text-anchor="middle" font-family="Space Mono" font-size="12" fill="var(--cosmos)">МОЗГ</text>
           </g>
-          <!-- gut -->
           <g>
             <path d="M450 150 q40 -20 60 10 q20 30 -10 50 q-40 22 -66 -6 q-20 -28 16 -54 z" fill="rgba(63,224,197,.10)" stroke="var(--nerve)" stroke-width="1.6"/>
             <text x="480" y="232" text-anchor="middle" font-family="Space Mono" font-size="12" fill="var(--nerve)">КИШЕЧНИК</text>
-            <text x="480" y="56" text-anchor="middle" font-family="Space Mono" font-size="10" fill="var(--ash)">триллионы микробов</text>
+            <text x="480" y="54" text-anchor="middle" font-family="Space Mono" font-size="10" fill="var(--ash)">второй мозг · триллионы микробов</text>
           </g>
-          <!-- afferent (up, thick) -->
           <path d="M455 150 C 320 60, 220 60, 124 78" fill="none" stroke="var(--nerve)" stroke-width="3.2" class="flow-rev"/>
-          <text x="290" y="48" text-anchor="middle" font-family="Space Mono" font-size="10" fill="var(--nerve)">80% · афференты (тело → мозг)</text>
-          <!-- efferent (down, thin) -->
+          <text x="290" y="46" text-anchor="middle" font-family="Space Mono" font-size="10" fill="var(--nerve)">80% · афференты (тело → мозг)</text>
           <path d="M118 100 C 220 160, 330 175, 444 175" fill="none" stroke="var(--cosmos)" stroke-width="1.4" class="flow"/>
           <text x="280" y="200" text-anchor="middle" font-family="Space Mono" font-size="10" fill="var(--cosmos)">20% · эфференты (мозг → тело)</text>
         </svg>
       </div>
-      <figcaption class="foot">Блуждающий нерв — преимущественно «восходящий» канал. Кишечник и его микробы непрерывно информируют мозг; через него же идёт противовоспалительный (холинергический) сигнал обратно.</figcaption>
+      <figcaption class="foot">Блуждающий нерв — почти односторонний канал снизу вверх. Кишечник и его микробы непрерывно информируют мозг; по нему же идёт и противовоспалительный сигнал обратно.</figcaption>
     </figure>
 
-    <div class="stat-band reveal">
-      <div class="stat"><div class="n" data-count="80" data-suf="%">0</div><div class="u">волокон блуждающего нерва — афферентные (тело → мозг)</div></div>
-      <div class="stat"><div class="n cos" data-count="90" data-suf="%">0</div><div class="u">нейронов заднего рога — интернейроны-обработчики</div></div>
-      <div class="stat"><div class="n pain" data-count="31" data-suf="">0</div><div class="u">пар спинномозговых нервов = уровней карты тела</div></div>
-      <div class="stat"><div class="n">∞</div><div class="u">островок — первичная интероцептивная кора</div></div>
-    </div>
-
-    <div class="callout fact reveal">
-      <div class="callout-h">◆ Источник по оси кишечник–мозг</div>
-      <div class="callout-b">
-        <p>По данным PubMed: микробиота–кишечник–мозг — отдельная ось, общающаяся через иммунитет, триптофан, блуждающий нерв и энтеральную нервную систему. Cryan J.F. et al. «The Microbiota-Gut-Brain Axis», Physiological Reviews, 2019. <a href="https://doi.org/10.1152/physrev.00018.2018" target="_blank" rel="noopener">doi.org/10.1152/physrev.00018.2018</a> · О роли вагуса: Bonaz B. et al., Front Neurosci, 2018. <a href="https://doi.org/10.3389/fnins.2018.00049" target="_blank" rel="noopener">doi.org/10.3389/fnins.2018.00049</a></p>
-      </div>
+    <div class="prose reveal">
+      <p>И последний слой этой матрёшки — самый невероятный. В кишечнике живут триллионы микробов. Ирландские учёные <strong>Джон Крайан и Тед Динан</strong>, авторы книги <em>«Психобиотическая революция»</em>, посвятили карьеру доказательству дикой на первый взгляд мысли: <strong>бактерии в твоём кишечнике влияют на твоё настроение.</strong> Их большой обзор в Physiological Reviews — одна из главных работ в этой области — показывает, что микробиота общается с мозгом сразу по нескольким линиям: через иммунитет, через обмен триптофана, через тот самый блуждающий нерв и через второй мозг кишечника. И эта ось замешана в тревоге, депрессии, и даже в болезнях Паркинсона и Альцгеймера.</p>
+      <span class="src-note">По данным PubMed: Cryan J.F. et al., «The Microbiota-Gut-Brain Axis», <em>Physiol Rev</em>, 2019 — <a href="https://doi.org/10.1152/physrev.00018.2018" target="_blank" rel="noopener">doi.org/10.1152/physrev.00018.2018</a>; Bonaz B. et al., <em>Front Neurosci</em>, 2018 — <a href="https://doi.org/10.3389/fnins.2018.00049" target="_blank" rel="noopener">doi.org/10.3389/fnins.2018.00049</a></span>
+      <p>Останься на секунду с этой мыслью. Существо, которое ты называешь «я», частично настраивается триллионами организмов, не несущих твоей ДНК. Твоё настроение сегодня — отчасти их разговор с твоим мозгом по нерву, который почти весь слушает. Вот тебе и «всё в теле связано». Только связь эта — не выдуманные меридианы, а измеримые нервы, молекулы и микробы. И она куда страннее любого эзотерического чертежа.</p>
     </div>
   </div>
 </section>
 
-<!-- ═══════════ VII. HONEST EDGE / MYTH ═══════════ -->
+<!-- ═══════════ VIII. HONEST EDGE ═══════════ -->
 <section class="movement">
   <div class="wrap">
     <div class="mv-head reveal">
-      <div class="mv-index"><span class="roman">VII</span> Честная граница</div>
-      <h2 class="mv-title">Тогда что не так с точками на стопах?</h2>
+      <div class="mv-index"><span class="roman">VIII</span> Честная граница</div>
+      <h2 class="mv-title">Так что же не так с точками на стопах?</h2>
     </div>
     <div class="prose reveal">
-      <p>Вернёмся к началу. Мы видели: реальная карта связи орган↔кожа существует. Так почему же рефлексология — «нажми зону на стопе, чтобы вылечить почку» — это всё-таки не наука?</p>
-      <p>Потому что она переворачивает стрелку. Настоящая связь работает <strong>от органа к коже</strong>: больной орган <em>посылает</em> сигнал, и он всплывает на коже. Рефлексология утверждает обратное — что, нажимая на кожу стопы, можно <em>послать команду</em> конкретному органу и улучшить его работу. Такого «канала вниз» к отдельному органу через стопу в анатомии нет. Сегмент стопы (поясничные и крестцовые уровни) не связан конвергенцией с почкой или печенью так, как это рисуют на схемах рефлексологии.</p>
-      <p>И это проверяли. По данным PubMed, в Кокрейновском систематическом обзоре по массажу при болях в пояснице прямо сказано: <strong>«рефлексология стоп не оказала влияния на боль и функцию».</strong> Расслабление и приятные ощущения от массажа — реальны, но это общий эффект прикосновения через нервную систему, а не адресное лечение органа.</p>
-      <p>Та же логика — с «меридианной картой зубов» и с идеей, что «тип тела определяет характер». В них берётся настоящее наблюдение (рот и правда связан со здоровьем тела через воспаление; телосложение правда отражает физиологию) и достраивается выдуманным механизмом. <em>Наука отделяет наблюдение от объяснения и проверяет каждое отдельно.</em></p>
-    </div>
-
-    <div class="callout myth reveal">
-      <div class="callout-h">✕ Миф, который стоит уточнить</div>
-      <div class="callout-b">
-        <p>«Нажатие точки на стопе лечит конкретный орган». Согласно PubMed, в рамках Кокрейновского обзора рефлексология стоп не показала эффекта на боль и функцию. Furlan A.D. et al. «Massage for low-back pain», Cochrane Database Syst Rev, 2008. <a href="https://doi.org/10.1002/14651858.CD001929.pub2" target="_blank" rel="noopener">doi.org/10.1002/14651858.CD001929.pub2</a></p>
-        <p>Важно: отсутствие адресного эффекта ≠ «массаж бесполезен». Прикосновение реально успокаивает через вегетативную нервную систему — просто не через «каналы к органам».</p>
-      </div>
-    </div>
-
-    <div class="prose reveal">
-      <p>Вот честная граница знания. Кое-что ещё спорно: например, точные пределы интероцепции и то, насколько микробиом причинно (а не просто статистически) влияет на психику, — предмет живых исследований. «Доказано» в науке почти всегда значит «доказано этим методом, в этих условиях». Именно поэтому хорошая наука <strong>называет свои границы</strong> — и в этом она честнее любой схемы, обещающей ключ ко всему телу.</p>
+      <span class="scene">Сцена девятая. Возвращение к началу.</span>
+      <p>Мы прошли длинный путь и теперь можем вернуться к человеку, который мял твою стопу и обещал здоровье печени. Мы видели: настоящая карта связи орган↔кожа существует. Так почему рефлексология — всё-таки не наука? Ответ теперь у тебя в руках, и он точный, а не высокомерный.</p>
+      <p>Потому что рефлексология <strong>переворачивает стрелку.</strong> Настоящая связь идёт <em>от органа к коже:</em> больной орган посылает крик, и он всплывает на коже. Рефлексология обещает обратное — что, нажимая на кожу стопы, можно <em>послать команду вниз,</em> конкретному органу, и улучшить его работу. Но такого адресного «провода вниз» от зоны стопы к отдельной почке или печени в анатомии просто нет. Сегменты стопы — это поясничные и крестцовые уровни; они не сцеплены конвергенцией с печенью так, как это рисуют на цветных схемах рефлексологов. Карта, которую они продают, не совпадает с картой, которую носит твоё тело.</p>
+      <p>И это проверяли по-настоящему. По данным PubMed, в строгом Кокрейновском систематическом обзоре прямо сказано: <strong>«рефлексология стоп не оказала влияния на боль и функцию».</strong> Не «мы не уверены» — а измерили и не нашли адресного эффекта. При этом — внимание, тут важная честность в обратную сторону — приятные ощущения и расслабление от массажа абсолютно реальны. Просто это общий эффект прикосновения через вегетативную нервную систему (вспомни ворота боли и контроль сверху), а не лечение конкретного органа через «канал».</p>
+      <span class="src-note">По данным PubMed: Furlan A.D. et al., «Massage for low-back pain», <em>Cochrane Database Syst Rev</em>, 2008 — <a href="https://doi.org/10.1002/14651858.CD001929.pub2" target="_blank" rel="noopener">doi.org/10.1002/14651858.CD001929.pub2</a></span>
+      <p>Та же логика — с «меридианной картой зубов» и с идеей, будто «тип тела определяет характер». Везде один и тот же приём: берут настоящее наблюдение (рот и правда связан со здоровьем через воспаление; телосложение правда отражает физиологию) — и достраивают его выдуманным механизмом. <em>Наука отделяет наблюдение от объяснения и проверяет их по отдельности.</em> В этом вся разница. Не в том, что учёные «не верят в связи тела». А в том, что они требуют показать <strong>провод.</strong></p>
+      <p>И последнее, о чём честный рассказчик обязан сказать. Кое-что в этой истории ещё спорно. Насколько причинно, а не просто статистически, микробы влияют на психику человека — предмет живых споров. Где точные пределы интероцепции — мы не знаем до конца. «Доказано» в науке почти всегда означает «доказано этим методом, в этих условиях, с такой-то вероятностью». Но именно поэтому хорошая наука сильнее красивой схемы: она <strong>называет свои границы</strong> вслух. Схема, которая объясняет всё и не ошибается никогда, — не карта тела. Это просто рисунок.</p>
     </div>
   </div>
 </section>
 
-<!-- ═══════════ VIII. THE GRAIL / COSMOS ═══════════ -->
-<section class="movement">
+<!-- ═══════════ IX. FINALE / COSMOS ═══════════ -->
+<section class="movement finale">
+  <canvas class="finale-canvas" id="finaleCanvas"></canvas>
   <div class="wrap">
     <div class="mv-head reveal">
-      <div class="mv-index"><span class="roman">VIII</span> Грааль междисциплинарности</div>
-      <h2 class="mv-title">Тело как карта, Вселенная как тело</h2>
+      <div class="mv-index"><span class="roman">IX</span> Финал</div>
+      <h2 class="mv-title">Карта — это не территория</h2>
     </div>
     <div class="prose reveal">
-      <p>Смотри, что у нас получилось. Чтобы объяснить простую вещь — «почему орган болит не там» — сошлись анатомия, нейрофизиология, история медицины, микробиология и даже теория информации. Один маленький конвергентный нейрон оказался узлом, в котором встречаются все эти дисциплины.</p>
+      <span class="scene">Сцена десятая. То, что можно прочитать в камеру на одном дыхании.</span>
+      <p>Смотри, что у нас получилось. Чтобы объяснить одну простую вещь — почему орган болит не там, где он находится, — нам понадобились невролог, резавший себя; нобелевский физиолог; теория ворот; складка коры по имени островок; философ, опровергавший Декарта; второй мозг в животе и триллионы микробов. Один крошечный конвергентный нейрон оказался узлом, в котором сошлись анатомия, нейрофизиология, история медицины, микробиология и философия сознания. Вот что значит сопоставлять разные науки и находить грааль на их пересечении.</p>
+      <p>И вот мысль на самый конец — для тебя, кто любит соединять далёкое. Твой мозг <strong>никогда не видел твоё тело напрямую.</strong> Он сидит в темноте черепа и строит тело из сигналов, бегущих по нервам, — собирает карту, которую ты переживаешь как «себя». Точно так же физика никогда не видит Вселенную целиком: она строит её модель из света далёких звёзд, из частиц, из гравитационных волн — из тонких следов, что доходят до нас через пустоту.</p>
+      <p>В обоих случаях реальность, которую мы знаем, — это <em>карта, а не территория.</em> Нейробиология и космология, по сути, заняты одним и тем же: восстанавливают огромное и невидимое по слабым сигналам, что до них долетают. Любопытная деталь на полях: астрофизик Франко Вацца и нейрохирург Альберто Фелетти однажды измерили статистическое сходство между сетью нейронов мозга и космической паутиной из галактик — и оно оказалось поразительным. Это не мистика. Это напоминание, что природа любит повторять удачные узоры на любом масштабе — от клетки до Вселенной.</p>
+      <p>Так что в следующий раз, когда тебе скажут про «точки, связанные с органами», ты будешь знать правду — и она глубже любого ролика. Связь <strong>есть.</strong> Она проходит через спинной мозг, поднимается в островок и переживается как ты сам. Ты не владелец тела, который дёргает за ниточки снаружи. Ты — то, что получается, когда тело рассказывает мозгу о себе, а мозг строит из этого рассказа целую вселенную и называет её «я». И это, честно, гораздо удивительнее любых меридианов.</p>
     </div>
-
-    <div class="web reveal">
-      <div class="web-row"><div class="web-field">Анатомия</div><div class="web-text">Дерматомы и сегменты задают <b>физическую карту</b> тела — решётку, по которой адресуются сигналы.</div></div>
-      <div class="web-row"><div class="web-field">Нейрофизиология</div><div class="web-text">Конвергентный нейрон <b>сжимает</b> два потока в один адрес — отсюда отражённая боль.</div></div>
-      <div class="web-row"><div class="web-field">Теория информации</div><div class="web-text">Мозг строит <b>модель тела</b> и достраивает недостающее по вероятности — поэтому и ошибается «в пользу кожи».</div></div>
-      <div class="web-row"><div class="web-field">Микробиология</div><div class="web-text">Через вагус в эту модель вмешиваются <b>триллионы микробов</b> кишечника.</div></div>
-      <div class="web-row"><div class="web-field">Философия сознания</div><div class="web-text">Островок превращает карту тела в <b>чувство «я»</b> — телесную основу самоощущения.</div></div>
-    </div>
-
-    <div class="prose reveal">
-      <p>И вот мысль на десерт — для того, кто любит сопоставлять далёкие науки. Мозг не видит тело напрямую. Он строит его <strong>внутреннюю модель</strong> из сигналов, приходящих по нервам, — карту, которую мы и переживаем как «своё тело». Точно так же физика не видит Вселенную целиком: она строит её модель из сигналов — света, частиц, гравитационных волн.</p>
-      <p>В обоих случаях <em>реальность, которую мы знаем, — это карта, а не территория.</em> Нейробиология и космология занимаются, по сути, одним: восстанавливают огромное по тонким следам, что до них доходят. Любопытная деталь на полях: астрофизик Ф. Вацца и нейрохирург А. Фелетти (2020, физический журнал Frontiers in Physics) даже измерили статистическое сходство между сетью нейронов и космической паутиной галактик. Это не мистика — это напоминание, что природа любит повторять удачные узоры на любом масштабе.</p>
-      <p>Так что в следующий раз, когда услышишь про «точки, связанные с органами», ты будешь знать правду: связь <strong>есть</strong> — и она глубже, чем в любом ролике. Она проходит через спинной мозг, поднимается в островок, переживается как ты сам. И это, честно, гораздо удивительнее меридианов.</p>
-    </div>
-
     <div class="epigraph reveal">
       <p>«Висцеральная боль — вместе с другими телесными ощущениями — представлена прежде всего в задней островковой коре, первичной интероцептивной коре».</p>
-      <cite>Jänig W., Schmerz, 2014</cite>
+      <cite>Вильфрид Йениг · Schmerz, 2014</cite>
     </div>
   </div>
 </section>
@@ -567,24 +584,38 @@ a{color:var(--nerve);}
 <section class="refs">
   <div class="wrap">
     <div class="refs-h reveal">Первоисточники</div>
-    <p class="refs-sub reveal">Все ссылки найдены через PubMed (Национальная медицинская библиотека США) и ведут на оригинальные рецензируемые публикации. Каждое утверждение в тексте опирается на эти работы.</p>
+    <p class="refs-sub reveal">Научные факты в этом сценарии опираются на рецензируемые работы, найденные через PubMed (Национальная медицинская библиотека США). Все ссылки ведут на оригиналы.</p>
     <div class="reflist">
       <div class="ref reveal"><div class="ref-meta">Jänig W. <span class="t">Neurobiology of visceral pain.</span> <span class="j">Schmerz, 2014;28(3):233–251.</span><br><a href="https://doi.org/10.1007/s00482-014-1402-x" target="_blank" rel="noopener">doi.org/10.1007/s00482-014-1402-x</a></div></div>
       <div class="ref reveal"><div class="ref-meta">Giamberardino MA. <span class="t">Referred muscle pain/hyperalgesia and central sensitisation.</span> <span class="j">J Rehabil Med, 2003;(41 Suppl):85–88.</span><br><a href="https://doi.org/10.1080/16501960310010205" target="_blank" rel="noopener">doi.org/10.1080/16501960310010205</a></div></div>
+      <div class="ref reveal"><div class="ref-meta">Mendell LM. <span class="t">Constructing and deconstructing the gate theory of pain.</span> <span class="j">Pain, 2014;155(2):210–216.</span><br><a href="https://doi.org/10.1016/j.pain.2013.12.010" target="_blank" rel="noopener">doi.org/10.1016/j.pain.2013.12.010</a></div></div>
       <div class="ref reveal"><div class="ref-meta">Klein AS, Dolensek N, Weiand C, Gogolla N. <span class="t">Fear balance is maintained by bodily feedback to the insular cortex in mice.</span> <span class="j">Science, 2021;374(6570):1010–1015.</span><br><a href="https://doi.org/10.1126/science.abj8817" target="_blank" rel="noopener">doi.org/10.1126/science.abj8817</a></div></div>
       <div class="ref reveal"><div class="ref-meta">Paulus MP, Stewart JL. <span class="t">Interoception and drug addiction.</span> <span class="j">Neuropharmacology, 2013;76 Pt B:342–350.</span><br><a href="https://doi.org/10.1016/j.neuropharm.2013.07.002" target="_blank" rel="noopener">doi.org/10.1016/j.neuropharm.2013.07.002</a></div></div>
+      <div class="ref reveal"><div class="ref-meta">Gershon MD. <span class="t">The enteric nervous system: a second brain.</span> <span class="j">Hosp Pract (1995), 1999;34(7):31–42.</span><br><a href="https://doi.org/10.3810/hp.1999.07.153" target="_blank" rel="noopener">doi.org/10.3810/hp.1999.07.153</a></div></div>
       <div class="ref reveal"><div class="ref-meta">Cryan JF, O'Riordan KJ, Cowan CSM, et al. <span class="t">The Microbiota-Gut-Brain Axis.</span> <span class="j">Physiol Rev, 2019;99(4):1877–2013.</span><br><a href="https://doi.org/10.1152/physrev.00018.2018" target="_blank" rel="noopener">doi.org/10.1152/physrev.00018.2018</a></div></div>
       <div class="ref reveal"><div class="ref-meta">Bonaz B, Bazin T, Pellissier S. <span class="t">The Vagus Nerve at the Interface of the Microbiota-Gut-Brain Axis.</span> <span class="j">Front Neurosci, 2018;12:49.</span><br><a href="https://doi.org/10.3389/fnins.2018.00049" target="_blank" rel="noopener">doi.org/10.3389/fnins.2018.00049</a></div></div>
       <div class="ref reveal"><div class="ref-meta">Furlan AD, Imamura M, Dryden T, Irvin E. <span class="t">Massage for low-back pain.</span> <span class="j">Cochrane Database Syst Rev, 2008;(4):CD001929.</span><br><a href="https://doi.org/10.1002/14651858.CD001929.pub2" target="_blank" rel="noopener">doi.org/10.1002/14651858.CD001929.pub2</a></div></div>
     </div>
 
+    <div class="booklist reveal">
+      <p style="font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--nerve);margin-bottom:1rem;">Книги учёных, упомянутые в сценарии</p>
+      <p>· Чарлз Шеррингтон — <b>«Интегративная деятельность нервной системы»</b> (1906)<br>
+      · Генри Хэд — <b>«Исследования по неврологии»</b> (Studies in Neurology, 1920); эксперимент с перерезкой нерва, 1903–1908<br>
+      · Рональд Мелзак и Патрик Уолл — <b>«Загадка боли»</b> (The Challenge of Pain); теория ворот, Science, 1965<br>
+      · Бад Крейг — <b>«Как ты себя чувствуешь?»</b> (How Do You Feel?, 2015)<br>
+      · Антонио Дамасио — <b>«Ошибка Декарта»</b> (Descartes' Error, 1994)<br>
+      · Лиза Фельдман Барретт — <b>«Как рождаются эмоции»</b> (How Emotions Are Made, 2017)<br>
+      · Майкл Гершон — <b>«Второй мозг»</b> (The Second Brain, 1998)<br>
+      · Джон Крайан и Тед Динан — <b>«Психобиотическая революция»</b> (The Psychobiotic Revolution, 2017)</p>
+    </div>
+
     <div class="attribution reveal">
-      Библиографические данные и аннотации получены через PubMed. Раздел про сходство нейросети и космической паутины опирается на работу Vazza &amp; Feletti (Frontiers in Physics, 2020) — она из области физики и приведена как междисциплинарная иллюстрация, а не медицинский факт. Это образовательный материал, не медицинский совет.
+      Библиографические данные и аннотации научных статей получены через PubMed. Идеи из перечисленных книг приведены в авторском пересказе для повествования, не как дословные цитаты. Раздел про сходство нейросети и космической паутины опирается на работу Vazza &amp; Feletti (Frontiers in Physics, 2020) — она из области физики и дана как междисциплинарная иллюстрация. Это образовательный материал, не медицинский совет.
     </div>
 
     <div class="endmark reveal">
       <div class="glyph">✦</div>
-      <p>Конец разбора · Карта, которой нет на коже</p>
+      <p>Конец сценария · Карта, которой нет на коже</p>
     </div>
   </div>
 </section>
@@ -597,53 +628,34 @@ addEventListener('scroll',()=>{const h=document.documentElement;
 
 // reveal
 const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){
-  e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+  e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.1,rootMargin:'0px 0px -8% 0px'});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-// count-up stats
-const cio=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){
-  const el=e.target,target=+el.dataset.count,suf=el.dataset.suf||'';
-  if(isNaN(target)){cio.unobserve(el);return;}
-  let v=0;const step=Math.max(1,Math.round(target/40));
-  const t=setInterval(()=>{v+=step;if(v>=target){v=target;clearInterval(t);}el.textContent=v+suf;},22);
-  cio.unobserve(el);}});},{threshold:.6});
-document.querySelectorAll('.n[data-count]').forEach(el=>cio.observe(el));
-
-// ───── HERO: neural network with travelling signal pulses ─────
+// ───── HERO neural field with travelling pulses ─────
 (function(){
-  const c=document.getElementById('heroCanvas'),x=c.getContext('2d');
+  const c=document.getElementById('heroCanvas');if(!c)return;const x=c.getContext('2d');
   let w,h,nodes,edges;const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   function size(){const d=Math.min(devicePixelRatio||1,2);w=c.clientWidth;h=c.clientHeight;
     c.width=w*d;c.height=h*d;x.setTransform(d,0,0,d,0,0);build();}
-  function build(){
-    const n=Math.max(34,Math.floor(w*h/26000));
+  function build(){const n=Math.max(36,Math.floor(w*h/24000));
     nodes=Array.from({length:n},()=>({x:Math.random()*w,y:Math.random()*h,
-      vx:(Math.random()-.5)*.14,vy:(Math.random()-.5)*.14,r:Math.random()*1.6+.6}));
-    edges=[];
-  }
+      vx:(Math.random()-.5)*.14,vy:(Math.random()-.5)*.14,r:Math.random()*1.6+.6}));edges=[];}
   function rebuildEdges(){edges=[];for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
     const a=nodes[i],b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,dd=dx*dx+dy*dy;
-    if(dd<19000)edges.push({a,b,d:Math.sqrt(dd),p:Math.random()});}}
+    if(dd<20000)edges.push({a,b,d:Math.sqrt(dd),p:Math.random()});}}
   let f=0;
-  function tick(){
-    x.clearRect(0,0,w,h);
-    for(const p of nodes){p.x+=p.vx;p.y+=p.vy;
-      if(p.x<0||p.x>w)p.vx*=-1;if(p.y<0||p.y>h)p.vy*=-1;}
+  function tick(){x.clearRect(0,0,w,h);
+    for(const p of nodes){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>w)p.vx*=-1;if(p.y<0||p.y>h)p.vy*=-1;}
     if(f%18===0)rebuildEdges();
-    for(const e of edges){
-      const al=(1-e.d/138)*.16;if(al<=0)continue;
+    for(const e of edges){const al=(1-e.d/142)*.16;if(al<=0)continue;
       x.globalAlpha=al;x.strokeStyle='#2a9d8f';x.lineWidth=.6;
       x.beginPath();x.moveTo(e.a.x,e.a.y);x.lineTo(e.b.x,e.b.y);x.stroke();
-      // travelling pulse
-      e.p+=.01;if(e.p>1)e.p-=1;
-      const px=e.a.x+(e.b.x-e.a.x)*e.p,py=e.a.y+(e.b.y-e.a.y)*e.p;
+      e.p+=.01;if(e.p>1)e.p-=1;const px=e.a.x+(e.b.x-e.a.x)*e.p,py=e.a.y+(e.b.y-e.a.y)*e.p;
       x.globalAlpha=Math.max(0,.5-e.d/300);x.fillStyle='#3fe0c5';
-      x.beginPath();x.arc(px,py,1.3,0,6.283);x.fill();
-    }
+      x.beginPath();x.arc(px,py,1.3,0,6.283);x.fill();}
     for(const p of nodes){x.globalAlpha=.6;x.fillStyle='#9b8cff';
       x.beginPath();x.arc(p.x,p.y,p.r,0,6.283);x.fill();}
-    x.globalAlpha=1;f++;requestAnimationFrame(tick);
-  }
+    x.globalAlpha=1;f++;requestAnimationFrame(tick);}
   size();addEventListener('resize',size);
   if(reduce){rebuildEdges();x.globalAlpha=.14;x.strokeStyle='#2a9d8f';
     for(const e of edges){x.beginPath();x.moveTo(e.a.x,e.a.y);x.lineTo(e.b.x,e.b.y);x.stroke();}
@@ -654,64 +666,86 @@ document.querySelectorAll('.n[data-count]').forEach(el=>cio.observe(el));
 // ───── INTERACTIVE BODY MAP ─────
 (function(){
   const cases=[
-    {seg:'C3–C5',organ:'Диафрагма',zone:'надплечье',
-     txt:'<b>Диафрагма</b> подключена к шейным сегментам <span class="seg">C3–C5</span> (диафрагмальный нерв). Поэтому её раздражение — например, кровь под диафрагмой — отдаёт болью в <b>верх плеча</b>, далеко от живота.'},
-    {seg:'T1–T5',organ:'Сердце',zone:'рука · челюсть',
-     txt:'<b>Сердце</b> сходится с кожей на грудных сегментах <span class="seg">T1–T5</span>. Вот почему инфаркт классически отдаёт в <b>левую руку, челюсть и шею</b> — это отражённая боль, а не «боль в руке».'},
-    {seg:'T6–T9',organ:'Печень · жёлчный',zone:'правая лопатка',
-     txt:'<b>Печень и жёлчный пузырь</b> делят сегменты <span class="seg">T6–T9</span> (и диафрагмальный путь) с кожей <b>правой лопатки</b>. Приступ жёлчной колики часто чувствуется именно под правой лопаткой.'},
-    {seg:'T10',organ:'Аппендикс',zone:'низ живота',
-     txt:'<b>Аппендикс</b> сначала «вещает» на уровне <span class="seg">T10</span> — боль ощущается <b>вокруг пупка</b>. Когда воспаление задевает брюшину, боль смещается в правый низ живота. Классика диагностики.'},
+    {txt:'<b>Диафрагма</b> подключена к шейным сегментам <span class="seg">C3–C5</span> (диафрагмальный нерв). Поэтому её раздражение отдаёт болью в <b>верх плеча</b> — далеко от живота.'},
+    {txt:'<b>Сердце</b> сходится с кожей на грудных сегментах <span class="seg">T1–T5</span>. Вот почему инфаркт классически отдаёт в <b>левую руку, челюсть и шею</b> — это отражённая боль.'},
+    {txt:'<b>Печень и жёлчный пузырь</b> делят сегменты <span class="seg">T6–T9</span> с кожей <b>правой лопатки</b>. Жёлчная колика часто чувствуется именно под ней.'},
+    {txt:'<b>Аппендикс</b> сначала «вещает» на уровне <span class="seg">T10</span> — боль ощущается <b>вокруг пупка</b>, и лишь потом смещается в правый низ живота. Классика диагностики.'},
   ];
-  const svg=document.getElementById('bodyMap');
-  if(!svg)return;
-  const dot=document.getElementById('bmDot');
-  const readout=document.getElementById('bmReadout');
-  const stateLbl=document.getElementById('bmState');
-  const btns=[...document.querySelectorAll('.bm-btn')];
+  const svg=document.getElementById('bodyMap');if(!svg)return;
+  const dot=document.getElementById('bmDot'),readout=document.getElementById('bmReadout'),
+    stateLbl=document.getElementById('bmState'),btns=[...document.querySelectorAll('#bodyMap ~ .bm-ctrls .bm-btn, .bm-ctrls .bm-btn[data-i]')].filter(b=>b.dataset.i!==undefined);
   let auto=true,timer=null,raf=null,cur=-1;
-
-  function clearActive(){
-    ['o','d','z'].forEach(p=>{for(let i=0;i<4;i++)document.getElementById(p+i).classList.remove('active');});
-    ['po','pz'].forEach(p=>{for(let i=0;i<4;i++)document.getElementById(p+i).classList.remove('active');});
-  }
-  function animateDot(pathId,dur){
-    return new Promise(res=>{
-      const path=document.getElementById(pathId);const len=path.getTotalLength();
-      const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if(reduce){dot.setAttribute('opacity','0');res();return;}
-      let t0=null;dot.setAttribute('opacity','1');
-      cancelAnimationFrame(raf);
-      function fr(ts){if(!t0)t0=ts;const k=Math.min((ts-t0)/dur,1);
-        const pt=path.getPointAtLength(len*k);
-        dot.setAttribute('cx',pt.x);dot.setAttribute('cy',pt.y);
-        if(k<1)raf=requestAnimationFrame(fr);else{res();}}
-      raf=requestAnimationFrame(fr);
-    });
-  }
-  async function play(i){
-    cur=i;clearActive();
-    btns.forEach((b,bi)=>b.classList.toggle('on',bi===i));
+  function clearActive(){['o','d','z','po','pz'].forEach(p=>{for(let i=0;i<4;i++){const el=document.getElementById(p+i);if(el)el.classList.remove('active');}});}
+  function animateDot(pathId,dur){return new Promise(res=>{
+    const path=document.getElementById(pathId);const len=path.getTotalLength();
+    const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduce){dot.setAttribute('opacity','0');res();return;}
+    let t0=null;dot.setAttribute('opacity','1');cancelAnimationFrame(raf);
+    function fr(ts){if(!t0)t0=ts;const k=Math.min((ts-t0)/dur,1);const pt=path.getPointAtLength(len*k);
+      dot.setAttribute('cx',pt.x);dot.setAttribute('cy',pt.y);
+      if(k<1)raf=requestAnimationFrame(fr);else res();}
+    raf=requestAnimationFrame(fr);});}
+  async function play(i){cur=i;clearActive();
+    btns.forEach(b=>b.classList.toggle('on',+b.dataset.i===i));
     readout.innerHTML=cases[i].txt;
     const o=document.getElementById('o'+i),d=document.getElementById('d'+i),z=document.getElementById('z'+i);
-    document.getElementById('po'+i).classList.add('active');
-    o.classList.add('active');
-    await animateDot('po'+i,650);
-    d.classList.add('active');
+    document.getElementById('po'+i).classList.add('active');o.classList.add('active');
+    await animateDot('po'+i,650);d.classList.add('active');
     document.getElementById('pz'+i).classList.add('active');
-    await animateDot('pz'+i,650);
-    z.classList.add('active');dot.setAttribute('opacity','0');
-  }
-  function next(){play((cur+1)%4).then(()=>{if(auto)timer=setTimeout(next,2600);});}
+    await animateDot('pz'+i,650);z.classList.add('active');dot.setAttribute('opacity','0');}
+  function next(){play((cur+1)%4).then(()=>{if(auto)timer=setTimeout(next,2700);});}
   function startAuto(){auto=true;stateLbl.textContent='авто-обход';clearTimeout(timer);next();}
   function stopAuto(){auto=false;stateLbl.textContent='ручной выбор';clearTimeout(timer);}
-
   btns.forEach(b=>b.addEventListener('click',()=>{stopAuto();play(+b.dataset.i);}));
-
-  // start auto when scrolled into view
-  const vis=new IntersectionObserver((es)=>{es.forEach(e=>{
-    if(e.isIntersecting){startAuto();vis.unobserve(e.target);}});},{threshold:.35});
+  const vis=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){startAuto();vis.unobserve(e.target);}});},{threshold:.3});
   vis.observe(svg);
+})();
+
+// ───── DERMATOME SWEEP ─────
+(function(){
+  const s=document.getElementById('dermSweep');if(!s)return;
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;if(reduce)return;
+  let y=20;function loop(){y+=1.1;if(y>400)y=20;s.setAttribute('y',y);requestAnimationFrame(loop);}loop();
+})();
+
+// ───── GATE CONTROL ─────
+(function(){
+  const door=document.getElementById('gateDoor'),out=document.getElementById('gateOut'),
+    state=document.getElementById('gateState'),btn=document.getElementById('gateToggle');
+  if(!door)return;let open=true;
+  function render(){
+    if(open){door.setAttribute('opacity','.85');door.setAttribute('height','130');door.setAttribute('y','55');
+      out.style.opacity='1';out.setAttribute('stroke-width','2.4');
+      state.textContent='ВОРОТА: открыты';state.style.color='var(--pain)';
+      btn.textContent='Закрыть ворота касанием';}
+    else{door.setAttribute('opacity','.3');door.setAttribute('height','40');door.setAttribute('y','100');
+      out.style.opacity='.25';out.setAttribute('stroke-width','1');
+      state.textContent='ВОРОТА: закрыты';state.style.color='var(--nerve)';
+      btn.textContent='Открыть ворота';}
+  }
+  btn.addEventListener('click',()=>{open=!open;render();});
+  render();
+})();
+
+// ───── FINALE COSMOS FIELD ─────
+(function(){
+  const c=document.getElementById('finaleCanvas');if(!c)return;const x=c.getContext('2d');
+  let w,h,stars;const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function size(){const d=Math.min(devicePixelRatio||1,2);w=c.clientWidth;h=c.clientHeight;
+    c.width=w*d;c.height=h*d;x.setTransform(d,0,0,d,0,0);
+    stars=Array.from({length:Math.floor(w*h/9000)},()=>({x:Math.random()*w,y:Math.random()*h,
+      r:Math.random()*1.3+.3,t:Math.random()*6.28,sp:Math.random()*.025+.005,
+      vx:(Math.random()-.5)*.06,vy:(Math.random()-.5)*.06}));}
+  function frame(){x.clearRect(0,0,w,h);
+    for(const p of stars){p.t+=p.sp;p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=w;if(p.x>w)p.x=0;if(p.y<0)p.y=h;if(p.y>h)p.y=0;
+      const a=.35+Math.sin(p.t)*.35;x.globalAlpha=a;
+      x.fillStyle=Math.random()<.5?'#9b8cff':'#cfd6ff';
+      x.beginPath();x.arc(p.x,p.y,p.r,0,6.283);x.fill();}
+    x.globalAlpha=1;requestAnimationFrame(frame);}
+  size();addEventListener('resize',size);
+  if(reduce){for(const p of stars){x.globalAlpha=.5;x.fillStyle='#cfd6ff';x.beginPath();x.arc(p.x,p.y,p.r,0,6.283);x.fill();}x.globalAlpha=1;}
+  else frame();
 })();
 </script>
 </body>
