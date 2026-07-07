@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✈️ Полёт — Авиасимулятор</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #000;
+    font-family: 'Segoe UI', system-ui, sans-serif; user-select: none; }
+  #game { display: block; width: 100vw; height: 100vh; touch-action: none; }
+
+  .overlay { position: fixed; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center; color: #fff;
+    background: rgba(6, 14, 30, 0.82); backdrop-filter: blur(4px); z-index: 10; }
+  .overlay h1 { font-size: clamp(28px, 6vw, 56px); margin-bottom: 12px;
+    text-shadow: 0 4px 24px rgba(0,180,255,.5); }
+  .overlay p { font-size: clamp(14px, 2.4vw, 18px); opacity: .9; margin: 4px 0;
+    max-width: 520px; line-height: 1.5; }
+  .keys { margin: 18px 0; font-size: 15px; opacity: .85; line-height: 1.9; }
+  .keys b { display: inline-block; min-width: 92px; padding: 2px 8px; margin: 2px;
+    background: rgba(255,255,255,.12); border-radius: 6px; }
+  .btn { margin-top: 22px; padding: 14px 40px; font-size: 20px; font-weight: 600;
+    color: #04263f; background: linear-gradient(180deg,#7fe3ff,#2ab7f0);
+    border: none; border-radius: 40px; cursor: pointer; letter-spacing: .5px;
+    box-shadow: 0 8px 28px rgba(42,183,240,.45); transition: transform .1s; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn:active { transform: translateY(1px); }
+  .hidden { display: none !important; }
+
+  #hint { position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+    color: #cfefff; font-size: 13px; opacity: .7; z-index: 5; text-align: center;
+    text-shadow: 0 1px 4px #000; }
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<!-- Стартовый экран -->
+<div id="start" class="overlay">
+  <h1>✈️ ПОЛЁТ</h1>
+  <p>Простой авиасимулятор. Держи скорость, набирай высоту и не сваливайся в штопор!</p>
+  <div class="keys">
+    <div><b>W / ↑</b> нос вниз &nbsp; <b>S / ↓</b> нос вверх</div>
+    <div><b>A / ←</b> крен влево &nbsp; <b>D / →</b> крен вправо</div>
+    <div><b>Shift</b> газ + &nbsp; <b>Ctrl</b> газ − &nbsp; <b>P</b> пауза</div>
+  </div>
+  <button class="btn" id="startBtn">Взлёт 🚀</button>
+</div>
+
+<!-- Экран паузы / конца -->
+<div id="over" class="overlay hidden">
+  <h1 id="overTitle">Пауза</h1>
+  <p id="overText"></p>
+  <button class="btn" id="overBtn">Продолжить</button>
+</div>
+
+<div id="hint">W/S — тангаж · A/D — крен · Shift/Ctrl — газ · P — пауза</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const canvas = document.getElementById("game");
+  const ctx = canvas.getContext("2d");
+
+  // ---- Размеры с учётом плотности пикселей ----
+  let W = 0, H = 0, DPR = 1;
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = Math.floor(W * DPR);
+    canvas.height = Math.floor(H * DPR);
+    canvas.style.width = W + "px";
+    canvas.style.height = H + "px";
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  // ---- Состояние игры ----
+  const STATE = { MENU: 0, PLAY: 1, PAUSE: 2, OVER: 3 };
+  let state = STATE.MENU;
+
+  const plane = {
+    pitch: 0,     // тангаж, градусы (-45..45) — визуальный наклон горизонта
+    roll: 0,      // крен, градусы (-45..45)
+    speed: 220,   // км/ч
+    altitude: 800, // метры
+    heading: 0,   // курс для смещения ландшафта
+    dist: 0       // пройдено, км
+  };
+
+  const keys = Object.create(null);
+  window.addEventListener("keydown", (e) => {
+    const k = e.key.toLowerCase();
+    keys[k] = true;
+    if (["arrowup", "arrowdown", "arrowleft", "arrowright", " "].includes(k)) e.preventDefault();
+    if (k === "p") togglePause();
+  });
+  window.addEventListener("keyup", (e) => { keys[e.key.toLowerCase()] = false; });
+
+  // ---- Облака (процедурные) ----
+  const clouds = [];
+  function seedClouds() {
+    clouds.length = 0;
+    for (let i = 0; i < 14; i++) {
+      clouds.push({
+        x: Math.random() * W,
+        y: Math.random() * H * 0.5,
+        s: 0.5 + Math.random() * 1.2,
+        depth: 0.3 + Math.random() * 0.7
+      });
+    }
+  }
+  seedClouds();
+
+  function reset() {
+    plane.pitch = 0; plane.roll = 0; plane.speed = 220;
+    plane.altitude = 800; plane.heading = 0; plane.dist = 0;
+    seedClouds();
+  }
+
+  // ---- Экраны ----
+  const startEl = document.getElementById("start");
+  const overEl  = document.getElementById("over");
+  const overTitle = document.getElementById("overTitle");
+  const overText  = document.getElementById("overText");
+  const overBtn   = document.getElementById("overBtn");
+
+  document.getElementById("startBtn").addEventListener("click", startGame);
+  overBtn.addEventListener("click", () => {
+    if (state === STATE.PAUSE) { state = STATE.PLAY; overEl.classList.add("hidden"); }
+    else { startGame(); }
+  });
+
+  function startGame() {
+    reset();
+    state = STATE.PLAY;
+    startEl.classList.add("hidden");
+    overEl.classList.add("hidden");
+    last = performance.now();
+  }
+  function togglePause() {
+    if (state === STATE.PLAY) {
+      state = STATE.PAUSE;
+      overTitle.textContent = "⏸ Пауза";
+      overText.textContent = "Полёт приостановлен.";
+      overBtn.textContent = "Продолжить";
+      overEl.classList.remove("hidden");
+    } else if (state === STATE.PAUSE) {
+      state = STATE.PLAY;
+      overEl.classList.add("hidden");
+      last = performance.now();
+    }
+  }
+  function crash(reason) {
+    state = STATE.OVER;
+    overTitle.textContent = "💥 Крушение";
+    overText.textContent = reason + " Пройдено " + plane.dist.toFixed(1) + " км.";
+    overBtn.textContent = "Заново";
+    overEl.classList.remove("hidden");
+  }
+
+  // ---- Физика ----
+  function update(dt) {
+    // Управление тангажом
+    if (keys["w"] || keys["arrowup"])   plane.pitch -= 60 * dt;
+    if (keys["s"] || keys["arrowdown"]) plane.pitch += 60 * dt;
+    // Автовыравнивание тангажа, когда клавиши отпущены
+    if (!(keys["w"]||keys["arrowup"]||keys["s"]||keys["arrowdown"]))
+      plane.pitch -= plane.pitch * 0.8 * dt;
+    plane.pitch = clamp(plane.pitch, -45, 45);
+
+    // Управление креном
+    if (keys["a"] || keys["arrowleft"])  plane.roll -= 70 * dt;
+    if (keys["d"] || keys["arrowright"]) plane.roll += 70 * dt;
+    if (!(keys["a"]||keys["arrowleft"]||keys["d"]||keys["arrowright"]))
+      plane.roll -= plane.roll * 1.2 * dt;
+    plane.roll = clamp(plane.roll, -45, 45);
+
+    // Газ
+    if (keys["shift"])   plane.speed += 90 * dt;
+    if (keys["control"]) plane.speed -= 90 * dt;
+    // pitch > 0 — нос вверх, pitch < 0 — нос вниз (W уменьшает — нос вниз)
+    // Тангаж влияет на скорость: нос вверх — тормозит, нос вниз — разгон
+    plane.speed += (-plane.pitch / 45) * 60 * dt;
+    plane.speed = clamp(plane.speed, 60, 620);
+
+    // Крен разворачивает — сдвигает ландшафт вбок
+    plane.heading += (plane.roll / 45) * 90 * dt;
+
+    // Высота: нос вверх — набор, нос вниз — снижение
+    const climb = (plane.pitch / 45) * (plane.speed / 300) * 220; // м/с * шкала
+    plane.altitude += climb * dt;
+
+    // Дистанция
+    plane.dist += (plane.speed / 3600) * dt; // км
+
+    // Сваливание (stall) — слишком малая скорость
+    if (plane.speed <= 70) {
+      plane.altitude -= 120 * dt; // проседаем
+    }
+
+    // Условия крушения
+    if (plane.altitude <= 0) {
+      plane.altitude = 0;
+      crash("Столкновение с землёй!");
+    } else if (plane.altitude > 12000) {
+      plane.altitude = 12000; // потолок
+    }
+
+    // Движение облаков
+    const spd = plane.speed / 260;
+    for (const c of clouds) {
+      c.x -= (plane.roll / 45) * 60 * c.depth * dt; // боковой снос от крена
+      c.y += spd * 30 * c.depth * dt + (-plane.pitch / 45) * 40 * c.depth * dt;
+      // Переиспользуем облака, вышедшие за экран
+      if (c.y > H * 0.72) { c.y = -20; c.x = Math.random() * W; }
+      if (c.y < -40)      { c.y = H * 0.7; c.x = Math.random() * W; }
+      if (c.x < -120) c.x = W + 60;
+      if (c.x > W + 120) c.x = -60;
+    }
+  }
+
+  // ---- Отрисовка ----
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.save();
+
+    // Центр и наклон мира по крену
+    ctx.translate(W / 2, H / 2);
+    ctx.rotate(plane.roll * Math.PI / 180);
+
+    // Линия горизонта смещается по тангажу
+    const horizon = (plane.pitch / 45) * H * 0.55;
+    const big = Math.max(W, H) * 1.8;
+
+    // Небо (градиент по высоте)
+    const t = clamp(plane.altitude / 12000, 0, 1);
+    const skyTop = mix([12, 30, 70], [4, 12, 40], t);
+    const skyBot = mix([120, 180, 230], [60, 110, 180], t);
+    const skyGrad = ctx.createLinearGradient(0, -big, 0, horizon);
+    skyGrad.addColorStop(0, rgb(skyTop));
+    skyGrad.addColorStop(1, rgb(skyBot));
+    ctx.fillStyle = skyGrad;
+    ctx.fillRect(-big, -big, big * 2, big + horizon);
+
+    // Земля
+    const gGrad = ctx.createLinearGradient(0, horizon, 0, big);
+    gGrad.addColorStop(0, "#6a8f3c");
+    gGrad.addColorStop(1, "#2f4a1c");
+    ctx.fillStyle = gGrad;
+    ctx.fillRect(-big, horizon, big * 2, big);
+
+    // Полоски полей на земле для ощущения движения
+    ctx.strokeStyle = "rgba(255,255,255,0.08)";
+    ctx.lineWidth = 2;
+    const off = (plane.dist * 400) % 60;
+    for (let y = horizon + off; y < big; y += 60) {
+      const w = (y - horizon) * 3;
+      ctx.beginPath();
+      ctx.moveTo(-w, y);
+      ctx.lineTo(w, y);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+
+    // Облака (в экранных координатах, поверх мира)
+    for (const c of clouds) {
+      drawCloud(c.x, c.y, 28 * c.s, 0.6 * c.depth + 0.2);
+    }
+
+    // Индикатор самолёта (фиксирован в центре)
+    drawPlaneSymbol();
+
+    // HUD
+    drawHUD();
+  }
+
+  function drawCloud(x, y, r, alpha) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.arc(x + r * 0.9, y + r * 0.1, r * 0.75, 0, Math.PI * 2);
+    ctx.arc(x - r * 0.9, y + r * 0.15, r * 0.7, 0, Math.PI * 2);
+    ctx.arc(x + r * 0.2, y - r * 0.5, r * 0.65, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawPlaneSymbol() {
+    const cx = W / 2, cy = H / 2;
+    ctx.save();
+    ctx.strokeStyle = "#ffd23f";
+    ctx.lineWidth = 4;
+    ctx.lineCap = "round";
+    // Крылья
+    ctx.beginPath();
+    ctx.moveTo(cx - 60, cy);
+    ctx.lineTo(cx - 18, cy);
+    ctx.moveTo(cx + 18, cy);
+    ctx.lineTo(cx + 60, cy);
+    // Фюзеляж / центр
+    ctx.moveTo(cx, cy - 14);
+    ctx.lineTo(cx, cy + 8);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawHUD() {
+    ctx.save();
+    ctx.font = "bold 15px 'Segoe UI', sans-serif";
+    ctx.textBaseline = "top";
+
+    // Панель слева
+    panel(14, 14, 180, 128);
+    hudLine(24, 26,  "СКОРОСТЬ", Math.round(plane.speed) + " км/ч",
+            plane.speed <= 80 ? "#ff5a5a" : "#7fe3ff");
+    hudLine(24, 56,  "ВЫСОТА",   Math.round(plane.altitude) + " м", "#7fe3ff");
+    hudLine(24, 86,  "КРЕН",     Math.round(plane.roll) + "°", "#7fe3ff");
+    hudLine(24, 116, "ТАНГАЖ",   Math.round(plane.pitch) + "°", "#7fe3ff");
+
+    // Панель справа — дистанция
+    panel(W - 194, 14, 180, 68);
+    hudLine(W - 184, 26, "ДИСТАНЦИЯ", plane.dist.toFixed(2) + " км", "#a6ff8f");
+    hudLine(W - 184, 56, "КУРС", ((plane.heading % 360 + 360) % 360).toFixed(0) + "°", "#a6ff8f");
+
+    // Предупреждение о сваливании
+    if (plane.speed <= 90) {
+      ctx.fillStyle = (Math.floor(performance.now() / 300) % 2) ? "#ff3b3b" : "#ffb0b0";
+      ctx.font = "bold 22px 'Segoe UI', sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("⚠ МАЛАЯ СКОРОСТЬ — ДАЙ ГАЗ (Shift)", W / 2, 24);
+      ctx.textAlign = "left";
+    }
+    ctx.restore();
+  }
+
+  function panel(x, y, w, h) {
+    ctx.fillStyle = "rgba(6, 20, 36, 0.55)";
+    roundRect(x, y, w, h, 10);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(127, 227, 255, 0.35)";
+    ctx.lineWidth = 1;
+    roundRect(x, y, w, h, 10);
+    ctx.stroke();
+  }
+  function hudLine(x, y, label, value, color) {
+    ctx.textAlign = "left";
+    ctx.fillStyle = "rgba(200,230,255,0.65)";
+    ctx.font = "11px 'Segoe UI', sans-serif";
+    ctx.fillText(label, x, y);
+    ctx.fillStyle = color;
+    ctx.font = "bold 17px 'Segoe UI', sans-serif";
+    ctx.fillText(value, x, y + 12);
+  }
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  // ---- Утилиты ----
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+  function mix(c1, c2, t) {
+    return [ c1[0]+(c2[0]-c1[0])*t, c1[1]+(c2[1]-c1[1])*t, c1[2]+(c2[2]-c1[2])*t ];
+  }
+  function rgb(c) { return "rgb(" + (c[0]|0) + "," + (c[1]|0) + "," + (c[2]|0) + ")"; }
+
+  // ---- Игровой цикл (delta-time) ----
+  let last = performance.now();
+  function loop(now) {
+    let dt = (now - last) / 1000;
+    last = now;
+    if (dt > 0.05) dt = 0.05; // защита от больших скачков (вкладка была неактивна)
+
+    if (state === STATE.PLAY) update(dt);
+    if (state !== STATE.MENU) draw();
+
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
