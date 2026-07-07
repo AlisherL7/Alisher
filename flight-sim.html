@@ -38,8 +38,8 @@
     text-shadow: 0 1px 4px #000; }
 
   /* ---- Сенсорное управление (телефон/планшет) ---- */
-  #touch, #pauseBtn { display: none; }         /* по умолчанию скрыто (ПК) */
-  body.touch #touch, body.touch #pauseBtn { display: block; }
+  #touch { display: none; }                    /* по умолчанию скрыто (ПК) */
+  body.touch #touch { display: block; }
 
   #touch { position: fixed; inset: 0; z-index: 6; pointer-events: none; }
   .pad { position: fixed; bottom: calc(20px + env(safe-area-inset-bottom));
@@ -60,11 +60,18 @@
     transform: scale(.94); }
   .tbtn .lbl { position: absolute; font-size: 10px; margin-top: 40px; opacity: .8; }
 
-  #pauseBtn { position: fixed; top: calc(12px + env(safe-area-inset-top));
-    left: 50%; transform: translateX(-50%); z-index: 7;
-    width: 46px; height: 46px; border-radius: 50%; font-size: 20px; color: #dff4ff;
-    background: rgba(10,30,54,.5); border: 2px solid rgba(127,227,255,.45);
-    touch-action: none; }
+  /* Панель кнопок: звук (всегда) + пауза (только сенсор).
+     Ниже HUD-панелей, чтобы не перекрывать их на узких экранах. */
+  #topbar { position: fixed; top: calc(150px + env(safe-area-inset-top));
+    right: calc(16px + env(safe-area-inset-right)); z-index: 7;
+    display: flex; flex-direction: column; gap: 10px; }
+  .minibtn { width: 46px; height: 46px; border-radius: 50%; font-size: 20px;
+    color: #dff4ff; background: rgba(10,30,54,.5);
+    border: 2px solid rgba(127,227,255,.45); touch-action: none;
+    display: flex; align-items: center; justify-content: center;
+    -webkit-user-select: none; user-select: none; cursor: pointer; }
+  .touchonly { display: none; }
+  body.touch .touchonly { display: flex; }
 </style>
 </head>
 <body>
@@ -73,7 +80,8 @@
 <!-- Стартовый экран -->
 <div id="start" class="overlay">
   <h1>✈️ ПОЛЁТ</h1>
-  <p>Простой авиасимулятор. Держи скорость, набирай высоту и не сваливайся в штопор!</p>
+  <p>Пролетай сквозь голубые кольца — за каждое очко и прибавка скорости.
+     Держи скорость, набирай высоту и не сваливайся в штопор!</p>
   <div class="keys" id="keysDesktop">
     <div><b>W / ↑</b> нос вниз &nbsp; <b>S / ↓</b> нос вверх</div>
     <div><b>A / ←</b> крен влево &nbsp; <b>D / →</b> крен вправо</div>
@@ -108,7 +116,10 @@
     <button class="tbtn" data-key="w" aria-label="нос вниз">▼</button>
   </div>
 </div>
-<button id="pauseBtn" aria-label="пауза">⏸</button>
+<div id="topbar">
+  <button id="soundBtn" class="minibtn" aria-label="звук вкл/выкл">🔊</button>
+  <button id="pauseBtn" class="minibtn touchonly" aria-label="пауза">⏸</button>
+</div>
 
 <script>
 (function () {
@@ -143,7 +154,8 @@
     speed: 220,   // км/ч
     altitude: 800, // метры
     heading: 0,   // курс для смещения ландшафта
-    dist: 0       // пройдено, км
+    dist: 0,      // пройдено, км
+    score: 0      // очки за пролёт колец
   };
 
   const keys = Object.create(null);
@@ -152,6 +164,7 @@
     keys[k] = true;
     if (["arrowup", "arrowdown", "arrowleft", "arrowright", " "].includes(k)) e.preventDefault();
     if (k === "p") togglePause();
+    if (k === "m") toggleSound();
   });
   window.addEventListener("keyup", (e) => { keys[e.key.toLowerCase()] = false; });
 
@@ -176,6 +189,90 @@
     document.getElementById("pauseBtn").addEventListener("click", () => togglePause());
   }
 
+  // ---- Вибрация (телефон) ----
+  const canVibrate = "vibrate" in navigator;
+  function buzz(p) { if (canVibrate) { try { navigator.vibrate(p); } catch (e) {} } }
+  if (isTouch) {
+    // лёгкая отдача на нажатие любой сенсорной кнопки
+    document.querySelectorAll(".tbtn, .minibtn").forEach((b) =>
+      b.addEventListener("pointerdown", () => buzz(8)));
+  }
+
+  // ---- Звук (Web Audio, без внешних файлов) ----
+  const audio = { ctx: null, on: true, osc: null, osc2: null, gain: null };
+  function initAudio() {
+    if (audio.ctx) return;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    audio.ctx = new AC();
+    audio.gain = audio.ctx.createGain();
+    audio.gain.gain.value = 0;
+    const lp = audio.ctx.createBiquadFilter();
+    lp.type = "lowpass"; lp.frequency.value = 950;
+    audio.gain.connect(lp); lp.connect(audio.ctx.destination);
+    audio.osc = audio.ctx.createOscillator();
+    audio.osc.type = "sawtooth"; audio.osc.frequency.value = 80;
+    audio.osc2 = audio.ctx.createOscillator();
+    audio.osc2.type = "square"; audio.osc2.frequency.value = 40;
+    const g2 = audio.ctx.createGain(); g2.gain.value = 0.35;
+    audio.osc.connect(audio.gain); audio.osc2.connect(g2); g2.connect(audio.gain);
+    audio.osc.start(); audio.osc2.start();
+  }
+  function engineUpdate() {
+    if (!audio.ctx) return;
+    const playing = state === STATE.PLAY && audio.on;
+    const f = 60 + (plane.speed - 60) / (620 - 60) * 150; // 60..210 Гц
+    const now = audio.ctx.currentTime;
+    audio.osc.frequency.setTargetAtTime(f, now, 0.08);
+    audio.osc2.frequency.setTargetAtTime(f * 0.5, now, 0.08);
+    audio.gain.gain.setTargetAtTime(playing ? 0.05 : 0.0, now, 0.1);
+  }
+  function beep(f1, f2, dur, vol) {
+    if (!audio.ctx || !audio.on) return;
+    const t = audio.ctx.currentTime;
+    const o = audio.ctx.createOscillator(), g = audio.ctx.createGain();
+    o.type = "sine";
+    o.frequency.setValueAtTime(f1, t);
+    o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(audio.ctx.destination);
+    o.start(t); o.stop(t + dur + 0.02);
+  }
+  const chime = () => beep(660, 1320, 0.35, 0.3);   // пролёт кольца
+  const boom  = () => beep(200, 40, 0.6, 0.4);      // крушение
+
+  const soundBtn = document.getElementById("soundBtn");
+  function toggleSound() {
+    audio.on = !audio.on;
+    soundBtn.textContent = audio.on ? "🔊" : "🔇";
+    if (audio.on) { initAudio(); if (audio.ctx && audio.ctx.state === "suspended") audio.ctx.resume(); }
+  }
+  soundBtn.addEventListener("click", toggleSound);
+
+  // ---- Кольца (цель — пролетать сквозь них) ----
+  const rings = [];
+  const RING_SPAWN_Z = 1.7, RING_PASS_Z = 0.14;
+  function newRing(z) {
+    return { x: (Math.random() * 2 - 1) * 0.65,
+             y: (Math.random() * 2 - 1) * 0.5,
+             z: z, scored: false };
+  }
+  function resetRings() {
+    rings.length = 0;
+    for (let i = 0; i < 3; i++) rings.push(newRing(0.5 + i * 0.5));
+  }
+  function ringScreen(r) {
+    const scale = 1 / r.z;
+    const unit = Math.min(W, H) * 0.5;
+    return {
+      sx: W / 2 + r.x * scale * unit,
+      sy: H / 2 + r.y * scale * unit,
+      rad: 0.17 * scale * unit
+    };
+  }
+
   // ---- Облака (процедурные) ----
   const clouds = [];
   function seedClouds() {
@@ -193,8 +290,9 @@
 
   function reset() {
     plane.pitch = 0; plane.roll = 0; plane.speed = 220;
-    plane.altitude = 800; plane.heading = 0; plane.dist = 0;
+    plane.altitude = 800; plane.heading = 0; plane.dist = 0; plane.score = 0;
     seedClouds();
+    resetRings();
   }
 
   // ---- Экраны ----
@@ -215,6 +313,8 @@
     state = STATE.PLAY;
     startEl.classList.add("hidden");
     overEl.classList.add("hidden");
+    initAudio();
+    if (audio.ctx && audio.ctx.state === "suspended") audio.ctx.resume();
     last = performance.now();
   }
   function togglePause() {
@@ -233,9 +333,12 @@
   function crash(reason) {
     state = STATE.OVER;
     overTitle.textContent = "💥 Крушение";
-    overText.textContent = reason + " Пройдено " + plane.dist.toFixed(1) + " км.";
+    overText.textContent = reason + " Пройдено " + plane.dist.toFixed(1) +
+      " км, колец пройдено: " + plane.score + ".";
     overBtn.textContent = "Заново";
     overEl.classList.remove("hidden");
+    boom();
+    buzz([60, 40, 120]);
   }
 
   // ---- Физика ----
@@ -297,6 +400,26 @@
       if (c.x < -120) c.x = W + 60;
       if (c.x > W + 120) c.x = -60;
     }
+
+    // Кольца: приближаются, крен/тангаж уводят их в сторону (нужно рулить)
+    const approach = 0.42 * (plane.speed / 260);
+    for (const r of rings) {
+      r.z -= approach * dt;
+      r.x -= (plane.roll / 45) * 0.55 * dt;   // банк вправо — кольцо уходит влево
+      r.y += (plane.pitch / 45) * 0.5 * dt;   // нос вверх — кольцо опускается к центру
+      if (r.z <= RING_PASS_Z && !r.scored) {
+        r.scored = true;
+        const s = ringScreen(r);
+        const hit = Math.hypot(s.sx - W / 2, s.sy - H / 2) < s.rad * 0.85;
+        if (hit) {
+          plane.score++;
+          plane.speed = Math.min(620, plane.speed + 25); // бонус скорости
+          chime();
+          buzz(35);
+        }
+        Object.assign(r, newRing(RING_SPAWN_Z + Math.random() * 0.4));
+      }
+    }
   }
 
   // ---- Отрисовка ----
@@ -348,6 +471,13 @@
       drawCloud(c.x, c.y, 28 * c.s, 0.6 * c.depth + 0.2);
     }
 
+    // Кольца — от дальних к ближним
+    const sorted = rings.slice().sort((a, b) => b.z - a.z);
+    for (const r of sorted) {
+      if (r.z <= RING_PASS_Z || r.z > RING_SPAWN_Z + 0.5) continue;
+      drawRing(r);
+    }
+
     // Индикатор самолёта (фиксирован в центре)
     drawPlaneSymbol();
 
@@ -365,6 +495,29 @@
     ctx.arc(x - r * 0.9, y + r * 0.15, r * 0.7, 0, Math.PI * 2);
     ctx.arc(x + r * 0.2, y - r * 0.5, r * 0.65, 0, Math.PI * 2);
     ctx.fill();
+    ctx.restore();
+  }
+
+  function drawRing(r) {
+    const s = ringScreen(r);
+    // Зелёное, если наведено на центр (пролетишь), иначе голубое
+    const aligned = Math.hypot(s.sx - W / 2, s.sy - H / 2) < s.rad * 0.85;
+    const near = clamp((RING_SPAWN_Z - r.z) / (RING_SPAWN_Z - RING_PASS_Z), 0, 1);
+    ctx.save();
+    ctx.globalAlpha = 0.35 + 0.65 * near;
+    ctx.lineWidth = Math.max(3, s.rad * 0.16);
+    ctx.strokeStyle = aligned ? "#63ff8a" : "#57d6ff";
+    ctx.shadowColor = ctx.strokeStyle;
+    ctx.shadowBlur = 14;
+    ctx.beginPath();
+    ctx.arc(s.sx, s.sy, s.rad, 0, Math.PI * 2);
+    ctx.stroke();
+    // Внутренний ободок
+    ctx.globalAlpha *= 0.5;
+    ctx.lineWidth = Math.max(2, s.rad * 0.07);
+    ctx.beginPath();
+    ctx.arc(s.sx, s.sy, s.rad * 0.82, 0, Math.PI * 2);
+    ctx.stroke();
     ctx.restore();
   }
 
@@ -403,17 +556,18 @@
     hudLine(24, 86,  "КРЕН",     Math.round(plane.roll) + "°", "#7fe3ff");
     hudLine(24, 116, "ТАНГАЖ",   Math.round(plane.pitch) + "°", "#7fe3ff");
 
-    // Панель справа — дистанция
-    panel(W - 194, 14, 180, 68);
-    hudLine(W - 184, 26, "ДИСТАНЦИЯ", plane.dist.toFixed(2) + " км", "#a6ff8f");
-    hudLine(W - 184, 56, "КУРС", ((plane.heading % 360 + 360) % 360).toFixed(0) + "°", "#a6ff8f");
+    // Панель справа — очки, дистанция, курс
+    panel(W - 194, 14, 180, 104);
+    hudLine(W - 184, 24, "★ ОЧКИ", String(plane.score), "#ffd23f");
+    hudLine(W - 184, 54, "ДИСТАНЦИЯ", plane.dist.toFixed(2) + " км", "#a6ff8f");
+    hudLine(W - 184, 84, "КУРС", ((plane.heading % 360 + 360) % 360).toFixed(0) + "°", "#a6ff8f");
 
     // Предупреждение о сваливании
     if (plane.speed <= 90) {
       ctx.fillStyle = (Math.floor(performance.now() / 300) % 2) ? "#ff3b3b" : "#ffb0b0";
       ctx.font = "bold 22px 'Segoe UI', sans-serif";
       ctx.textAlign = "center";
-      ctx.fillText("⚠ МАЛАЯ СКОРОСТЬ — ДАЙ ГАЗ (Shift)", W / 2, 24);
+      ctx.fillText("⚠ МАЛАЯ СКОРОСТЬ — ГАЗ!", W / 2, 76);
       ctx.textAlign = "left";
     }
     ctx.restore();
@@ -463,10 +617,20 @@
 
     if (state === STATE.PLAY) update(dt);
     if (state !== STATE.MENU) draw();
+    engineUpdate();
 
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
+
+  // ---- Тестовый хук (только при ?debug в адресе) ----
+  if (location.search.indexOf("debug") >= 0) {
+    window.__game = {
+      peek: () => ({ score: plane.score, speed: plane.speed, alt: plane.altitude }),
+      forceRing: () => { rings[0].x = 0; rings[0].y = 0;
+                         rings[0].z = RING_PASS_Z + 0.02; rings[0].scored = false; }
+    };
+  }
 })();
 </script>
 </body>
