@@ -2,12 +2,17 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a1e3c">
 <title>✈️ Полёт — Авиасимулятор</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { width: 100%; height: 100%; overflow: hidden; background: #000;
-    font-family: 'Segoe UI', system-ui, sans-serif; user-select: none; }
+    font-family: 'Segoe UI', system-ui, sans-serif; user-select: none;
+    -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+    touch-action: none; overscroll-behavior: none; }
   #game { display: block; width: 100vw; height: 100vh; touch-action: none; }
 
   .overlay { position: fixed; inset: 0; display: flex; flex-direction: column;
@@ -31,6 +36,35 @@
   #hint { position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
     color: #cfefff; font-size: 13px; opacity: .7; z-index: 5; text-align: center;
     text-shadow: 0 1px 4px #000; }
+
+  /* ---- Сенсорное управление (телефон/планшет) ---- */
+  #touch, #pauseBtn { display: none; }         /* по умолчанию скрыто (ПК) */
+  body.touch #touch, body.touch #pauseBtn { display: block; }
+
+  #touch { position: fixed; inset: 0; z-index: 6; pointer-events: none; }
+  .pad { position: fixed; bottom: calc(20px + env(safe-area-inset-bottom));
+    display: flex; gap: 16px; pointer-events: auto; }
+  .pad.left  { left: calc(16px + env(safe-area-inset-left)); }
+  .pad.right { right: calc(16px + env(safe-area-inset-right)); flex-direction: column; }
+  .pad.throttle { left: 50%; transform: translateX(-50%); flex-direction: column; gap: 12px;
+    bottom: calc(112px + env(safe-area-inset-bottom)); }
+
+  .tbtn { width: 72px; height: 72px; border-radius: 50%;
+    background: rgba(10, 30, 54, 0.5); border: 2px solid rgba(127,227,255,.5);
+    color: #dff4ff; font-size: 30px; line-height: 1; display: flex;
+    align-items: center; justify-content: center; touch-action: none;
+    -webkit-user-select: none; user-select: none; backdrop-filter: blur(3px);
+    box-shadow: 0 4px 14px rgba(0,0,0,.35); }
+  .tbtn.small { width: 58px; height: 58px; font-size: 24px; }
+  .tbtn.press { background: rgba(42,183,240,.55); border-color: #7fe3ff;
+    transform: scale(.94); }
+  .tbtn .lbl { position: absolute; font-size: 10px; margin-top: 40px; opacity: .8; }
+
+  #pauseBtn { position: fixed; top: calc(12px + env(safe-area-inset-top));
+    left: 50%; transform: translateX(-50%); z-index: 7;
+    width: 46px; height: 46px; border-radius: 50%; font-size: 20px; color: #dff4ff;
+    background: rgba(10,30,54,.5); border: 2px solid rgba(127,227,255,.45);
+    touch-action: none; }
 </style>
 </head>
 <body>
@@ -40,11 +74,13 @@
 <div id="start" class="overlay">
   <h1>✈️ ПОЛЁТ</h1>
   <p>Простой авиасимулятор. Держи скорость, набирай высоту и не сваливайся в штопор!</p>
-  <div class="keys">
+  <div class="keys" id="keysDesktop">
     <div><b>W / ↑</b> нос вниз &nbsp; <b>S / ↓</b> нос вверх</div>
     <div><b>A / ←</b> крен влево &nbsp; <b>D / →</b> крен вправо</div>
     <div><b>Shift</b> газ + &nbsp; <b>Ctrl</b> газ − &nbsp; <b>P</b> пауза</div>
   </div>
+  <p id="keysTouch" style="display:none">Управление — кнопками на экране:<br>
+    слева ◀ ▶ крен · справа ▲ ▼ нос · в центре ＋ − газ.</p>
   <button class="btn" id="startBtn">Взлёт 🚀</button>
 </div>
 
@@ -56,6 +92,23 @@
 </div>
 
 <div id="hint">W/S — тангаж · A/D — крен · Shift/Ctrl — газ · P — пауза</div>
+
+<!-- Сенсорное управление (появляется только на телефоне/планшете) -->
+<div id="touch">
+  <div class="pad left">
+    <button class="tbtn" data-key="a" aria-label="крен влево">◀</button>
+    <button class="tbtn" data-key="d" aria-label="крен вправо">▶</button>
+  </div>
+  <div class="pad throttle">
+    <button class="tbtn small" data-key="shift" aria-label="газ больше">＋</button>
+    <button class="tbtn small" data-key="control" aria-label="газ меньше">−</button>
+  </div>
+  <div class="pad right">
+    <button class="tbtn" data-key="s" aria-label="нос вверх">▲</button>
+    <button class="tbtn" data-key="w" aria-label="нос вниз">▼</button>
+  </div>
+</div>
+<button id="pauseBtn" aria-label="пауза">⏸</button>
 
 <script>
 (function () {
@@ -77,6 +130,7 @@
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   }
   window.addEventListener("resize", resize);
+  window.addEventListener("orientationchange", () => setTimeout(resize, 150));
   resize();
 
   // ---- Состояние игры ----
@@ -100,6 +154,27 @@
     if (k === "p") togglePause();
   });
   window.addEventListener("keyup", (e) => { keys[e.key.toLowerCase()] = false; });
+
+  // ---- Сенсорное управление ----
+  const isTouch = window.matchMedia("(pointer: coarse)").matches
+                  || ("ontouchstart" in window) || navigator.maxTouchPoints > 0;
+  if (isTouch) {
+    document.body.classList.add("touch");
+    document.getElementById("keysDesktop").style.display = "none";
+    document.getElementById("keysTouch").style.display = "block";
+    document.getElementById("hint").style.display = "none";
+    document.querySelectorAll(".tbtn").forEach((b) => {
+      const key = b.dataset.key;
+      const press = (e) => { e.preventDefault(); keys[key] = true;  b.classList.add("press"); };
+      const release = (e) => { e.preventDefault(); keys[key] = false; b.classList.remove("press"); };
+      b.addEventListener("pointerdown", press);
+      b.addEventListener("pointerup", release);
+      b.addEventListener("pointercancel", release);
+      b.addEventListener("pointerleave", release);
+      b.addEventListener("contextmenu", (e) => e.preventDefault());
+    });
+    document.getElementById("pauseBtn").addEventListener("click", () => togglePause());
+  }
 
   // ---- Облака (процедурные) ----
   const clouds = [];
