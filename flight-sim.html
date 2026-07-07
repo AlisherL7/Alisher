@@ -5,121 +5,152 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0a1e3c">
-<title>✈️ Полёт — Авиасимулятор</title>
+<meta name="theme-color" content="#05060f">
+<title>КОСМОС · Пояс астероидов</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { width: 100%; height: 100%; overflow: hidden; background: #000;
-    font-family: 'Segoe UI', system-ui, sans-serif; user-select: none;
-    -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
-    touch-action: none; overscroll-behavior: none; }
-  #game { display: block; width: 100vw; height: 100vh; touch-action: none; }
+  :root {
+    --bg0:#05060f; --bg1:#0a0f2a; --ink:#dfe8ff; --dim:#8ea2c8;
+    --cyan:#46e6ff; --magenta:#ff4bd8; --gold:#ffd23f;
+    --danger:#ff3b6b; --panel:rgba(10,16,40,.55); --stroke:rgba(70,230,255,.35);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body {
+    width:100%; height:100%; overflow:hidden; background:var(--bg0);
+    font-family:'Segoe UI', system-ui, -apple-system, sans-serif; color:var(--ink);
+    user-select:none; -webkit-user-select:none; -webkit-tap-highlight-color:transparent;
+    touch-action:none; overscroll-behavior:none;
+  }
+  #game { display:block; width:100vw; height:100vh; touch-action:none; }
 
-  .overlay { position: fixed; inset: 0; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; text-align: center; color: #fff;
-    background: rgba(6, 14, 30, 0.82); backdrop-filter: blur(4px); z-index: 10; }
-  .overlay h1 { font-size: clamp(28px, 6vw, 56px); margin-bottom: 12px;
-    text-shadow: 0 4px 24px rgba(0,180,255,.5); }
-  .overlay p { font-size: clamp(14px, 2.4vw, 18px); opacity: .9; margin: 4px 0;
-    max-width: 520px; line-height: 1.5; }
-  .keys { margin: 18px 0; font-size: 15px; opacity: .85; line-height: 1.9; }
-  .keys b { display: inline-block; min-width: 92px; padding: 2px 8px; margin: 2px;
-    background: rgba(255,255,255,.12); border-radius: 6px; }
-  .btn { margin-top: 22px; padding: 14px 40px; font-size: 20px; font-weight: 600;
-    color: #04263f; background: linear-gradient(180deg,#7fe3ff,#2ab7f0);
-    border: none; border-radius: 40px; cursor: pointer; letter-spacing: .5px;
-    box-shadow: 0 8px 28px rgba(42,183,240,.45); transition: transform .1s; }
-  .btn:hover { transform: translateY(-2px); }
-  .btn:active { transform: translateY(1px); }
-  .hidden { display: none !important; }
+  /* --- Оверлеи (меню / пауза / конец) --- */
+  .overlay {
+    position:fixed; inset:0; z-index:20; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center; padding:24px;
+    background:radial-gradient(120% 120% at 50% 30%, rgba(20,12,54,.72), rgba(4,5,15,.92));
+    backdrop-filter:blur(6px);
+  }
+  .title {
+    font-size:clamp(40px,11vw,92px); font-weight:800; letter-spacing:.14em;
+    line-height:.98; margin-bottom:6px;
+    background:linear-gradient(180deg,#eafcff,#46e6ff 55%,#2a7bff);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 0 34px rgba(70,230,255,.35);
+  }
+  .sub { color:var(--dim); letter-spacing:.35em; font-size:clamp(11px,2.6vw,14px);
+    text-transform:uppercase; margin-bottom:22px; }
+  .lead { max-width:460px; font-size:clamp(14px,3vw,17px); line-height:1.55;
+    color:var(--ink); opacity:.92; margin-bottom:20px; }
+  .lead b { color:var(--cyan); font-weight:600; }
+  .lead .m { color:var(--magenta); } .lead .g { color:var(--gold); }
+  .keys { color:var(--dim); font-size:13px; line-height:1.9; margin-bottom:26px; }
+  .keys kbd { display:inline-block; min-width:26px; padding:2px 8px; margin:0 2px;
+    background:rgba(70,230,255,.1); border:1px solid var(--stroke); border-radius:6px;
+    color:var(--ink); font-family:inherit; font-size:12px; }
+  .btn {
+    padding:15px 46px; font-size:19px; font-weight:700; letter-spacing:.12em;
+    text-transform:uppercase; color:#04121e; cursor:pointer; border:none; border-radius:40px;
+    background:linear-gradient(180deg,#7ff0ff,#26c2f5); position:relative;
+    box-shadow:0 10px 34px rgba(38,194,245,.5), inset 0 1px 0 rgba(255,255,255,.6);
+    transition:transform .08s ease;
+  }
+  .btn:hover { transform:translateY(-2px); }
+  .btn:active { transform:translateY(1px); }
+  .stat { color:var(--dim); font-size:15px; margin:2px 0 18px; letter-spacing:.04em; }
+  .stat b { color:var(--gold); font-size:22px; }
+  .hidden { display:none !important; }
 
-  #hint { position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
-    color: #cfefff; font-size: 13px; opacity: .7; z-index: 5; text-align: center;
-    text-shadow: 0 1px 4px #000; }
+  /* --- Верхние кнопки: звук + пауза --- */
+  /* Ниже правой HUD-панели, чтобы не перекрывать её на узких экранах */
+  #topbar { position:fixed; z-index:12; display:flex; flex-direction:column; gap:10px;
+    top:calc(100px + env(safe-area-inset-top)); right:calc(14px + env(safe-area-inset-right)); }
+  .mini { width:44px; height:44px; border-radius:50%; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; font-size:18px;
+    color:var(--ink); background:var(--panel); border:1.5px solid var(--stroke);
+    touch-action:none; backdrop-filter:blur(4px); }
+  .touchonly { display:none; }
+  body.touch .touchonly { display:flex; }
 
-  /* ---- Сенсорное управление (телефон/планшет) ---- */
-  #touch { display: none; }                    /* по умолчанию скрыто (ПК) */
-  body.touch #touch { display: block; }
+  /* --- Сенсорное управление --- */
+  #touch { display:none; position:fixed; inset:0; z-index:11; pointer-events:none; }
+  body.touch #touch { display:block; }
+  #stick {
+    position:absolute; pointer-events:auto; touch-action:none;
+    left:calc(22px + env(safe-area-inset-left));
+    bottom:calc(26px + env(safe-area-inset-bottom));
+    width:132px; height:132px; border-radius:50%;
+    background:radial-gradient(circle at 50% 50%, rgba(70,230,255,.06), rgba(10,16,40,.5));
+    border:1.5px solid var(--stroke); display:flex; align-items:center; justify-content:center;
+  }
+  #knob { width:58px; height:58px; border-radius:50%;
+    background:radial-gradient(circle at 40% 35%, #9ff3ff, #2ab7f0);
+    box-shadow:0 4px 16px rgba(0,0,0,.4), 0 0 20px rgba(70,230,255,.5);
+    will-change:transform; }
+  .rbtns { position:absolute; pointer-events:auto;
+    right:calc(22px + env(safe-area-inset-right));
+    bottom:calc(26px + env(safe-area-inset-bottom));
+    display:flex; flex-direction:column; align-items:center; gap:16px; }
+  .rbtn { pointer-events:auto; touch-action:none; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-weight:700;
+    letter-spacing:.04em; color:var(--ink); }
+  #fireBtn { width:104px; height:104px; font-size:17px;
+    background:radial-gradient(circle at 50% 40%, rgba(255,75,120,.45), rgba(120,10,40,.5));
+    border:2px solid rgba(255,75,120,.7); color:#fff;
+    box-shadow:0 0 24px rgba(255,59,107,.4); }
+  #boostBtn { width:74px; height:74px; font-size:13px;
+    background:radial-gradient(circle at 50% 40%, rgba(70,230,255,.28), rgba(10,40,70,.5));
+    border:2px solid var(--stroke); }
+  .rbtn.press { transform:scale(.93); filter:brightness(1.3); }
 
-  #touch { position: fixed; inset: 0; z-index: 6; pointer-events: none; }
-  .pad { position: fixed; bottom: calc(20px + env(safe-area-inset-bottom));
-    display: flex; gap: 16px; pointer-events: auto; }
-  .pad.left  { left: calc(16px + env(safe-area-inset-left)); }
-  .pad.right { right: calc(16px + env(safe-area-inset-right)); flex-direction: column; }
-  .pad.throttle { left: 50%; transform: translateX(-50%); flex-direction: column; gap: 12px;
-    bottom: calc(112px + env(safe-area-inset-bottom)); }
-
-  .tbtn { width: 72px; height: 72px; border-radius: 50%;
-    background: rgba(10, 30, 54, 0.5); border: 2px solid rgba(127,227,255,.5);
-    color: #dff4ff; font-size: 30px; line-height: 1; display: flex;
-    align-items: center; justify-content: center; touch-action: none;
-    -webkit-user-select: none; user-select: none; backdrop-filter: blur(3px);
-    box-shadow: 0 4px 14px rgba(0,0,0,.35); }
-  .tbtn.small { width: 58px; height: 58px; font-size: 24px; }
-  .tbtn.press { background: rgba(42,183,240,.55); border-color: #7fe3ff;
-    transform: scale(.94); }
-  .tbtn .lbl { position: absolute; font-size: 10px; margin-top: 40px; opacity: .8; }
-
-  /* Панель кнопок: звук (всегда) + пауза (только сенсор).
-     Ниже HUD-панелей, чтобы не перекрывать их на узких экранах. */
-  #topbar { position: fixed; top: calc(150px + env(safe-area-inset-top));
-    right: calc(16px + env(safe-area-inset-right)); z-index: 7;
-    display: flex; flex-direction: column; gap: 10px; }
-  .minibtn { width: 46px; height: 46px; border-radius: 50%; font-size: 20px;
-    color: #dff4ff; background: rgba(10,30,54,.5);
-    border: 2px solid rgba(127,227,255,.45); touch-action: none;
-    display: flex; align-items: center; justify-content: center;
-    -webkit-user-select: none; user-select: none; cursor: pointer; }
-  .touchonly { display: none; }
-  body.touch .touchonly { display: flex; }
+  #hint { position:fixed; bottom:12px; left:50%; transform:translateX(-50%);
+    z-index:11; color:var(--dim); font-size:12.5px; letter-spacing:.05em; opacity:.7;
+    text-align:center; pointer-events:none; }
 </style>
 </head>
 <body>
 <canvas id="game"></canvas>
 
-<!-- Стартовый экран -->
+<!-- Меню -->
 <div id="start" class="overlay">
-  <h1>✈️ ПОЛЁТ</h1>
-  <p>Пролетай сквозь голубые кольца — за каждое очко и прибавка скорости.
-     Держи скорость, набирай высоту и не сваливайся в штопор!</p>
+  <div class="title">КОСМОС</div>
+  <div class="sub">Пояс&nbsp;астероидов</div>
+  <p class="lead">Пилотируй истребитель сквозь астероидное поле.
+    <b>Стреляй</b> по камням, уворачивайся от столкновений и собирай
+    <span class="g">кристаллы</span> — за них очки и заряд <b>щита</b>.</p>
   <div class="keys" id="keysDesktop">
-    <div><b>W / ↑</b> нос вниз &nbsp; <b>S / ↓</b> нос вверх</div>
-    <div><b>A / ←</b> крен влево &nbsp; <b>D / →</b> крен вправо</div>
-    <div><b>Shift</b> газ + &nbsp; <b>Ctrl</b> газ − &nbsp; <b>P</b> пауза</div>
+    <div><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / стрелки — манёвр</div>
+    <div><kbd>Space</kbd> — огонь &nbsp;·&nbsp; <kbd>Shift</kbd> — форсаж</div>
+    <div><kbd>P</kbd> — пауза &nbsp;·&nbsp; <kbd>M</kbd> — звук</div>
   </div>
-  <p id="keysTouch" style="display:none">Управление — кнопками на экране:<br>
-    слева ◀ ▶ крен · справа ▲ ▼ нос · в центре ＋ − газ.</p>
-  <button class="btn" id="startBtn">Взлёт 🚀</button>
+  <p class="lead" id="keysTouch" style="display:none">
+    Слева — <b>джойстик</b> для манёвра, справа — <span class="m">ОГОНЬ</span>
+    и <b>форсаж</b>.</p>
+  <button class="btn" id="startBtn">Старт ▸</button>
 </div>
 
-<!-- Экран паузы / конца -->
+<!-- Пауза / конец -->
 <div id="over" class="overlay hidden">
-  <h1 id="overTitle">Пауза</h1>
-  <p id="overText"></p>
+  <div class="title" id="overTitle" style="font-size:clamp(30px,8vw,60px)">Пауза</div>
+  <div class="sub" id="overSub">Полёт приостановлен</div>
+  <div class="stat" id="overStat"></div>
   <button class="btn" id="overBtn">Продолжить</button>
 </div>
 
-<div id="hint">W/S — тангаж · A/D — крен · Shift/Ctrl — газ · P — пауза</div>
-
-<!-- Сенсорное управление (появляется только на телефоне/планшете) -->
-<div id="touch">
-  <div class="pad left">
-    <button class="tbtn" data-key="a" aria-label="крен влево">◀</button>
-    <button class="tbtn" data-key="d" aria-label="крен вправо">▶</button>
-  </div>
-  <div class="pad throttle">
-    <button class="tbtn small" data-key="shift" aria-label="газ больше">＋</button>
-    <button class="tbtn small" data-key="control" aria-label="газ меньше">−</button>
-  </div>
-  <div class="pad right">
-    <button class="tbtn" data-key="s" aria-label="нос вверх">▲</button>
-    <button class="tbtn" data-key="w" aria-label="нос вниз">▼</button>
-  </div>
-</div>
+<!-- Верхние кнопки -->
 <div id="topbar">
-  <button id="soundBtn" class="minibtn" aria-label="звук вкл/выкл">🔊</button>
-  <button id="pauseBtn" class="minibtn touchonly" aria-label="пауза">⏸</button>
+  <button id="soundBtn" class="mini" aria-label="звук вкл/выкл">🔊</button>
+  <button id="pauseBtn" class="mini touchonly" aria-label="пауза">⏸</button>
 </div>
+
+<!-- Сенсорное управление -->
+<div id="touch">
+  <div id="stick"><div id="knob"></div></div>
+  <div class="rbtns">
+    <button id="boostBtn" class="rbtn" aria-label="форсаж">ФОРС</button>
+    <button id="fireBtn" class="rbtn" aria-label="огонь">ОГОНЬ</button>
+  </div>
+</div>
+
+<div id="hint">WASD/стрелки — манёвр · Space — огонь · Shift — форсаж</div>
 
 <script>
 (function () {
@@ -128,120 +159,172 @@
   const canvas = document.getElementById("game");
   const ctx = canvas.getContext("2d");
 
-  // ---- Размеры с учётом плотности пикселей ----
-  let W = 0, H = 0, DPR = 1;
+  // ---------- Размеры (с учётом плотности пикселей) ----------
+  let W = 0, H = 0, DPR = 1, MIN = 0;
   function resize() {
     DPR = Math.min(window.devicePixelRatio || 1, 2);
-    W = window.innerWidth;
-    H = window.innerHeight;
-    canvas.width = Math.floor(W * DPR);
-    canvas.height = Math.floor(H * DPR);
-    canvas.style.width = W + "px";
-    canvas.style.height = H + "px";
+    W = window.innerWidth; H = window.innerHeight; MIN = Math.min(W, H);
+    canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR);
+    canvas.style.width = W + "px"; canvas.style.height = H + "px";
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   }
   window.addEventListener("resize", resize);
   window.addEventListener("orientationchange", () => setTimeout(resize, 150));
   resize();
 
-  // ---- Состояние игры ----
+  // ---------- Утилиты ----------
+  const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const TAU = Math.PI * 2;
+
+  // ---------- Состояние ----------
   const STATE = { MENU: 0, PLAY: 1, PAUSE: 2, OVER: 3 };
   let state = STATE.MENU;
 
-  const plane = {
-    pitch: 0,     // тангаж, градусы (-45..45) — визуальный наклон горизонта
-    roll: 0,      // крен, градусы (-45..45)
-    speed: 220,   // км/ч
-    altitude: 800, // метры
-    heading: 0,   // курс для смещения ландшафта
-    dist: 0,      // пройдено, км
-    score: 0      // очки за пролёт колец
+  const NEAR = 0.18, FAR = 1.9;          // границы глубины
+  function project(x, y, z) {
+    const k = NEAR / z;                  // 1 у ближнего плана, →0 вдали
+    return { sx: W / 2 + x * W * 0.46 * k, sy: H / 2 + y * H * 0.46 * k, k };
+  }
+
+  const ship = { x: 0, y: 0, roll: 0, r: 0.11 };
+  const game = {
+    score: 0, best: loadBest(), shield: 100, t: 0, vel: 1,
+    shake: 0, lastFire: 0, spawnAcc: 0
   };
 
+  const asteroids = [], crystals = [], lasers = [], particles = [], stars = [];
+
+  function loadBest() { try { return parseInt(localStorage.getItem("cosmos_best") || "0", 10) || 0; } catch (e) { return 0; } }
+  function saveBest(v) { try { localStorage.setItem("cosmos_best", String(v)); } catch (e) {} }
+
+  // ---------- Ввод ----------
   const keys = Object.create(null);
+  const joy = { active: false, ax: 0, ay: 0 };
+  let firing = false, boosting = false;
+
   window.addEventListener("keydown", (e) => {
     const k = e.key.toLowerCase();
     keys[k] = true;
-    if (["arrowup", "arrowdown", "arrowleft", "arrowright", " "].includes(k)) e.preventDefault();
+    if (["arrowup","arrowdown","arrowleft","arrowright"," "].includes(k)) e.preventDefault();
+    if (k === " ") firing = true;
+    if (k === "shift") boosting = true;
     if (k === "p") togglePause();
     if (k === "m") toggleSound();
+    if ((k === "enter" || k === " ") && state !== STATE.PLAY) primaryAction();
   });
-  window.addEventListener("keyup", (e) => { keys[e.key.toLowerCase()] = false; });
+  window.addEventListener("keyup", (e) => {
+    const k = e.key.toLowerCase();
+    keys[k] = false;
+    if (k === " ") firing = false;
+    if (k === "shift") boosting = false;
+  });
 
-  // ---- Сенсорное управление ----
+  function axisX() { return joy.active ? joy.ax : ((keys["d"]||keys["arrowright"]?1:0) - (keys["a"]||keys["arrowleft"]?1:0)); }
+  function axisY() { return joy.active ? joy.ay : ((keys["s"]||keys["arrowdown"]?1:0) - (keys["w"]||keys["arrowup"]?1:0)); }
+
+  // ---------- Сенсорное управление ----------
   const isTouch = window.matchMedia("(pointer: coarse)").matches
                   || ("ontouchstart" in window) || navigator.maxTouchPoints > 0;
+  const canVibrate = "vibrate" in navigator;
+  function buzz(p) { if (canVibrate) { try { navigator.vibrate(p); } catch (e) {} } }
+
   if (isTouch) {
     document.body.classList.add("touch");
     document.getElementById("keysDesktop").style.display = "none";
     document.getElementById("keysTouch").style.display = "block";
     document.getElementById("hint").style.display = "none";
-    document.querySelectorAll(".tbtn").forEach((b) => {
-      const key = b.dataset.key;
-      const press = (e) => { e.preventDefault(); keys[key] = true;  b.classList.add("press"); };
-      const release = (e) => { e.preventDefault(); keys[key] = false; b.classList.remove("press"); };
-      b.addEventListener("pointerdown", press);
-      b.addEventListener("pointerup", release);
-      b.addEventListener("pointercancel", release);
-      b.addEventListener("pointerleave", release);
-      b.addEventListener("contextmenu", (e) => e.preventDefault());
+
+    // Джойстик
+    const stick = document.getElementById("stick"), knob = document.getElementById("knob");
+    let stickId = null, bx = 0, by = 0; const MAXR = 46;
+    function stickMove(e) {
+      const dx = e.clientX - bx, dy = e.clientY - by;
+      const d = Math.hypot(dx, dy), cl = Math.min(d, MAXR), ang = Math.atan2(dy, dx);
+      const kx = Math.cos(ang) * cl, ky = Math.sin(ang) * cl;
+      knob.style.transform = `translate(${kx}px,${ky}px)`;
+      joy.ax = kx / MAXR; joy.ay = ky / MAXR; joy.active = true;
+    }
+    function stickEnd(e) {
+      if (e.pointerId !== stickId) return;
+      stickId = null; joy.active = false; joy.ax = 0; joy.ay = 0;
+      knob.style.transform = "translate(0,0)";
+    }
+    stick.addEventListener("pointerdown", (e) => {
+      e.preventDefault(); stickId = e.pointerId;
+      const r = stick.getBoundingClientRect();
+      bx = r.left + r.width / 2; by = r.top + r.height / 2;
+      try { stick.setPointerCapture(e.pointerId); } catch (er) {}
+      buzz(6); stickMove(e);
     });
-    document.getElementById("pauseBtn").addEventListener("click", () => togglePause());
+    stick.addEventListener("pointermove", (e) => { if (e.pointerId === stickId) stickMove(e); });
+    stick.addEventListener("pointerup", stickEnd);
+    stick.addEventListener("pointercancel", stickEnd);
+
+    // Кнопки огня / форсажа
+    function holdBtn(el, on, off) {
+      el.addEventListener("pointerdown", (e) => { e.preventDefault(); el.classList.add("press"); buzz(6); on(); });
+      const up = (e) => { e.preventDefault(); el.classList.remove("press"); off(); };
+      el.addEventListener("pointerup", up);
+      el.addEventListener("pointercancel", up);
+      el.addEventListener("contextmenu", (e) => e.preventDefault());
+    }
+    holdBtn(document.getElementById("fireBtn"),  () => firing = true,  () => firing = false);
+    holdBtn(document.getElementById("boostBtn"), () => boosting = true, () => boosting = false);
+    document.getElementById("pauseBtn").addEventListener("click", () => { buzz(6); togglePause(); });
   }
 
-  // ---- Вибрация (телефон) ----
-  const canVibrate = "vibrate" in navigator;
-  function buzz(p) { if (canVibrate) { try { navigator.vibrate(p); } catch (e) {} } }
-  if (isTouch) {
-    // лёгкая отдача на нажатие любой сенсорной кнопки
-    document.querySelectorAll(".tbtn, .minibtn").forEach((b) =>
-      b.addEventListener("pointerdown", () => buzz(8)));
-  }
-
-  // ---- Звук (Web Audio, без внешних файлов) ----
-  const audio = { ctx: null, on: true, osc: null, osc2: null, gain: null };
+  // ---------- Звук (Web Audio, без внешних файлов) ----------
+  const audio = { ctx: null, on: true, drone: null, drone2: null, gain: null };
   function initAudio() {
     if (audio.ctx) return;
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return;
     audio.ctx = new AC();
-    audio.gain = audio.ctx.createGain();
-    audio.gain.gain.value = 0;
-    const lp = audio.ctx.createBiquadFilter();
-    lp.type = "lowpass"; lp.frequency.value = 950;
+    audio.gain = audio.ctx.createGain(); audio.gain.gain.value = 0;
+    const lp = audio.ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 620;
     audio.gain.connect(lp); lp.connect(audio.ctx.destination);
-    audio.osc = audio.ctx.createOscillator();
-    audio.osc.type = "sawtooth"; audio.osc.frequency.value = 80;
-    audio.osc2 = audio.ctx.createOscillator();
-    audio.osc2.type = "square"; audio.osc2.frequency.value = 40;
-    const g2 = audio.ctx.createGain(); g2.gain.value = 0.35;
-    audio.osc.connect(audio.gain); audio.osc2.connect(g2); g2.connect(audio.gain);
-    audio.osc.start(); audio.osc2.start();
+    audio.drone = audio.ctx.createOscillator(); audio.drone.type = "sawtooth"; audio.drone.frequency.value = 55;
+    audio.drone2 = audio.ctx.createOscillator(); audio.drone2.type = "sine"; audio.drone2.frequency.value = 28;
+    const g2 = audio.ctx.createGain(); g2.gain.value = 0.5;
+    audio.drone.connect(audio.gain); audio.drone2.connect(g2); g2.connect(audio.gain);
+    audio.drone.start(); audio.drone2.start();
   }
   function engineUpdate() {
     if (!audio.ctx) return;
-    const playing = state === STATE.PLAY && audio.on;
-    const f = 60 + (plane.speed - 60) / (620 - 60) * 150; // 60..210 Гц
     const now = audio.ctx.currentTime;
-    audio.osc.frequency.setTargetAtTime(f, now, 0.08);
-    audio.osc2.frequency.setTargetAtTime(f * 0.5, now, 0.08);
-    audio.gain.gain.setTargetAtTime(playing ? 0.05 : 0.0, now, 0.1);
+    const playing = state === STATE.PLAY && audio.on;
+    const f = 44 + game.vel * 26 + (boosting ? 22 : 0);
+    audio.drone.frequency.setTargetAtTime(f, now, 0.1);
+    audio.drone2.frequency.setTargetAtTime(f * 0.5, now, 0.1);
+    audio.gain.gain.setTargetAtTime(playing ? 0.06 : 0.0, now, 0.12);
   }
-  function beep(f1, f2, dur, vol) {
+  function tone(type, f1, f2, dur, vol, curve) {
     if (!audio.ctx || !audio.on) return;
     const t = audio.ctx.currentTime;
     const o = audio.ctx.createOscillator(), g = audio.ctx.createGain();
-    o.type = "sine";
-    o.frequency.setValueAtTime(f1, t);
-    o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    o.type = type; o.frequency.setValueAtTime(f1, t);
+    if (curve === "exp") o.frequency.exponentialRampToValueAtTime(Math.max(1, f2), t + dur);
+    else o.frequency.linearRampToValueAtTime(f2, t + dur);
     g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(vol, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.012);
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    o.connect(g); g.connect(audio.ctx.destination);
-    o.start(t); o.stop(t + dur + 0.02);
+    o.connect(g); g.connect(audio.ctx.destination); o.start(t); o.stop(t + dur + 0.02);
   }
-  const chime = () => beep(660, 1320, 0.35, 0.3);   // пролёт кольца
-  const boom  = () => beep(200, 40, 0.6, 0.4);      // крушение
+  function noise(dur, vol, freq) {
+    if (!audio.ctx || !audio.on) return;
+    const t = audio.ctx.currentTime, n = Math.floor(audio.ctx.sampleRate * dur);
+    const buf = audio.ctx.createBuffer(1, n, audio.ctx.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+    const src = audio.ctx.createBufferSource(); src.buffer = buf;
+    const bp = audio.ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = freq; bp.Q.value = 0.8;
+    const g = audio.ctx.createGain(); g.gain.value = vol;
+    src.connect(bp); bp.connect(g); g.connect(audio.ctx.destination); src.start(t);
+  }
+  const sfxLaser  = () => tone("square", 900, 220, 0.14, 0.16, "exp");
+  const sfxPickup = () => { tone("sine", 780, 1180, 0.12, 0.24, "exp"); tone("sine", 1180, 1560, 0.12, 0.16, "exp"); };
+  const sfxBoom   = () => { noise(0.4, 0.35, 320); tone("sawtooth", 180, 40, 0.4, 0.25, "exp"); };
+  const sfxHit    = () => { noise(0.25, 0.4, 180); tone("square", 120, 50, 0.25, 0.3, "exp"); };
 
   const soundBtn = document.getElementById("soundBtn");
   function toggleSound() {
@@ -251,68 +334,58 @@
   }
   soundBtn.addEventListener("click", toggleSound);
 
-  // ---- Кольца (цель — пролетать сквозь них) ----
-  const rings = [];
-  const RING_SPAWN_Z = 1.7, RING_PASS_Z = 0.14;
-  function newRing(z) {
-    return { x: (Math.random() * 2 - 1) * 0.65,
-             y: (Math.random() * 2 - 1) * 0.5,
-             z: z, scored: false };
+  // ---------- Звёзды ----------
+  function seedStars() {
+    stars.length = 0;
+    for (let i = 0; i < 150; i++) stars.push({ x: rand(-1.4, 1.4), y: rand(-1.4, 1.4), z: rand(0.05, 1) });
   }
-  function resetRings() {
-    rings.length = 0;
-    for (let i = 0; i < 3; i++) rings.push(newRing(0.5 + i * 0.5));
-  }
-  function ringScreen(r) {
-    const scale = 1 / r.z;
-    const unit = Math.min(W, H) * 0.5;
-    return {
-      sx: W / 2 + r.x * scale * unit,
-      sy: H / 2 + r.y * scale * unit,
-      rad: 0.17 * scale * unit
-    };
-  }
+  seedStars();
 
-  // ---- Облака (процедурные) ----
-  const clouds = [];
-  function seedClouds() {
-    clouds.length = 0;
-    for (let i = 0; i < 14; i++) {
-      clouds.push({
-        x: Math.random() * W,
-        y: Math.random() * H * 0.5,
-        s: 0.5 + Math.random() * 1.2,
-        depth: 0.3 + Math.random() * 0.7
-      });
+  // ---------- Спавн объектов ----------
+  function spawnObject() {
+    const x = rand(-0.92, 0.92), y = rand(-0.82, 0.82), z = rand(FAR - 0.15, FAR);
+    if (Math.random() < 0.28) {
+      crystals.push({ x, y, z, r: 0.055, spin: rand(0, TAU) });
+    } else {
+      asteroids.push({ x, y, z, r: rand(0.075, 0.14), hp: 1,
+        spin: rand(0, TAU), spd: rand(-1.5, 1.5),
+        seed: Math.random() * 100, wob: rand(-0.05, 0.05) });
     }
   }
-  seedClouds();
 
-  function reset() {
-    plane.pitch = 0; plane.roll = 0; plane.speed = 220;
-    plane.altitude = 800; plane.heading = 0; plane.dist = 0; plane.score = 0;
-    seedClouds();
-    resetRings();
+  // ---------- Частицы ----------
+  function burst(sx, sy, color, n, power) {
+    for (let i = 0; i < n; i++) {
+      const a = rand(0, TAU), s = rand(0.3, 1) * power;
+      particles.push({ x: sx, y: sy, vx: Math.cos(a) * s, vy: Math.sin(a) * s,
+        life: 1, decay: rand(1.4, 2.6), r: rand(1.5, 3.5), color });
+    }
   }
 
-  // ---- Экраны ----
+  // ---------- Экраны ----------
   const startEl = document.getElementById("start");
-  const overEl  = document.getElementById("over");
+  const overEl = document.getElementById("over");
   const overTitle = document.getElementById("overTitle");
-  const overText  = document.getElementById("overText");
-  const overBtn   = document.getElementById("overBtn");
+  const overSub = document.getElementById("overSub");
+  const overStat = document.getElementById("overStat");
+  const overBtn = document.getElementById("overBtn");
 
   document.getElementById("startBtn").addEventListener("click", startGame);
-  overBtn.addEventListener("click", () => {
-    if (state === STATE.PAUSE) { state = STATE.PLAY; overEl.classList.add("hidden"); }
-    else { startGame(); }
-  });
+  overBtn.addEventListener("click", primaryAction);
+
+  function primaryAction() {
+    if (state === STATE.PAUSE) { state = STATE.PLAY; overEl.classList.add("hidden"); last = performance.now(); }
+    else if (state === STATE.OVER || state === STATE.MENU) startGame();
+  }
 
   function startGame() {
-    reset();
+    ship.x = 0; ship.y = 0; ship.roll = 0;
+    game.score = 0; game.shield = 100; game.t = 0; game.vel = 1;
+    game.shake = 0; game.lastFire = 0; game.spawnAcc = 0;
+    asteroids.length = crystals.length = lasers.length = particles.length = 0;
+    seedStars();
     state = STATE.PLAY;
-    startEl.classList.add("hidden");
-    overEl.classList.add("hidden");
+    startEl.classList.add("hidden"); overEl.classList.add("hidden");
     initAudio();
     if (audio.ctx && audio.ctx.state === "suspended") audio.ctx.resume();
     last = performance.now();
@@ -320,278 +393,351 @@
   function togglePause() {
     if (state === STATE.PLAY) {
       state = STATE.PAUSE;
-      overTitle.textContent = "⏸ Пауза";
-      overText.textContent = "Полёт приостановлен.";
+      overTitle.textContent = "Пауза"; overSub.textContent = "Полёт приостановлен";
+      overStat.innerHTML = "Очки: <b>" + game.score + "</b>";
       overBtn.textContent = "Продолжить";
       overEl.classList.remove("hidden");
     } else if (state === STATE.PAUSE) {
-      state = STATE.PLAY;
-      overEl.classList.add("hidden");
-      last = performance.now();
+      state = STATE.PLAY; overEl.classList.add("hidden"); last = performance.now();
     }
   }
-  function crash(reason) {
+  function gameOver() {
     state = STATE.OVER;
-    overTitle.textContent = "💥 Крушение";
-    overText.textContent = reason + " Пройдено " + plane.dist.toFixed(1) +
-      " км, колец пройдено: " + plane.score + ".";
-    overBtn.textContent = "Заново";
+    game.score = Math.floor(game.score);
+    const record = game.score > game.best;
+    if (record) { game.best = game.score; saveBest(game.best); }
+    overTitle.textContent = "Корабль потерян";
+    overSub.textContent = record ? "★ Новый рекорд!" : "Пояс астероидов победил";
+    overStat.innerHTML = "Очки: <b>" + game.score + "</b> · Рекорд: <b>" + game.best + "</b>";
+    overBtn.textContent = "Ещё раз ▸";
     overEl.classList.remove("hidden");
-    boom();
-    buzz([60, 40, 120]);
+    sfxBoom(); buzz([90, 50, 140]);
   }
 
-  // ---- Физика ----
+  // ---------- Огонь ----------
+  function tryFire() {
+    if (game.t - game.lastFire < 0.14) return;
+    game.lastFire = game.t;
+    lasers.push({ x: ship.x, y: ship.y, z: NEAR, pz: NEAR });
+    sfxLaser(); buzz(5);
+  }
+
+  // ---------- Обновление ----------
   function update(dt) {
-    // Управление тангажом
-    if (keys["w"] || keys["arrowup"])   plane.pitch -= 60 * dt;
-    if (keys["s"] || keys["arrowdown"]) plane.pitch += 60 * dt;
-    // Автовыравнивание тангажа, когда клавиши отпущены
-    if (!(keys["w"]||keys["arrowup"]||keys["s"]||keys["arrowdown"]))
-      plane.pitch -= plane.pitch * 0.8 * dt;
-    plane.pitch = clamp(plane.pitch, -45, 45);
+    game.t += dt;
+    // Сложность и скорость нарастают
+    const diff = 1 + game.t * 0.02;
+    game.vel += ((boosting ? 2.1 : 1) * diff - game.vel) * Math.min(1, dt * 3);
+    game.score += dt * 8 * game.vel;                 // очки за выживание
+    game.shake = Math.max(0, game.shake - dt * 3);
 
-    // Управление креном
-    if (keys["a"] || keys["arrowleft"])  plane.roll -= 70 * dt;
-    if (keys["d"] || keys["arrowright"]) plane.roll += 70 * dt;
-    if (!(keys["a"]||keys["arrowleft"]||keys["d"]||keys["arrowright"]))
-      plane.roll -= plane.roll * 1.2 * dt;
-    plane.roll = clamp(plane.roll, -45, 45);
+    // Манёвр
+    const ix = axisX(), iy = axisY();
+    ship.x = clamp(ship.x + ix * 1.7 * dt, -1, 1);
+    ship.y = clamp(ship.y + iy * 1.4 * dt, -0.85, 0.85);
+    ship.roll += (ix * 0.42 - ship.roll) * Math.min(1, dt * 8);
 
-    // Газ
-    if (keys["shift"])   plane.speed += 90 * dt;
-    if (keys["control"]) plane.speed -= 90 * dt;
-    // pitch > 0 — нос вверх, pitch < 0 — нос вниз (W уменьшает — нос вниз)
-    // Тангаж влияет на скорость: нос вверх — тормозит, нос вниз — разгон
-    plane.speed += (-plane.pitch / 45) * 60 * dt;
-    plane.speed = clamp(plane.speed, 60, 620);
+    if (firing) tryFire();
 
-    // Крен разворачивает — сдвигает ландшафт вбок
-    plane.heading += (plane.roll / 45) * 90 * dt;
+    const approach = 0.42 * game.vel * diff;
 
-    // Высота: нос вверх — набор, нос вниз — снижение
-    const climb = (plane.pitch / 45) * (plane.speed / 300) * 220; // м/с * шкала
-    plane.altitude += climb * dt;
+    // Спавн
+    game.spawnAcc += dt;
+    const interval = Math.max(0.32, 0.85 - game.t * 0.012);
+    while (game.spawnAcc >= interval) { game.spawnAcc -= interval; spawnObject(); }
 
-    // Дистанция
-    plane.dist += (plane.speed / 3600) * dt; // км
-
-    // Сваливание (stall) — слишком малая скорость
-    if (plane.speed <= 70) {
-      plane.altitude -= 120 * dt; // проседаем
-    }
-
-    // Условия крушения
-    if (plane.altitude <= 0) {
-      plane.altitude = 0;
-      crash("Столкновение с землёй!");
-    } else if (plane.altitude > 12000) {
-      plane.altitude = 12000; // потолок
-    }
-
-    // Движение облаков
-    const spd = plane.speed / 260;
-    for (const c of clouds) {
-      c.x -= (plane.roll / 45) * 60 * c.depth * dt; // боковой снос от крена
-      c.y += spd * 30 * c.depth * dt + (-plane.pitch / 45) * 40 * c.depth * dt;
-      // Переиспользуем облака, вышедшие за экран
-      if (c.y > H * 0.72) { c.y = -20; c.x = Math.random() * W; }
-      if (c.y < -40)      { c.y = H * 0.7; c.x = Math.random() * W; }
-      if (c.x < -120) c.x = W + 60;
-      if (c.x > W + 120) c.x = -60;
-    }
-
-    // Кольца: приближаются, крен/тангаж уводят их в сторону (нужно рулить)
-    const approach = 0.42 * (plane.speed / 260);
-    for (const r of rings) {
-      r.z -= approach * dt;
-      r.x -= (plane.roll / 45) * 0.55 * dt;   // банк вправо — кольцо уходит влево
-      r.y += (plane.pitch / 45) * 0.5 * dt;   // нос вверх — кольцо опускается к центру
-      if (r.z <= RING_PASS_Z && !r.scored) {
-        r.scored = true;
-        const s = ringScreen(r);
-        const hit = Math.hypot(s.sx - W / 2, s.sy - H / 2) < s.rad * 0.85;
-        if (hit) {
-          plane.score++;
-          plane.speed = Math.min(620, plane.speed + 25); // бонус скорости
-          chime();
-          buzz(35);
+    // Лазеры (летят от корабля вглубь)
+    for (let i = lasers.length - 1; i >= 0; i--) {
+      const L = lasers[i]; L.pz = L.z; L.z += 3.4 * dt;
+      if (L.z > FAR) { lasers.splice(i, 1); continue; }
+      // попадание по астероиду
+      for (let j = asteroids.length - 1; j >= 0; j--) {
+        const a = asteroids[j];
+        if (L.pz <= a.z && L.z >= a.z) {
+          const lp = project(L.x, L.y, a.z), ap = project(a.x, a.y, a.z);
+          const rr = a.r * MIN * ap.k;
+          if (Math.hypot(lp.sx - ap.sx, lp.sy - ap.sy) < rr) {
+            asteroids.splice(j, 1); lasers.splice(i, 1);
+            game.score += 25;
+            burst(ap.sx, ap.sy, "#ff9a4d", 16, 3.4 * ap.k + 1.2);
+            burst(ap.sx, ap.sy, "#ffd23f", 6, 2 * ap.k + 0.8);
+            sfxBoom();
+            break;
+          }
         }
-        Object.assign(r, newRing(RING_SPAWN_Z + Math.random() * 0.4));
       }
     }
+
+    // Астероиды приближаются
+    for (let i = asteroids.length - 1; i >= 0; i--) {
+      const a = asteroids[i];
+      a.z -= approach * dt; a.spin += a.spd * dt;
+      a.x += a.wob * dt;
+      if (a.z <= NEAR) {
+        const ap = project(a.x, a.y, NEAR), sp = project(ship.x, ship.y, NEAR);
+        const rr = a.r * MIN + ship.r * MIN;
+        if (Math.hypot(ap.sx - sp.sx, ap.sy - sp.sy) < rr * 0.82) {
+          game.shield -= 24;
+          game.shake = 1;
+          burst(sp.sx, sp.sy, "#ff3b6b", 20, 4);
+          sfxHit(); buzz(45);
+          if (game.shield <= 0) { game.shield = 0; gameOver(); }
+        }
+        asteroids.splice(i, 1);
+      }
+    }
+
+    // Кристаллы
+    for (let i = crystals.length - 1; i >= 0; i--) {
+      const c = crystals[i];
+      c.z -= approach * dt; c.spin += dt * 2;
+      if (c.z <= NEAR) {
+        const cp = project(c.x, c.y, NEAR), sp = project(ship.x, ship.y, NEAR);
+        if (Math.hypot(cp.sx - sp.sx, cp.sy - sp.sy) < (c.r + ship.r) * MIN) {
+          game.score += 100;
+          game.shield = Math.min(100, game.shield + 6);
+          burst(sp.sx, sp.sy, "#46e6ff", 14, 3);
+          burst(sp.sx, sp.sy, "#ffffff", 6, 1.6);
+          sfxPickup(); buzz(20);
+        }
+        crystals.splice(i, 1);
+      }
+    }
+
+    // Звёзды
+    const starSpd = 0.35 * game.vel * (boosting ? 1.9 : 1);
+    for (const s of stars) {
+      s.z -= starSpd * dt;
+      if (s.z <= 0.04) { s.x = rand(-1.4, 1.4); s.y = rand(-1.4, 1.4); s.z = 1; }
+    }
+
+    // Частицы
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx * 60 * dt; p.y += p.vy * 60 * dt;
+      p.vx *= 0.96; p.vy *= 0.96;
+      p.life -= p.decay * dt;
+      if (p.life <= 0) particles.splice(i, 1);
+    }
   }
 
-  // ---- Отрисовка ----
+  // ---------- Отрисовка ----------
   function draw() {
-    ctx.clearRect(0, 0, W, H);
+    // Фон-туманность
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#070a1c"); g.addColorStop(1, "#04050e");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    radialGlow(W * 0.24, H * 0.28, MIN * 0.9, "rgba(58,26,120,0.35)");
+    radialGlow(W * 0.82, H * 0.7, MIN * 0.8, "rgba(12,70,96,0.3)");
+
     ctx.save();
-
-    // Центр и наклон мира по крену
-    ctx.translate(W / 2, H / 2);
-    ctx.rotate(plane.roll * Math.PI / 180);
-
-    // Линия горизонта смещается по тангажу
-    const horizon = (plane.pitch / 45) * H * 0.55;
-    const big = Math.max(W, H) * 1.8;
-
-    // Небо (градиент по высоте)
-    const t = clamp(plane.altitude / 12000, 0, 1);
-    const skyTop = mix([12, 30, 70], [4, 12, 40], t);
-    const skyBot = mix([120, 180, 230], [60, 110, 180], t);
-    const skyGrad = ctx.createLinearGradient(0, -big, 0, horizon);
-    skyGrad.addColorStop(0, rgb(skyTop));
-    skyGrad.addColorStop(1, rgb(skyBot));
-    ctx.fillStyle = skyGrad;
-    ctx.fillRect(-big, -big, big * 2, big + horizon);
-
-    // Земля
-    const gGrad = ctx.createLinearGradient(0, horizon, 0, big);
-    gGrad.addColorStop(0, "#6a8f3c");
-    gGrad.addColorStop(1, "#2f4a1c");
-    ctx.fillStyle = gGrad;
-    ctx.fillRect(-big, horizon, big * 2, big);
-
-    // Полоски полей на земле для ощущения движения
-    ctx.strokeStyle = "rgba(255,255,255,0.08)";
-    ctx.lineWidth = 2;
-    const off = (plane.dist * 400) % 60;
-    for (let y = horizon + off; y < big; y += 60) {
-      const w = (y - horizon) * 3;
-      ctx.beginPath();
-      ctx.moveTo(-w, y);
-      ctx.lineTo(w, y);
-      ctx.stroke();
+    if (game.shake > 0) {
+      const m = game.shake * 10;
+      ctx.translate(rand(-m, m), rand(-m, m));
     }
+
+    drawStars();
+    // объекты — от дальних к ближним
+    const objs = [];
+    for (const a of asteroids) objs.push(a);
+    for (const c of crystals) objs.push(c);
+    objs.sort((p, q) => q.z - p.z);
+    for (const o of objs) (o.hp !== undefined ? drawAsteroid : drawCrystal)(o);
+
+    drawLasers();
+    if (state !== STATE.OVER) drawShip();
+    drawParticles();
 
     ctx.restore();
 
-    // Облака (в экранных координатах, поверх мира)
-    for (const c of clouds) {
-      drawCloud(c.x, c.y, 28 * c.s, 0.6 * c.depth + 0.2);
-    }
-
-    // Кольца — от дальних к ближним
-    const sorted = rings.slice().sort((a, b) => b.z - a.z);
-    for (const r of sorted) {
-      if (r.z <= RING_PASS_Z || r.z > RING_SPAWN_Z + 0.5) continue;
-      drawRing(r);
-    }
-
-    // Индикатор самолёта (фиксирован в центре)
-    drawPlaneSymbol();
-
-    // HUD
+    vignette();
     drawHUD();
   }
 
-  function drawCloud(x, y, r, alpha) {
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.fillStyle = "#ffffff";
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.arc(x + r * 0.9, y + r * 0.1, r * 0.75, 0, Math.PI * 2);
-    ctx.arc(x - r * 0.9, y + r * 0.15, r * 0.7, 0, Math.PI * 2);
-    ctx.arc(x + r * 0.2, y - r * 0.5, r * 0.65, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
+  function radialGlow(x, y, r, color) {
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+    g.addColorStop(0, color); g.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
   }
 
-  function drawRing(r) {
-    const s = ringScreen(r);
-    // Зелёное, если наведено на центр (пролетишь), иначе голубое
-    const aligned = Math.hypot(s.sx - W / 2, s.sy - H / 2) < s.rad * 0.85;
-    const near = clamp((RING_SPAWN_Z - r.z) / (RING_SPAWN_Z - RING_PASS_Z), 0, 1);
-    ctx.save();
-    ctx.globalAlpha = 0.35 + 0.65 * near;
-    ctx.lineWidth = Math.max(3, s.rad * 0.16);
-    ctx.strokeStyle = aligned ? "#63ff8a" : "#57d6ff";
-    ctx.shadowColor = ctx.strokeStyle;
-    ctx.shadowBlur = 14;
-    ctx.beginPath();
-    ctx.arc(s.sx, s.sy, s.rad, 0, Math.PI * 2);
-    ctx.stroke();
-    // Внутренний ободок
-    ctx.globalAlpha *= 0.5;
-    ctx.lineWidth = Math.max(2, s.rad * 0.07);
-    ctx.beginPath();
-    ctx.arc(s.sx, s.sy, s.rad * 0.82, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.restore();
+  function drawStars() {
+    for (const s of stars) {
+      const k = 0.22 / s.z;
+      const sx = W / 2 + s.x * W * k, sy = H / 2 + s.y * H * k;
+      if (sx < -20 || sx > W + 20 || sy < -20 || sy > H + 20) continue;
+      const k2 = 0.22 / Math.min(1, s.z + 0.4 * game.vel * (boosting ? 1.9 : 1) * 0.05);
+      const px = W / 2 + s.x * W * k2, py = H / 2 + s.y * H * k2;
+      const a = clamp(k * 1.4, 0.1, 1);
+      ctx.strokeStyle = "rgba(180,210,255," + a + ")";
+      ctx.lineWidth = clamp(k * 1.6, 0.6, 2.4);
+      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(sx, sy); ctx.stroke();
+    }
   }
 
-  function drawPlaneSymbol() {
-    const cx = W / 2, cy = H / 2;
+  function drawAsteroid(a) {
+    const p = project(a.x, a.y, a.z);
+    if (p.k <= 0) return;
+    const R = a.r * MIN * p.k;
+    if (R < 0.6) return;
     ctx.save();
-    ctx.strokeStyle = "#ffd23f";
-    ctx.lineWidth = 4;
-    ctx.lineCap = "round";
-    // Крылья
+    ctx.translate(p.sx, p.sy); ctx.rotate(a.spin);
+    ctx.globalAlpha = clamp(p.k * 1.5, 0.15, 1);
     ctx.beginPath();
-    ctx.moveTo(cx - 60, cy);
-    ctx.lineTo(cx - 18, cy);
-    ctx.moveTo(cx + 18, cy);
-    ctx.lineTo(cx + 60, cy);
-    // Фюзеляж / центр
-    ctx.moveTo(cx, cy - 14);
-    ctx.lineTo(cx, cy + 8);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.arc(cx, cy, 6, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  function drawHUD() {
-    ctx.save();
-    ctx.font = "bold 15px 'Segoe UI', sans-serif";
-    ctx.textBaseline = "top";
-
-    // Панель слева
-    panel(14, 14, 180, 128);
-    hudLine(24, 26,  "СКОРОСТЬ", Math.round(plane.speed) + " км/ч",
-            plane.speed <= 80 ? "#ff5a5a" : "#7fe3ff");
-    hudLine(24, 56,  "ВЫСОТА",   Math.round(plane.altitude) + " м", "#7fe3ff");
-    hudLine(24, 86,  "КРЕН",     Math.round(plane.roll) + "°", "#7fe3ff");
-    hudLine(24, 116, "ТАНГАЖ",   Math.round(plane.pitch) + "°", "#7fe3ff");
-
-    // Панель справа — очки, дистанция, курс
-    panel(W - 194, 14, 180, 104);
-    hudLine(W - 184, 24, "★ ОЧКИ", String(plane.score), "#ffd23f");
-    hudLine(W - 184, 54, "ДИСТАНЦИЯ", plane.dist.toFixed(2) + " км", "#a6ff8f");
-    hudLine(W - 184, 84, "КУРС", ((plane.heading % 360 + 360) % 360).toFixed(0) + "°", "#a6ff8f");
-
-    // Предупреждение о сваливании
-    if (plane.speed <= 90) {
-      ctx.fillStyle = (Math.floor(performance.now() / 300) % 2) ? "#ff3b3b" : "#ffb0b0";
-      ctx.font = "bold 22px 'Segoe UI', sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText("⚠ МАЛАЯ СКОРОСТЬ — ГАЗ!", W / 2, 76);
-      ctx.textAlign = "left";
+    for (let i = 0; i < 9; i++) {
+      const ang = (i / 9) * TAU;
+      const rr = R * (0.78 + 0.22 * Math.sin(a.seed + i * 1.7));
+      const px = Math.cos(ang) * rr, py = Math.sin(ang) * rr;
+      i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+    }
+    ctx.closePath();
+    const gr = ctx.createLinearGradient(-R, -R, R, R);
+    gr.addColorStop(0, "#6b6f82"); gr.addColorStop(1, "#2c2f42");
+    ctx.fillStyle = gr; ctx.fill();
+    ctx.lineWidth = Math.max(1, R * 0.06); ctx.strokeStyle = "#1a1c2b"; ctx.stroke();
+    // кратеры
+    ctx.fillStyle = "rgba(0,0,0,0.22)";
+    for (let i = 0; i < 3; i++) {
+      const ca = a.seed + i * 2.1, cd = R * 0.4;
+      ctx.beginPath();
+      ctx.arc(Math.cos(ca) * cd, Math.sin(ca) * cd, R * (0.12 + 0.05 * i), 0, TAU);
+      ctx.fill();
     }
     ctx.restore();
   }
 
-  function panel(x, y, w, h) {
-    ctx.fillStyle = "rgba(6, 20, 36, 0.55)";
-    roundRect(x, y, w, h, 10);
-    ctx.fill();
-    ctx.strokeStyle = "rgba(127, 227, 255, 0.35)";
-    ctx.lineWidth = 1;
-    roundRect(x, y, w, h, 10);
-    ctx.stroke();
+  function drawCrystal(c) {
+    const p = project(c.x, c.y, c.z);
+    if (p.k <= 0) return;
+    const R = c.r * MIN * p.k;
+    if (R < 0.6) return;
+    ctx.save();
+    ctx.translate(p.sx, p.sy); ctx.rotate(c.spin);
+    ctx.globalAlpha = clamp(p.k * 1.6, 0.15, 1);
+    ctx.shadowColor = "#46e6ff"; ctx.shadowBlur = R * 0.9;
+    ctx.beginPath();
+    ctx.moveTo(0, -R); ctx.lineTo(R * 0.7, 0); ctx.lineTo(0, R); ctx.lineTo(-R * 0.7, 0);
+    ctx.closePath();
+    const gr = ctx.createLinearGradient(0, -R, 0, R);
+    gr.addColorStop(0, "#d6fbff"); gr.addColorStop(0.5, "#46e6ff"); gr.addColorStop(1, "#2a7bff");
+    ctx.fillStyle = gr; ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,0.7)"; ctx.lineWidth = Math.max(1, R * 0.08); ctx.stroke();
+    ctx.restore();
   }
-  function hudLine(x, y, label, value, color) {
-    ctx.textAlign = "left";
-    ctx.fillStyle = "rgba(200,230,255,0.65)";
-    ctx.font = "11px 'Segoe UI', sans-serif";
-    ctx.fillText(label, x, y);
-    ctx.fillStyle = color;
-    ctx.font = "bold 17px 'Segoe UI', sans-serif";
-    ctx.fillText(value, x, y + 12);
+
+  function drawLasers() {
+    ctx.save();
+    ctx.lineCap = "round";
+    for (const L of lasers) {
+      const a = project(L.x, L.y, Math.max(NEAR, L.z)), b = project(L.x, L.y, Math.max(NEAR, L.z + 0.12));
+      ctx.strokeStyle = "#ff4bd8"; ctx.shadowColor = "#ff4bd8"; ctx.shadowBlur = 12;
+      ctx.lineWidth = Math.max(1.5, 5 * a.k);
+      ctx.beginPath(); ctx.moveTo(a.sx, a.sy); ctx.lineTo(b.sx, b.sy); ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawShip() {
+    const p = project(ship.x, ship.y, NEAR);
+    const R = ship.r * MIN;
+    ctx.save();
+    ctx.translate(p.sx, p.sy); ctx.rotate(ship.roll);
+
+    // выхлоп
+    const flame = R * (1.1 + Math.random() * 0.5) * (boosting ? 1.7 : 1);
+    const fg = ctx.createLinearGradient(0, R * 0.4, 0, R * 0.4 + flame);
+    fg.addColorStop(0, "rgba(120,240,255,0.9)"); fg.addColorStop(1, "rgba(70,120,255,0)");
+    ctx.fillStyle = fg;
+    ctx.beginPath();
+    ctx.moveTo(-R * 0.28, R * 0.4); ctx.lineTo(0, R * 0.4 + flame); ctx.lineTo(R * 0.28, R * 0.4);
+    ctx.closePath(); ctx.fill();
+
+    // корпус
+    ctx.shadowColor = "#46e6ff"; ctx.shadowBlur = 16;
+    ctx.beginPath();
+    ctx.moveTo(0, -R);
+    ctx.lineTo(R * 0.86, R * 0.7);
+    ctx.lineTo(R * 0.3, R * 0.42);
+    ctx.lineTo(-R * 0.3, R * 0.42);
+    ctx.lineTo(-R * 0.86, R * 0.7);
+    ctx.closePath();
+    const bg = ctx.createLinearGradient(0, -R, 0, R);
+    bg.addColorStop(0, "#eafcff"); bg.addColorStop(0.5, "#7fd8ff"); bg.addColorStop(1, "#1f6fd6");
+    ctx.fillStyle = bg; ctx.fill();
+    ctx.lineWidth = Math.max(1.5, R * 0.06); ctx.strokeStyle = "#0c2f5a"; ctx.stroke();
+
+    // кабина
+    ctx.shadowBlur = 0;
+    ctx.beginPath(); ctx.ellipse(0, -R * 0.18, R * 0.2, R * 0.32, 0, 0, TAU);
+    ctx.fillStyle = "#0b1f3a"; ctx.fill();
+    ctx.restore();
+  }
+
+  function drawParticles() {
+    for (const p of particles) {
+      ctx.globalAlpha = clamp(p.life, 0, 1);
+      ctx.fillStyle = p.color;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, TAU); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function vignette() {
+    const g = ctx.createRadialGradient(W / 2, H / 2, MIN * 0.35, W / 2, H / 2, MIN * 0.85);
+    g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, "rgba(0,0,0,0.55)");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  }
+
+  // ---------- HUD ----------
+  function drawHUD() {
+    ctx.save();
+    ctx.textBaseline = "top";
+
+    // Слева: очки + щит
+    panel(14, 14, 190, 96);
+    label(26, 24, "ОЧКИ");
+    ctx.fillStyle = "#eafcff"; ctx.font = "800 30px 'Segoe UI', sans-serif";
+    ctx.fillText(String(Math.floor(game.score)), 26, 38);
+    // щит
+    label(26, 76, "ЩИТ");
+    const bx = 66, by = 80, bw = 122, bh = 12;
+    ctx.fillStyle = "rgba(255,255,255,0.12)"; roundRect(bx, by, bw, bh, 6); ctx.fill();
+    const sw = bw * clamp(game.shield / 100, 0, 1);
+    const sc = game.shield > 55 ? "#46e6ff" : game.shield > 25 ? "#ffd23f" : "#ff3b6b";
+    ctx.fillStyle = sc; if (sw > 0) { roundRect(bx, by, sw, bh, 6); ctx.fill(); }
+
+    // Справа: рекорд + уровень
+    const pw = 150, px = W - pw - 14;
+    panel(px, 14, pw, 74);
+    label(px + 12, 24, "РЕКОРД");
+    ctx.fillStyle = "#ffd23f"; ctx.font = "800 20px 'Segoe UI', sans-serif";
+    ctx.fillText(String(Math.max(game.best, Math.floor(game.score))), px + 12, 38);
+    label(px + 12, 60, "УРОВЕНЬ  " );
+    ctx.fillStyle = "#9be7ff"; ctx.font = "700 13px 'Segoe UI', sans-serif";
+    ctx.fillText(String(1 + Math.floor(game.t / 15)), px + 78, 60);
+
+    // Предупреждение о низком щите
+    if (game.shield <= 30 && state === STATE.PLAY) {
+      ctx.globalAlpha = 0.5 + 0.5 * Math.sin(performance.now() / 120);
+      ctx.fillStyle = "#ff3b6b"; ctx.textAlign = "center";
+      ctx.font = "800 17px 'Segoe UI', sans-serif";
+      ctx.fillText("⚠ ЩИТ КРИТИЧЕСКИЙ", W / 2, 20);
+      ctx.textAlign = "left"; ctx.globalAlpha = 1;
+    }
+    ctx.restore();
+  }
+  function panel(x, y, w, h) {
+    ctx.fillStyle = "rgba(10,16,40,0.55)"; roundRect(x, y, w, h, 12); ctx.fill();
+    ctx.strokeStyle = "rgba(70,230,255,0.28)"; ctx.lineWidth = 1; roundRect(x, y, w, h, 12); ctx.stroke();
+  }
+  function label(x, y, t) {
+    ctx.fillStyle = "rgba(158,178,210,0.85)"; ctx.font = "600 11px 'Segoe UI', sans-serif";
+    ctx.save(); ctx.textAlign = "left";
+    // лёгкий трекинг
+    let cx = x; for (const ch of t) { ctx.fillText(ch, cx, y); cx += ctx.measureText(ch).width + 1.2; }
+    ctx.restore();
   }
   function roundRect(x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
     ctx.beginPath();
     ctx.moveTo(x + r, y);
     ctx.arcTo(x + w, y, x + w, y + h, r);
@@ -601,34 +747,45 @@
     ctx.closePath();
   }
 
-  // ---- Утилиты ----
-  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
-  function mix(c1, c2, t) {
-    return [ c1[0]+(c2[0]-c1[0])*t, c1[1]+(c2[1]-c1[1])*t, c1[2]+(c2[2]-c1[2])*t ];
+  // ---------- Меню-фон (лёгкая анимация звёзд) ----------
+  function drawMenuBg() {
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#070a1c"); g.addColorStop(1, "#04050e");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    radialGlow(W * 0.3, H * 0.3, MIN, "rgba(58,26,120,0.4)");
+    radialGlow(W * 0.75, H * 0.72, MIN * 0.9, "rgba(12,70,96,0.32)");
+    drawStars();
+    vignette();
   }
-  function rgb(c) { return "rgb(" + (c[0]|0) + "," + (c[1]|0) + "," + (c[2]|0) + ")"; }
 
-  // ---- Игровой цикл (delta-time) ----
+  // ---------- Цикл ----------
   let last = performance.now();
   function loop(now) {
-    let dt = (now - last) / 1000;
-    last = now;
-    if (dt > 0.05) dt = 0.05; // защита от больших скачков (вкладка была неактивна)
+    let dt = (now - last) / 1000; last = now;
+    if (dt > 0.05) dt = 0.05;
 
-    if (state === STATE.PLAY) update(dt);
-    if (state !== STATE.MENU) draw();
+    if (state === STATE.PLAY) { update(dt); draw(); }
+    else if (state === STATE.PAUSE || state === STATE.OVER) { draw(); }
+    else { // MENU — тихо крутим звёзды
+      const sp = 0.15;
+      for (const s of stars) { s.z -= sp * dt; if (s.z <= 0.04) { s.x = rand(-1.4,1.4); s.y = rand(-1.4,1.4); s.z = 1; } }
+      drawMenuBg();
+    }
     engineUpdate();
-
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
 
-  // ---- Тестовый хук (только при ?debug в адресе) ----
+  // ---------- Тестовый хук (?debug) ----------
   if (location.search.indexOf("debug") >= 0) {
     window.__game = {
-      peek: () => ({ score: plane.score, speed: plane.speed, alt: plane.altitude }),
-      forceRing: () => { rings[0].x = 0; rings[0].y = 0;
-                         rings[0].z = RING_PASS_Z + 0.02; rings[0].scored = false; }
+      peek: () => ({ score: Math.floor(game.score), shield: game.shield, state,
+        asteroids: asteroids.length, crystals: crystals.length, lasers: lasers.length }),
+      forceAsteroid: () => { asteroids.push({ x: ship.x, y: ship.y, z: NEAR + 0.02, r: 0.1,
+        hp: 1, spin: 0, spd: 0, seed: 1, wob: 0 }); },
+      forceCrystal: () => { crystals.push({ x: ship.x, y: ship.y, z: NEAR + 0.02, r: 0.055, spin: 0 }); },
+      aimAsteroid: () => { asteroids.length = 0; asteroids.push({ x: ship.x, y: ship.y, z: 0.9, r: 0.1,
+        hp: 1, spin: 0, spd: 0, seed: 1, wob: 0 }); }
     };
   }
 })();
