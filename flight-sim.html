@@ -187,7 +187,7 @@
     return { sx: W / 2 + x * W * 0.46 * k, sy: H / 2 + y * H * 0.46 * k, k };
   }
 
-  const ship = { x: 0, y: 0, roll: 0, r: 0.11 };
+  const ship = { x: 0, y: 0, vx: 0, vy: 0, roll: 0, pitch: 0, r: 0.11 };
   const game = {
     score: 0, best: loadBest(), shield: 100, t: 0, vel: 1,
     shake: 0, lastFire: 0, spawnAcc: 0
@@ -379,7 +379,7 @@
   }
 
   function startGame() {
-    ship.x = 0; ship.y = 0; ship.roll = 0;
+    ship.x = 0; ship.y = 0; ship.vx = 0; ship.vy = 0; ship.roll = 0; ship.pitch = 0;
     game.score = 0; game.shield = 100; game.t = 0; game.vel = 1;
     game.shake = 0; game.lastFire = 0; game.spawnAcc = 0;
     asteroids.length = crystals.length = lasers.length = particles.length = 0;
@@ -431,11 +431,20 @@
     game.score += dt * 8 * game.vel;                 // очки за выживание
     game.shake = Math.max(0, game.shake - dt * 3);
 
-    // Манёвр
+    // Манёвр — плавное движение с инерцией во все стороны
     const ix = axisX(), iy = axisY();
-    ship.x = clamp(ship.x + ix * 1.7 * dt, -1, 1);
-    ship.y = clamp(ship.y + iy * 1.4 * dt, -0.85, 0.85);
-    ship.roll += (ix * 0.42 - ship.roll) * Math.min(1, dt * 8);
+    const tvx = ix * 1.75, tvy = iy * 1.45;
+    ship.vx += (tvx - ship.vx) * Math.min(1, dt * 6);
+    ship.vy += (tvy - ship.vy) * Math.min(1, dt * 6);
+    ship.x = clamp(ship.x + ship.vx * dt, -1, 1);
+    ship.y = clamp(ship.y + ship.vy * dt, -0.85, 0.85);
+    if (ship.x <= -1 || ship.x >= 1) ship.vx *= 0.4;
+    if (ship.y <= -0.85 || ship.y >= 0.85) ship.vy *= 0.4;
+    // крен и тангаж от скорости манёвра — для 3D-наклона
+    const tRoll = clamp(ship.vx / 1.75, -1, 1) * 0.55;
+    const tPitch = clamp(ship.vy / 1.45, -1, 1) * 0.42;
+    ship.roll += (tRoll - ship.roll) * Math.min(1, dt * 7);
+    ship.pitch += (tPitch - ship.pitch) * Math.min(1, dt * 7);
 
     if (firing) tryFire();
 
@@ -636,40 +645,157 @@
     ctx.restore();
   }
 
-  function drawShip() {
-    const p = project(ship.x, ship.y, NEAR);
-    const R = ship.r * MIN;
-    ctx.save();
-    ctx.translate(p.sx, p.sy); ctx.rotate(ship.roll);
-
-    // выхлоп
-    const flame = R * (1.1 + Math.random() * 0.5) * (boosting ? 1.7 : 1);
-    const fg = ctx.createLinearGradient(0, R * 0.4, 0, R * 0.4 + flame);
-    fg.addColorStop(0, "rgba(120,240,255,0.9)"); fg.addColorStop(1, "rgba(70,120,255,0)");
-    ctx.fillStyle = fg;
+  // ---------- 3D-модель корабля (вид сзади, нос смотрит в экран) ----------
+  // Локальные координаты: x — вправо, y — вверх, z — вперёд (в экран).
+  const MODEL = {
+    nose:[0,0.14,1.75], rsh:[0.30,0.05,-0.10], rtl:[0.20,-0.03,-1.02],
+    ltl:[-0.20,-0.03,-1.02], lsh:[-0.30,0.05,-0.10],
+    lwRootF:[-0.24,0.03,0.28], lwTip:[-1.72,-0.06,-0.42], lwTipB:[-1.55,-0.12,-0.86], lwRootB:[-0.30,-0.03,-0.92],
+    rwRootF:[0.24,0.03,0.28],  rwTip:[1.72,-0.06,-0.42],  rwTipB:[1.55,-0.12,-0.86],  rwRootB:[0.30,-0.03,-0.92],
+    finF:[0,0.10,-0.30], finTop:[0,0.62,-0.74], finB:[0,0.0,-1.0],
+    engL:[-0.17,-0.02,-1.03], engR:[0.17,-0.02,-1.03],
+    cockpit:[0,0.20,0.60]
+  };
+  const FOC3 = 3.4;
+  function rot3(p, roll, pitch, yaw) {
+    let x = p[0], y = p[1], z = p[2];
+    let c = Math.cos(yaw), s = Math.sin(yaw);           // рыскание (Y)
+    let x1 = x * c + z * s, z1 = -x * s + z * c, y1 = y;
+    c = Math.cos(pitch); s = Math.sin(pitch);           // тангаж (X)
+    let y2 = y1 * c - z1 * s, z2 = y1 * s + z1 * c, x2 = x1;
+    c = Math.cos(roll); s = Math.sin(roll);             // крен (Z)
+    let x3 = x2 * c - y2 * s, y3 = x2 * s + y2 * c, z3 = z2;
+    return { x: x3, y: y3, z: z3 };
+  }
+  function proj3(r, cx, cy, S) {
+    const sc = FOC3 / (FOC3 + r.z);
+    return { x: cx + r.x * sc * S, y: cy - r.y * sc * S, s: sc, z: r.z };
+  }
+  function shade(hex, m) {
+    const r = clamp((parseInt(hex.slice(1,3),16) * m)|0, 0, 255);
+    const g = clamp((parseInt(hex.slice(3,5),16) * m)|0, 0, 255);
+    const b = clamp((parseInt(hex.slice(5,7),16) * m)|0, 0, 255);
+    return "rgb(" + r + "," + g + "," + b + ")";
+  }
+  function faceLight(a, b, c) {
+    const ux=b.x-a.x, uy=b.y-a.y, uz=b.z-a.z, vx=c.x-a.x, vy=c.y-a.y, vz=c.z-a.z;
+    let nx=uy*vz-uz*vy, ny=uz*vx-ux*vz, nz=ux*vy-uy*vx;
+    const l=Math.hypot(nx,ny,nz)||1; nx/=l; ny/=l; nz/=l;
+    const d = nx*0.25 + ny*0.9 + nz*(-0.35);            // свет сверху-спереди
+    return clamp(0.42 + 0.72 * Math.abs(d), 0.25, 1.25);
+  }
+  function polyPath(pts) {
     ctx.beginPath();
-    ctx.moveTo(-R * 0.28, R * 0.4); ctx.lineTo(0, R * 0.4 + flame); ctx.lineTo(R * 0.28, R * 0.4);
-    ctx.closePath(); ctx.fill();
-
-    // корпус
-    ctx.shadowColor = "#46e6ff"; ctx.shadowBlur = 16;
-    ctx.beginPath();
-    ctx.moveTo(0, -R);
-    ctx.lineTo(R * 0.86, R * 0.7);
-    ctx.lineTo(R * 0.3, R * 0.42);
-    ctx.lineTo(-R * 0.3, R * 0.42);
-    ctx.lineTo(-R * 0.86, R * 0.7);
+    for (let i=0;i<pts.length;i++) i ? ctx.lineTo(pts[i].x,pts[i].y) : ctx.moveTo(pts[i].x,pts[i].y);
     ctx.closePath();
-    const bg = ctx.createLinearGradient(0, -R, 0, R);
-    bg.addColorStop(0, "#eafcff"); bg.addColorStop(0.5, "#7fd8ff"); bg.addColorStop(1, "#1f6fd6");
-    ctx.fillStyle = bg; ctx.fill();
-    ctx.lineWidth = Math.max(1.5, R * 0.06); ctx.strokeStyle = "#0c2f5a"; ctx.stroke();
+  }
+  function lgrad(a, b, c1, c2) {
+    const g = ctx.createLinearGradient(a.x,a.y,b.x,b.y);
+    g.addColorStop(0,c1); g.addColorStop(1,c2); return g;
+  }
 
-    // кабина
+  function drawShip() {
+    const base = project(ship.x, ship.y, NEAR);
+    const cx = base.sx, cy = base.sy, S = MIN * 0.078;
+    const roll = ship.roll, pitch = ship.pitch, yaw = ship.roll * 0.45;
+
+    const R3 = {}, P = {};
+    for (const k in MODEL) { R3[k] = rot3(MODEL[k], roll, pitch, yaw); P[k] = proj3(R3[k], cx, cy, S); }
+
+    ctx.save();
+    ctx.lineJoin = "round";
+
+    // --- Выхлоп двигателей (аддитивное свечение) ---
+    const bx = P.engL.x - P.cockpit.x, by = P.engL.y - P.cockpit.y;
+    const bl = Math.hypot(bx, by) || 1, dx = bx / bl, dy = by / bl;
+    const flame = (1 + (boosting ? 1.15 : 0)) * (0.75 + Math.random() * 0.4);
+    ctx.globalCompositeOperation = "lighter";
+    drawFlame(P.engL, dx, dy, S * flame, S * 0.36 * P.engL.s);
+    drawFlame(P.engR, dx, dy, S * flame, S * 0.36 * P.engR.s);
+    ctx.globalCompositeOperation = "source-over";
+
+    // --- Крылья (дальнее рисуем первым) ---
+    const drawWing = (rf, tp, tb, rb, r3rf, r3tp, r3tb) => {
+      const lit = faceLight(r3rf, r3tp, r3tb);
+      polyPath([rf, tp, tb, rb]);
+      ctx.fillStyle = lgrad(rf, tb, shade("#5bb2ff", lit), shade("#1a5bbf", lit * 0.7));
+      ctx.fill();
+      ctx.lineWidth = Math.max(1, S * 0.05); ctx.strokeStyle = "#0a1f3e"; ctx.stroke();
+      // подсветка передней кромки
+      ctx.beginPath(); ctx.moveTo(rf.x, rf.y); ctx.lineTo(tp.x, tp.y);
+      ctx.strokeStyle = "rgba(150,240,255,0.85)"; ctx.lineWidth = Math.max(1, S * 0.045); ctx.stroke();
+    };
+    if (R3.lwTip.z >= R3.rwTip.z) {
+      drawWing(P.lwRootF,P.lwTip,P.lwTipB,P.lwRootB, R3.lwRootF,R3.lwTip,R3.lwTipB);
+      drawWing(P.rwRootF,P.rwTip,P.rwTipB,P.rwRootB, R3.rwRootF,R3.rwTip,R3.rwTipB);
+    } else {
+      drawWing(P.rwRootF,P.rwTip,P.rwTipB,P.rwRootB, R3.rwRootF,R3.rwTip,R3.rwTipB);
+      drawWing(P.lwRootF,P.lwTip,P.lwTipB,P.lwRootB, R3.lwRootF,R3.lwTip,R3.lwTipB);
+    }
+
+    // --- Фюзеляж ---
+    const litBody = faceLight(R3.nose, R3.rsh, R3.lsh);
+    ctx.shadowColor = "rgba(70,230,255,0.55)"; ctx.shadowBlur = 14;
+    polyPath([P.nose, P.rsh, P.rtl, P.ltl, P.lsh]);
+    ctx.fillStyle = lgrad(P.nose, P.ltl, shade("#eafcff", litBody), shade("#2a72d6", litBody * 0.7));
+    ctx.fill();
     ctx.shadowBlur = 0;
-    ctx.beginPath(); ctx.ellipse(0, -R * 0.18, R * 0.2, R * 0.32, 0, 0, TAU);
-    ctx.fillStyle = "#0b1f3a"; ctx.fill();
+    ctx.lineWidth = Math.max(1.2, S * 0.05); ctx.strokeStyle = "#0b2244"; ctx.stroke();
+    // центральный киль-блик
+    ctx.beginPath(); ctx.moveTo(P.nose.x, P.nose.y);
+    ctx.lineTo((P.ltl.x + P.rtl.x)/2, (P.ltl.y + P.rtl.y)/2);
+    ctx.strokeStyle = "rgba(255,255,255,0.35)"; ctx.lineWidth = Math.max(1, S*0.03); ctx.stroke();
+
+    // --- Вертикальный киль ---
+    const litFin = faceLight(R3.finF, R3.finTop, R3.finB);
+    polyPath([P.finF, P.finTop, P.finB]);
+    ctx.fillStyle = lgrad(P.finTop, P.finB, shade("#7fd0ff", litFin), shade("#164a8f", litFin*0.7));
+    ctx.fill();
+    ctx.lineWidth = Math.max(1, S*0.04); ctx.strokeStyle = "#0a1f3e"; ctx.stroke();
+
+    // --- Сопла двигателей ---
+    for (const e of [P.engL, P.engR]) {
+      const rr = S * 0.20 * e.s;
+      ctx.beginPath(); ctx.ellipse(e.x, e.y, rr, rr * 0.7, 0, 0, TAU);
+      ctx.fillStyle = "#0b1830"; ctx.fill();
+      ctx.lineWidth = Math.max(1, S*0.03); ctx.strokeStyle = "#22406e"; ctx.stroke();
+      ctx.globalCompositeOperation = "lighter";
+      const g = ctx.createRadialGradient(e.x, e.y, 0, e.x, e.y, rr);
+      g.addColorStop(0, "rgba(150,245,255,0.95)"); g.addColorStop(0.6, "rgba(70,180,255,0.5)"); g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(e.x, e.y, rr*0.8, rr*0.55, 0, 0, TAU); ctx.fill();
+      ctx.globalCompositeOperation = "source-over";
+    }
+
+    // --- Кабина ---
+    const cpr = S * 0.19 * P.cockpit.s;
+    ctx.save();
+    ctx.translate(P.cockpit.x, P.cockpit.y); ctx.rotate(roll);
+    ctx.beginPath(); ctx.ellipse(0, 0, cpr * 0.78, cpr * 1.15, 0, 0, TAU);
+    const cg = ctx.createLinearGradient(0, -cpr, 0, cpr);
+    cg.addColorStop(0, "#39d0ff"); cg.addColorStop(0.5, "#0e2f5c"); cg.addColorStop(1, "#050f22");
+    ctx.fillStyle = cg; ctx.fill();
+    ctx.strokeStyle = "rgba(120,220,255,0.6)"; ctx.lineWidth = Math.max(1, S*0.03); ctx.stroke();
+    // блик на стекле
+    ctx.beginPath(); ctx.ellipse(-cpr*0.22, -cpr*0.4, cpr*0.22, cpr*0.42, 0, 0, TAU);
+    ctx.fillStyle = "rgba(220,250,255,0.6)"; ctx.fill();
     ctx.restore();
+
+    ctx.restore();
+  }
+
+  function drawFlame(pt, dx, dy, len, wid) {
+    const ex = pt.x + dx * len, ey = pt.y + dy * len;
+    const px = -dy, py = dx; // перпендикуляр
+    ctx.beginPath();
+    ctx.moveTo(pt.x + px * wid, pt.y + py * wid);
+    ctx.lineTo(pt.x - px * wid, pt.y - py * wid);
+    ctx.lineTo(ex, ey);
+    ctx.closePath();
+    const g = ctx.createLinearGradient(pt.x, pt.y, ex, ey);
+    g.addColorStop(0, "rgba(200,250,255,0.95)");
+    g.addColorStop(0.4, "rgba(90,190,255,0.6)");
+    g.addColorStop(1, "rgba(60,110,255,0)");
+    ctx.fillStyle = g; ctx.fill();
   }
 
   function drawParticles() {
