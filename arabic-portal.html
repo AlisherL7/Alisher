@@ -14,7 +14,6 @@
     --surface-2: #F0E7D4;
     --ink: #221B12;
     --muted: #6E6353;
-    --faint: #97897318;
     --emerald: #0C6B57;
     --emerald-deep: #094E41;
     --emerald-soft: #0c6b5714;
@@ -35,29 +34,17 @@
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --ground: #14110B;
-      --surface: #1D1810;
-      --surface-2: #251F14;
-      --ink: #F0E7D5;
-      --muted: #A99B82;
-      --faint: #d9c8a30a;
-      --emerald: #45B79C;
-      --emerald-deep: #2C8C74;
-      --emerald-soft: #45b79c1a;
-      --gold: #D9B061;
-      --gold-soft: #d9b06120;
-      --line: #362D1D;
-      --line-strong: #473b26;
-      --success: #4FB587;
-      --warning: #D6A340;
-      --error: #D97052;
+      --ground: #14110B; --surface: #1D1810; --surface-2: #251F14; --ink: #F0E7D5;
+      --muted: #A99B82; --emerald: #45B79C; --emerald-deep: #2C8C74; --emerald-soft: #45b79c1a;
+      --gold: #D9B061; --gold-soft: #d9b06120; --line: #362D1D; --line-strong: #473b26;
+      --success: #4FB587; --warning: #D6A340; --error: #D97052;
       --shadow: 0 1px 2px #00000030, 0 8px 24px -12px #00000060;
       --shadow-lg: 0 2px 4px #00000040, 0 20px 48px -18px #00000070;
     }
   }
   :root[data-theme="light"] {
     --ground: #F5EFE2; --surface: #FDFAF3; --surface-2: #F0E7D4; --ink: #221B12;
-    --muted: #6E6353; --faint: #97897318; --emerald: #0C6B57; --emerald-deep: #094E41;
+    --muted: #6E6353; --emerald: #0C6B57; --emerald-deep: #094E41;
     --emerald-soft: #0c6b5714; --gold: #B0843A; --gold-soft: #b0843a1f; --line: #E4D8C0;
     --line-strong: #d6c6a6; --success: #2E7D5B; --warning: #B67A1E; --error: #B14A34;
     --shadow: 0 1px 2px #2a1e0a0a, 0 8px 24px -12px #2a1e0a22;
@@ -65,9 +52,9 @@
   }
   :root[data-theme="dark"] {
     --ground: #14110B; --surface: #1D1810; --surface-2: #251F14; --ink: #F0E7D5;
-    --muted: #A99B82; --faint: #d9c8a30a; --emerald: #45B79C; --emerald-deep: #2C8C74;
-    --emerald-soft: #45b79c1a; --gold: #D9B061; --gold-soft: #d9b06120; --line: #362D1D;
-    --line-strong: #473b26; --success: #4FB587; --warning: #D6A340; --error: #D97052;
+    --muted: #A99B82; --emerald: #45B79C; --emerald-deep: #2C8C74; --emerald-soft: #45b79c1a;
+    --gold: #D9B061; --gold-soft: #d9b06120; --line: #362D1D; --line-strong: #473b26;
+    --success: #4FB587; --warning: #D6A340; --error: #D97052;
     --shadow: 0 1px 2px #00000030, 0 8px 24px -12px #00000060;
     --shadow-lg: 0 2px 4px #00000040, 0 20px 48px -18px #00000070;
   }
@@ -75,17 +62,12 @@
   * { box-sizing: border-box; }
   #app, #app *::before, #app *::after { box-sizing: border-box; }
   #app {
-    margin: 0;
-    font-family: var(--sans);
-    color: var(--ink);
+    margin: 0; font-family: var(--sans); color: var(--ink);
     background:
       radial-gradient(1200px 600px at 100% -10%, var(--emerald-soft), transparent 60%),
       radial-gradient(900px 500px at -10% 110%, var(--gold-soft), transparent 55%),
       var(--ground);
-    min-height: 100vh;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
+    min-height: 100vh; line-height: 1.6; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
   }
   #app h1, #app h2, #app h3, #app h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15; text-wrap: balance; margin: 0; }
   #app p { margin: 0; }
@@ -96,53 +78,38 @@
   .tab-num { font-variant-numeric: tabular-nums; }
   .eyebrow { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; font-weight: 700; color: var(--gold); }
   .muted { color: var(--muted); }
-
-  /* focus */
   #app :focus-visible { outline: 2.5px solid var(--emerald); outline-offset: 2px; border-radius: 4px; }
 
-  /* ---------- top bar ---------- */
   .topbar {
-    position: sticky; top: 0; z-index: 40;
-    display: flex; align-items: center; gap: 14px;
+    position: sticky; top: 0; z-index: 40; display: flex; align-items: center; gap: 14px;
     padding: 12px clamp(14px, 4vw, 40px);
     background: color-mix(in srgb, var(--surface) 82%, transparent);
-    backdrop-filter: saturate(1.2) blur(12px);
-    border-bottom: 1px solid var(--line);
+    backdrop-filter: saturate(1.2) blur(12px); border-bottom: 1px solid var(--line);
   }
   .brand { display: flex; align-items: center; gap: 12px; margin-right: auto; }
   .brand .seal {
-    width: 42px; height: 42px; flex: none; border-radius: 12px;
-    display: grid; place-items: center;
-    background: linear-gradient(150deg, var(--emerald), var(--emerald-deep));
-    color: #fdf7e6; box-shadow: var(--shadow); position: relative; overflow: hidden;
+    width: 42px; height: 42px; flex: none; border-radius: 12px; display: grid; place-items: center;
+    background: linear-gradient(150deg, var(--emerald), var(--emerald-deep)); color: #fdf7e6; box-shadow: var(--shadow); position: relative; overflow: hidden;
   }
   .brand .seal span { font-family: var(--arabic); font-size: 26px; line-height: 1; margin-top: -2px; text-shadow: 0 1px 2px #0004; }
   .brand .seal::after { content:""; position:absolute; inset:0; background: radial-gradient(circle at 30% 20%, #ffffff30, transparent 60%); }
   .brand b { font-family: var(--serif); font-size: 20px; letter-spacing: .01em; display: block; }
   .brand small { color: var(--muted); font-size: 11.5px; letter-spacing: .04em; display:block; margin-top:-2px;}
   .icon-btn {
-    width: 40px; height: 40px; border-radius: 11px; border: 1px solid var(--line);
-    background: var(--surface); color: var(--ink); display: grid; place-items: center;
-    transition: background .15s, border-color .15s, transform .15s;
+    width: 40px; height: 40px; border-radius: 11px; border: 1px solid var(--line); background: var(--surface);
+    color: var(--ink); display: grid; place-items: center; transition: background .15s, border-color .15s, transform .15s;
   }
   .icon-btn:hover { background: var(--surface-2); border-color: var(--line-strong); }
   .icon-btn:active { transform: scale(.94); }
   .icon-btn svg { width: 19px; height: 19px; }
 
-  /* ---------- layout ---------- */
   .shell { display: flex; align-items: flex-start; gap: 0; }
-  .sidebar {
-    position: sticky; top: 67px; align-self: flex-start;
-    width: 244px; flex: none; padding: 22px 14px;
-    height: calc(100vh - 67px); overflow-y: auto;
-  }
+  .sidebar { position: sticky; top: 67px; align-self: flex-start; width: 244px; flex: none; padding: 22px 14px; height: calc(100vh - 67px); overflow-y: auto; }
   .nav-group + .nav-group { margin-top: 20px; }
   .nav-group h5 { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px 12px; font-family: var(--sans); font-weight: 700; }
   .nav-item {
-    display: flex; align-items: center; gap: 12px; width: 100%;
-    padding: 10px 12px; border-radius: 11px; border: none; background: transparent;
-    color: var(--ink); font-size: 14.5px; font-weight: 500; text-align: left;
-    transition: background .14s, color .14s;
+    display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 12px; border-radius: 11px; border: none;
+    background: transparent; color: var(--ink); font-size: 14.5px; font-weight: 500; text-align: left; transition: background .14s, color .14s;
   }
   .nav-item .ni-ico { width: 20px; height: 20px; flex: none; color: var(--muted); transition: color .14s; }
   .nav-item .ni-ico svg { width: 20px; height: 20px; display:block; }
@@ -158,36 +125,27 @@
   @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
   @media (prefers-reduced-motion: reduce) { .view, #app * { animation: none !important; transition: none !important; } }
 
+  .backlink { display: inline-flex; align-items: center; gap: 7px; font-weight: 600; font-size: 14px; color: var(--emerald); background: var(--surface); border: 1px solid var(--line-strong); padding: 8px 14px; border-radius: 999px; margin-bottom: 18px; }
+  .backlink:hover { background: var(--surface-2); }
+
   .page-head { margin-bottom: 26px; }
   .page-head h2 { font-size: clamp(26px, 3.6vw, 36px); margin: 6px 0 6px; letter-spacing: -0.01em; }
   .page-head p { color: var(--muted); max-width: 62ch; }
 
-  /* cards */
   .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow); }
   .grid { display: grid; gap: 16px; }
   .g-auto { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
 
-  /* ---------- HOME ---------- */
-  .hero {
-    position: relative; overflow: hidden; border-radius: var(--r-lg);
-    padding: clamp(28px, 5vw, 52px); color: #fbf5e6;
-    background: linear-gradient(135deg, var(--emerald-deep), var(--emerald) 70%, #0c7d61);
-    box-shadow: var(--shadow-lg);
-  }
-  .hero::before {
-    content: ""; position: absolute; inset: 0; opacity: .16; pointer-events: none;
-    background-image: var(--girih); background-size: 210px 210px;
-  }
+  .hero { position: relative; overflow: hidden; border-radius: var(--r-lg); padding: clamp(28px, 5vw, 52px); color: #fbf5e6;
+    background: linear-gradient(135deg, var(--emerald-deep), var(--emerald) 70%, #0c7d61); box-shadow: var(--shadow-lg); }
+  .hero::before { content: ""; position: absolute; inset: 0; opacity: .16; pointer-events: none; background-image: var(--girih); background-size: 210px 210px; }
   .hero::after { content:""; position:absolute; right:-80px; top:-90px; width:320px; height:320px; border-radius:50%; background: radial-gradient(circle, #ffe9a840, transparent 65%); }
   .hero .inner { position: relative; z-index: 1; max-width: 640px; }
   .hero .ar-big { font-family: var(--arabic); font-size: clamp(42px, 9vw, 82px); line-height: 1; margin-bottom: 10px; color: #ffe6a8; text-shadow: 0 2px 14px #0006; }
   .hero h1 { font-size: clamp(26px, 4.4vw, 42px); color: #fff; margin-bottom: 12px; }
   .hero p { color: #eadfbf; font-size: clamp(15px, 2vw, 17px); max-width: 54ch; }
   .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 999px;
-    font-weight: 600; font-size: 14.5px; border: 1px solid transparent; transition: transform .15s, filter .15s, background .15s;
-  }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 999px; font-weight: 600; font-size: 14.5px; border: 1px solid transparent; transition: transform .15s, filter .15s, background .15s; }
   .btn:active { transform: translateY(1px); }
   .btn-gold { background: linear-gradient(135deg, #e9c877, var(--gold)); color: #3a2708; box-shadow: 0 6px 18px -8px #0007; }
   .btn-gold:hover { filter: brightness(1.05); }
@@ -205,11 +163,7 @@
   .progress-track { height: 9px; border-radius: 999px; background: var(--surface-2); overflow: hidden; margin-top: 10px; border: 1px solid var(--line); }
   .progress-fill { height: 100%; background: linear-gradient(90deg, var(--emerald), var(--gold)); border-radius: 999px; transition: width .6s cubic-bezier(.2,.8,.2,1); }
 
-  .home-card {
-    padding: 22px; display: flex; flex-direction: column; gap: 10px; text-align: left;
-    border: 1px solid var(--line); background: var(--surface); border-radius: var(--r-md);
-    box-shadow: var(--shadow); transition: transform .16s, box-shadow .16s, border-color .16s; color: var(--ink);
-  }
+  .home-card { padding: 22px; display: flex; flex-direction: column; gap: 10px; text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: var(--r-md); box-shadow: var(--shadow); transition: transform .16s, box-shadow .16s, border-color .16s; color: var(--ink); }
   button.home-card { width: 100%; cursor: pointer; }
   .home-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--line-strong); }
   .home-card .hc-ico { width: 46px; height: 46px; border-radius: 13px; display: grid; place-items: center; background: var(--emerald-soft); color: var(--emerald); }
@@ -218,32 +172,22 @@
   .home-card p { color: var(--muted); font-size: 14px; }
   .home-card .go { margin-top: auto; color: var(--emerald); font-weight: 600; font-size: 13.5px; display: inline-flex; align-items:center; gap:6px; }
 
-  /* section title */
   .sec-title { display: flex; align-items: baseline; gap: 12px; margin: 40px 0 16px; }
   .sec-title h3 { font-size: 22px; }
   .sec-title .rule { flex: 1; height: 1px; background: var(--line-strong); }
 
-  /* ---------- controls ---------- */
   .search-wrap { position: relative; margin-bottom: 16px; }
   .search-wrap svg { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); width: 19px; height: 19px; color: var(--muted); pointer-events:none; }
-  .search-wrap input {
-    width: 100%; padding: 14px 16px 14px 44px; border-radius: 14px; border: 1px solid var(--line-strong);
-    background: var(--surface); color: var(--ink); font-size: 15px; font-family: inherit; box-shadow: var(--shadow);
-  }
+  .search-wrap input { width: 100%; padding: 14px 16px 14px 44px; border-radius: 14px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font-size: 15px; font-family: inherit; box-shadow: var(--shadow); }
   .search-wrap input::placeholder { color: var(--muted); }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
-  .chip {
-    padding: 8px 15px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface);
-    color: var(--ink); font-size: 13.5px; font-weight: 500; transition: all .14s;
-  }
+  .chip { padding: 8px 15px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font-size: 13.5px; font-weight: 500; transition: all .14s; }
   .chip:hover { border-color: var(--emerald); }
   .chip.active { background: var(--emerald); color: #fdf7e6; border-color: var(--emerald); }
   .chip.gold.active { background: var(--gold); border-color: var(--gold); color: #3a2708; }
 
-  /* vocab cards */
   .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-top: 14px; }
   .vcard { position: relative; padding: 18px 18px 16px; text-align: left; }
-  .vcard .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
   .vcard .word { font-family: var(--arabic); direction: rtl; font-size: 34px; line-height: 1.3; color: var(--ink); }
   .vcard .translit { font-family: var(--mono); font-size: 13.5px; color: var(--emerald); margin-top: 2px; letter-spacing: .02em; }
   .vcard .mean { font-size: 15.5px; margin-top: 7px; font-weight: 500; }
@@ -251,26 +195,20 @@
   .tag { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: var(--surface-2); color: var(--muted); letter-spacing: .02em; }
   .tag.pos { background: var(--emerald-soft); color: var(--emerald); }
   .tag.freq { background: var(--gold-soft); color: var(--gold); font-variant-numeric: tabular-nums; }
-  .star {
-    position: absolute; right: 12px; bottom: 12px; width: 34px; height: 34px; border-radius: 10px;
-    border: none; background: transparent; color: var(--line-strong); display: grid; place-items: center; transition: color .14s, transform .14s;
-  }
+  .star { position: absolute; right: 12px; bottom: 12px; width: 34px; height: 34px; border-radius: 10px; border: none; background: transparent; color: var(--line-strong); display: grid; place-items: center; transition: color .14s, transform .14s; }
   .star:hover { transform: scale(1.15); }
   .star svg { width: 21px; height: 21px; }
   .star.on { color: var(--gold); }
   .empty { text-align: center; padding: 60px 20px; color: var(--muted); }
   .empty .ar { font-size: 50px; opacity: .3; }
 
-  /* ---------- alphabet ---------- */
   .letters-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
-  .letter {
-    padding: 16px 14px; text-align: center; transition: transform .16s, box-shadow .16s, border-color .16s; cursor: pointer;
-    background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow); color: var(--ink);
-  }
+  .letter { padding: 16px 14px; text-align: center; transition: transform .16s, box-shadow .16s, border-color .16s; cursor: pointer; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow); color: var(--ink); }
   .letter:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--gold); }
   .letter .glyph { font-family: var(--arabic); font-size: 46px; line-height: 1.1; color: var(--emerald); }
   .letter .lname { font-weight: 600; font-size: 14px; margin-top: 4px; }
   .letter .ltr { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .letter .hint2 { font-size: 11.5px; color: var(--muted); margin-top: 6px; min-height: 28px; }
   .forms-row { display: flex; justify-content: center; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line-strong); }
   .form-cell { flex: 1; }
   .form-cell .fg { font-family: var(--arabic); font-size: 22px; color: var(--ink); line-height: 1.4; }
@@ -282,15 +220,13 @@
   .haraka h4 { font-size: 15px; }
   .haraka p { font-size: 13px; color: var(--muted); }
 
-  /* ---------- phrasebook ---------- */
-  .phrase { padding: 18px 20px; display: flex; align-items: center; gap: 18px; margin-bottom: 12px; }
+  .phrase { padding: 16px 18px; display: flex; align-items: center; gap: 16px; margin-bottom: 10px; }
   .phrase .body { flex: 1; min-width: 0; }
-  .phrase .ar-ph { font-family: var(--arabic); direction: rtl; font-size: 27px; line-height: 1.5; color: var(--ink); }
-  .phrase .translit { font-family: var(--mono); font-size: 13.5px; color: var(--emerald); margin: 3px 0; }
-  .phrase .ru { font-size: 15px; }
-  .phrase .num { font-family: var(--serif); font-size: 15px; color: var(--gold); width: 30px; text-align: center; flex: none; }
+  .phrase .ar-ph { font-family: var(--arabic); direction: rtl; font-size: 25px; line-height: 1.5; color: var(--ink); }
+  .phrase .translit { font-family: var(--mono); font-size: 13px; color: var(--emerald); margin: 3px 0; }
+  .phrase .ru { font-size: 14.5px; }
+  .phrase .num { font-family: var(--serif); font-size: 14px; color: var(--gold); width: 28px; text-align: center; flex: none; }
 
-  /* ---------- grammar ---------- */
   .lesson { margin-bottom: 14px; overflow: hidden; }
   .lesson summary { list-style: none; padding: 18px 20px; display: flex; align-items: center; gap: 14px; cursor: pointer; }
   .lesson summary::-webkit-details-marker { display: none; }
@@ -308,34 +244,27 @@
   .ex-table td { padding: 11px 14px; border-top: 1px solid var(--line); font-size: 14.5px; }
   .ex-table .ar-cell { font-family: var(--arabic); direction: rtl; font-size: 24px; }
   .ex-table .tr-cell { font-family: var(--mono); font-size: 13px; color: var(--emerald); }
+  .tbl-wrap { overflow-x: auto; }
 
-  /* ---------- reading ---------- */
   .reader { padding: 24px clamp(18px, 3vw, 32px); margin-bottom: 18px; }
   .reader .r-head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
   .reader .r-head .lv { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: var(--gold-soft); color: var(--gold); }
   .reader .r-head h4 { font-size: 19px; }
   .verse { padding: 14px 0; border-bottom: 1px dashed var(--line-strong); }
   .verse:last-child { border-bottom: none; }
-  .verse .ar-line { font-family: var(--arabic); direction: rtl; font-size: clamp(26px, 4vw, 34px); line-height: 2; color: var(--ink); }
+  .verse .ar-line { font-family: var(--arabic); direction: rtl; font-size: clamp(24px, 4vw, 32px); line-height: 2; color: var(--ink); }
   .verse .tl-line { font-family: var(--mono); font-size: 13.5px; color: var(--emerald); margin: 6px 0 2px; }
   .verse .ru-line { font-size: 15px; color: var(--muted); }
 
-  /* ---------- exercises ---------- */
   .ex-switch { display: inline-flex; padding: 5px; gap: 4px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--line); margin-bottom: 20px; }
   .ex-switch button { padding: 9px 18px; border-radius: 10px; border: none; background: transparent; color: var(--muted); font-weight: 600; font-size: 14px; transition: all .14s; }
   .ex-switch button.active { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
 
   .flashcard-stage { display: grid; place-items: center; gap: 20px; padding: 20px 0; }
-  .flashcard {
-    width: min(420px, 92%); aspect-ratio: 3/2; perspective: 1200px; background: transparent; border: none; padding: 0;
-  }
+  .flashcard { width: min(420px, 92%); aspect-ratio: 3/2; perspective: 1200px; background: transparent; border: none; padding: 0; }
   .fc-inner { position: relative; width: 100%; height: 100%; transition: transform .5s cubic-bezier(.2,.8,.2,1); transform-style: preserve-3d; }
   .flashcard.flipped .fc-inner { transform: rotateY(180deg); }
-  .fc-face {
-    position: absolute; inset: 0; backface-visibility: hidden; border-radius: var(--r-lg);
-    display: grid; place-content: center; text-align: center; gap: 8px; padding: 24px;
-    border: 1px solid var(--line); box-shadow: var(--shadow-lg);
-  }
+  .fc-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: var(--r-lg); display: grid; place-content: center; text-align: center; gap: 8px; padding: 24px; border: 1px solid var(--line); box-shadow: var(--shadow-lg); }
   .fc-front { background: linear-gradient(150deg, var(--surface), var(--surface-2)); }
   .fc-front .ar { font-size: clamp(48px, 12vw, 78px); color: var(--emerald); line-height: 1.2; }
   .fc-front .hint { color: var(--muted); font-size: 13px; }
@@ -352,10 +281,7 @@
   .quiz-q .translit { font-family: var(--mono); color: var(--muted); font-size: 14px; margin-top: 4px; }
   .quiz-q .prompt { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
   .quiz-opts { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
-  .opt {
-    padding: 14px 16px; border-radius: 13px; border: 1px solid var(--line-strong); background: var(--surface);
-    color: var(--ink); font-size: 15px; font-weight: 500; text-align: center; transition: all .14s;
-  }
+  .opt { padding: 14px 16px; border-radius: 13px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font-size: 15px; font-weight: 500; text-align: center; transition: all .14s; }
   .opt:hover:not(:disabled) { border-color: var(--emerald); background: var(--emerald-soft); }
   .opt.correct { background: color-mix(in srgb, var(--success) 18%, var(--surface)); border-color: var(--success); color: var(--success); font-weight: 700; }
   .opt.wrong { background: color-mix(in srgb, var(--error) 15%, var(--surface)); border-color: var(--error); color: var(--error); }
@@ -364,13 +290,9 @@
   .quiz-score { font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
 
   .level-track { display: grid; gap: 14px; }
-  .level {
-    display: grid; grid-template-columns: auto 1fr; gap: 18px; padding: 22px; align-items: start;
-  }
-  .level .badge {
-    width: 58px; height: 58px; border-radius: 16px; display: grid; place-items: center; flex: none;
-    font-family: var(--serif); font-size: 22px; font-weight: 700; color: #fbf5e6;
-  }
+  .level { display: grid; grid-template-columns: auto 1fr auto; gap: 18px; padding: 22px; align-items: center; text-align: left; width: 100%; color: var(--ink); cursor: pointer; transition: transform .16s, box-shadow .16s, border-color .16s; }
+  .level:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--gold); }
+  .level .badge { width: 58px; height: 58px; border-radius: 16px; display: grid; place-items: center; flex: none; font-family: var(--serif); font-size: 22px; font-weight: 700; color: #fbf5e6; }
   .level .badge.a1 { background: linear-gradient(150deg,#3a9a7f,#0c6b57); }
   .level .badge.a2 { background: linear-gradient(150deg,#4aa98d,#0c7d61); }
   .level .badge.b1 { background: linear-gradient(150deg,#c9a24d,#b0843a); color:#3a2708; }
@@ -380,22 +302,31 @@
   .level ul { margin: 8px 0 0; padding-left: 18px; color: var(--ink); font-size: 14px; }
   .level ul li { margin: 3px 0; }
   .level ul li::marker { color: var(--gold); }
+  .level .arrow { color: var(--gold); font-size: 26px; align-self: center; }
+
+  .ld-hero { display: flex; align-items: center; gap: 18px; padding: 24px; margin-bottom: 22px; border-radius: var(--r-lg); color:#fbf5e6; background: linear-gradient(135deg, var(--emerald-deep), var(--emerald)); box-shadow: var(--shadow-lg); position: relative; overflow: hidden; }
+  .ld-hero::before { content:""; position:absolute; inset:0; opacity:.14; background-image: var(--girih); background-size: 200px; }
+  .ld-hero .badge { width: 70px; height: 70px; border-radius: 18px; display:grid; place-items:center; font-family:var(--serif); font-size:26px; font-weight:700; background:#ffffff22; border:1px solid #ffffff40; flex:none; z-index:1; }
+  .ld-hero .t { z-index: 1; }
+  .ld-hero h2 { color:#fff; font-size: clamp(22px,3.6vw,30px); }
+  .ld-hero p { color:#eadfbf; font-size:14px; margin-top:4px; }
+  .goals { display:grid; gap:10px; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); }
+  .goal { display:flex; gap:10px; align-items:flex-start; padding:13px 15px; background:var(--surface); border:1px solid var(--line); border-radius:12px; font-size:14px; box-shadow:var(--shadow); }
+  .goal .ck { color:var(--emerald); flex:none; margin-top:2px; }
+  .ld-cta { display:flex; flex-wrap:wrap; gap:10px; margin-top: 8px; }
 
   .footer-note { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; text-align: center; }
   .footer-note .ar { font-size: 22px; color: var(--gold); display:block; margin-bottom: 8px; }
 
-  /* mobile nav */
   .backdrop { display: none; }
   @media (max-width: 860px) {
-    .sidebar {
-      position: fixed; left: 0; top: 0; height: 100vh; z-index: 60; width: 270px;
-      background: var(--surface); border-right: 1px solid var(--line); box-shadow: var(--shadow-lg);
-      transform: translateX(-102%); transition: transform .28s cubic-bezier(.2,.8,.2,1); padding-top: 16px;
-    }
+    .sidebar { position: fixed; left: 0; top: 0; height: 100vh; z-index: 60; width: 270px; background: var(--surface); border-right: 1px solid var(--line); box-shadow: var(--shadow-lg); transform: translateX(-102%); transition: transform .28s cubic-bezier(.2,.8,.2,1); padding-top: 16px; }
     .shell.open .sidebar { transform: none; }
     .shell.open .backdrop { display: block; position: fixed; inset: 0; z-index: 55; background: #0009; }
     .menu-btn { display: grid !important; }
     .quiz-opts { grid-template-columns: 1fr; }
+    .level { grid-template-columns: auto 1fr; }
+    .level .arrow { display:none; }
   }
   .menu-btn { display: none; }
 </style>
@@ -413,7 +344,7 @@
       </div>
     </div>
     <button class="icon-btn" id="themeBtn" aria-label="Сменить тему">
-      <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
     </button>
   </header>
 
@@ -436,11 +367,7 @@
       </nav>
     </aside>
 
-    <main id="main"><!-- views injected --></main>
-  </div>
-
-  <div style="position:absolute;width:0;height:0;overflow:hidden">
-    <svg id="girihDef" xmlns="http://www.w3.org/2000/svg"></svg>
+    <main id="main"></main>
   </div>
 </div>
 
@@ -450,31 +377,24 @@
   const ZWJ = "‍";
   const $ = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
-  const el = (t, cls, html) => { const e = document.createElement(t); if(cls) e.className = cls; if(html!=null) e.innerHTML = html; return e; };
   const store = {
-    get(k, d){ try { return JSON.parse(localStorage.getItem("nur_"+k)) ?? d; } catch(e){ return d; } },
+    get(k, d){ try { const v = localStorage.getItem("nur_"+k); return v==null?d:JSON.parse(v); } catch(e){ return d; } },
     set(k, v){ try { localStorage.setItem("nur_"+k, JSON.stringify(v)); } catch(e){} }
   };
   let favs = new Set(store.get("favs", []));
   const saveFavs = () => store.set("favs", Array.from(favs));
 
-  /* ---------- girih background pattern (8-point star tessellation) ---------- */
   const girih = `<svg xmlns='http://www.w3.org/2000/svg' width='210' height='210' viewBox='0 0 210 210'><g fill='none' stroke='%23ffe6a8' stroke-width='1.4'><path d='M105 20 L140 55 L105 90 L70 55 Z'/><path d='M20 105 L55 70 L90 105 L55 140 Z'/><path d='M190 105 L155 70 L120 105 L155 140 Z'/><path d='M105 190 L140 155 L105 120 L70 155 Z'/><path d='M105 90 L120 105 L105 120 L90 105 Z'/><circle cx='105' cy='105' r='6'/></g></svg>`;
   document.documentElement.style.setProperty("--girih", `url("data:image/svg+xml,${girih}")`);
 
-  /* =========================================================
-     DATA  —  все арабские тексты выверены с огласовками,
-     транслитерация по единой системе (ā ī ū ; ʾ ʿ ; ḥ ṣ ḍ ṭ ẓ ; th dh sh kh gh)
-  ========================================================= */
-
-  // --- 28 букв алфавита ---
+  /* ================= DATA (выверено, огласовки, единая транслитерация) ================= */
   const letters = [
     { ar:"ا", name:"алиф",  tr:"ʾ / ā", hint:"долгая «а»; носитель хамзы", con:false },
     { ar:"ب", name:"ба",    tr:"b",     hint:"«б», как в «банан»", con:true },
     { ar:"ت", name:"та",    tr:"t",     hint:"«т», как в «тень»", con:true },
     { ar:"ث", name:"са",    tr:"th",    hint:"межзубный «с» — англ. th в think", con:true },
     { ar:"ج", name:"джим",  tr:"j",     hint:"«дж», как в «джем»", con:true },
-    { ar:"ح", name:"ха",    tr:"ḥ",     hint:"глубокий гортанный «х» (напряжённый выдох)", con:true },
+    { ar:"ح", name:"ха",    tr:"ḥ",     hint:"глубокий гортанный «х»", con:true },
     { ar:"خ", name:"ха",    tr:"kh",    hint:"хриплый «х», как в «хата»", con:true },
     { ar:"د", name:"даль",  tr:"d",     hint:"«д», как в «дом»", con:false },
     { ar:"ذ", name:"заль",  tr:"dh",    hint:"межзубный «з» — англ. th в this", con:false },
@@ -486,7 +406,7 @@
     { ar:"ض", name:"дад",   tr:"ḍ",     hint:"эмфатический твёрдый «д»", con:true },
     { ar:"ط", name:"та",    tr:"ṭ",     hint:"эмфатический твёрдый «т»", con:true },
     { ar:"ظ", name:"за",    tr:"ẓ",     hint:"эмфатический межзубный «з»", con:true },
-    { ar:"ع", name:"айн",   tr:"ʿ",     hint:"звонкий гортанный звук (сжатие горла)", con:true },
+    { ar:"ع", name:"айн",   tr:"ʿ",     hint:"звонкий гортанный звук", con:true },
     { ar:"غ", name:"гайн",  tr:"gh",    hint:"картавый «г», как франц. r", con:true },
     { ar:"ف", name:"фа",    tr:"f",     hint:"«ф», как в «флаг»", con:true },
     { ar:"ق", name:"каф",   tr:"q",     hint:"глубокий «к» из глубины горла", con:true },
@@ -505,13 +425,11 @@
     { s:"بُ", h:"Дамма (ضَمَّة)", d:"краткий звук «у» — завиток над буквой" },
     { s:"بْ", h:"Сукун (سُكُون)", d:"отсутствие гласного — кружок над буквой" },
     { s:"بّ", h:"Шадда (شَدَّة)", d:"удвоение согласной буквы" },
-    { s:"بً", h:"Танвин фатх (ـً)", d:"окончание «-ан» (неопред. вин. падеж)" },
-    { s:"بٍ", h:"Танвин кяср (ـٍ)", d:"окончание «-ин» (неопред. род. падеж)" },
-    { s:"بٌ", h:"Танвин дамм (ـٌ)", d:"окончание «-ун» (неопред. им. падеж)" }
+    { s:"بً", h:"Танвин фатх (ـً)", d:"окончание «-ан» (неопр. вин. падеж)" },
+    { s:"بٍ", h:"Танвин кяср (ـٍ)", d:"окончание «-ин» (неопр. род. падеж)" },
+    { s:"بٌ", h:"Танвин дамм (ـٌ)", d:"окончание «-ун» (неопр. им. падеж)" }
   ];
 
-  // --- Словарь (высокочастотная лексика Корана + база) ---
-  // cat: категория ; pos: часть речи ; freq: примерная частота в Коране (если есть)
   const vocab = [
     // частицы и предлоги
     { ar:"مِنْ", tr:"min", ru:"из, от", cat:"Частицы и предлоги", pos:"предлог", freq:"3226×" },
@@ -537,17 +455,89 @@
     { ar:"لَيْل", tr:"layl", ru:"ночь", cat:"Существительные", pos:"имя", freq:"92×" },
     { ar:"كِتَاب", tr:"kitāb", ru:"книга, писание", cat:"Существительные", pos:"имя", freq:"319×" },
     { ar:"نَاس", tr:"nās", ru:"люди", cat:"Существительные", pos:"имя", freq:"241×" },
-    { ar:"أَرْض", tr:"arḍ", ru:"земля", cat:"Природа", pos:"имя", freq:"461×" },
-    { ar:"سَمَاء", tr:"samāʾ", ru:"небо", cat:"Природа", pos:"имя", freq:"310×" },
-    { ar:"مَاء", tr:"māʾ", ru:"вода", cat:"Природа", pos:"имя", freq:"63×" },
-    { ar:"نَار", tr:"nār", ru:"огонь", cat:"Природа", pos:"имя", freq:"145×" },
-    { ar:"نُور", tr:"nūr", ru:"свет", cat:"Природа", pos:"имя", freq:"49×" },
     { ar:"قَلْب", tr:"qalb", ru:"сердце", cat:"Существительные", pos:"имя", freq:"132×" },
     { ar:"بَيْت", tr:"bayt", ru:"дом", cat:"Существительные", pos:"имя", freq:"73×" },
     { ar:"عِلْم", tr:"ʿilm", ru:"знание", cat:"Существительные", pos:"имя", freq:"105×" },
     { ar:"حَقّ", tr:"ḥaqq", ru:"истина, право", cat:"Существительные", pos:"имя", freq:"287×" },
     { ar:"إِنْسَان", tr:"insān", ru:"человек", cat:"Существительные", pos:"имя", freq:"65×" },
-    // глаголы (прош. вр., 3 л. ед.ч. м.р.)
+    { ar:"مَدِينَة", tr:"madīna", ru:"город", cat:"Существительные", pos:"имя", freq:"" },
+    { ar:"مَدْرَسَة", tr:"madrasa", ru:"школа", cat:"Существительные", pos:"имя", freq:"" },
+    { ar:"عَمَل", tr:"ʿamal", ru:"работа, дело", cat:"Существительные", pos:"имя", freq:"" },
+    // природа
+    { ar:"أَرْض", tr:"arḍ", ru:"земля", cat:"Природа", pos:"имя", freq:"461×" },
+    { ar:"سَمَاء", tr:"samāʾ", ru:"небо", cat:"Природа", pos:"имя", freq:"310×" },
+    { ar:"مَاء", tr:"māʾ", ru:"вода", cat:"Природа", pos:"имя", freq:"63×" },
+    { ar:"نَار", tr:"nār", ru:"огонь", cat:"Природа", pos:"имя", freq:"145×" },
+    { ar:"نُور", tr:"nūr", ru:"свет", cat:"Природа", pos:"имя", freq:"49×" },
+    { ar:"شَمْس", tr:"shams", ru:"солнце", cat:"Природа", pos:"имя", freq:"" },
+    { ar:"قَمَر", tr:"qamar", ru:"луна", cat:"Природа", pos:"имя", freq:"" },
+    { ar:"شَجَرَة", tr:"shajara", ru:"дерево", cat:"Природа", pos:"имя", freq:"" },
+    // семья
+    { ar:"أَب", tr:"ab", ru:"отец", cat:"Семья", pos:"имя", freq:"" },
+    { ar:"أُمّ", tr:"umm", ru:"мать", cat:"Семья", pos:"имя", freq:"" },
+    { ar:"اِبْن", tr:"ibn", ru:"сын", cat:"Семья", pos:"имя", freq:"" },
+    { ar:"بِنْت", tr:"bint", ru:"дочь", cat:"Семья", pos:"имя", freq:"" },
+    { ar:"أَخ", tr:"akh", ru:"брат", cat:"Семья", pos:"имя", freq:"" },
+    { ar:"أُخْت", tr:"ukht", ru:"сестра", cat:"Семья", pos:"имя", freq:"" },
+    { ar:"زَوْج", tr:"zawj", ru:"муж, супруг", cat:"Семья", pos:"имя", freq:"" },
+    { ar:"زَوْجَة", tr:"zawja", ru:"жена, супруга", cat:"Семья", pos:"имя", freq:"" },
+    { ar:"وَلَد", tr:"walad", ru:"мальчик, ребёнок", cat:"Семья", pos:"имя", freq:"" },
+    { ar:"جَدّ", tr:"jadd", ru:"дедушка", cat:"Семья", pos:"имя", freq:"" },
+    // еда и напитки
+    { ar:"خُبْز", tr:"khubz", ru:"хлеб", cat:"Еда и напитки", pos:"имя", freq:"" },
+    { ar:"لَحْم", tr:"laḥm", ru:"мясо", cat:"Еда и напитки", pos:"имя", freq:"" },
+    { ar:"تَمْر", tr:"tamr", ru:"финики", cat:"Еда и напитки", pos:"имя", freq:"" },
+    { ar:"حَلِيب", tr:"ḥalīb", ru:"молоко", cat:"Еда и напитки", pos:"имя", freq:"" },
+    { ar:"شَاي", tr:"shāy", ru:"чай", cat:"Еда и напитки", pos:"имя", freq:"" },
+    { ar:"قَهْوَة", tr:"qahwa", ru:"кофе", cat:"Еда и напитки", pos:"имя", freq:"" },
+    { ar:"أَرُزّ", tr:"aruzz", ru:"рис", cat:"Еда и напитки", pos:"имя", freq:"" },
+    { ar:"سُكَّر", tr:"sukkar", ru:"сахар", cat:"Еда и напитки", pos:"имя", freq:"" },
+    // тело
+    { ar:"رَأْس", tr:"raʾs", ru:"голова", cat:"Тело", pos:"имя", freq:"" },
+    { ar:"عَيْن", tr:"ʿayn", ru:"глаз; источник", cat:"Тело", pos:"имя", freq:"" },
+    { ar:"يَد", tr:"yad", ru:"рука, кисть", cat:"Тело", pos:"имя", freq:"" },
+    { ar:"رِجْل", tr:"rijl", ru:"нога", cat:"Тело", pos:"имя", freq:"" },
+    { ar:"وَجْه", tr:"wajh", ru:"лицо", cat:"Тело", pos:"имя", freq:"" },
+    { ar:"فَم", tr:"fam", ru:"рот", cat:"Тело", pos:"имя", freq:"" },
+    // цвета
+    { ar:"أَحْمَر", tr:"aḥmar", ru:"красный", cat:"Цвета", pos:"прилагательное", freq:"" },
+    { ar:"أَزْرَق", tr:"azraq", ru:"синий", cat:"Цвета", pos:"прилагательное", freq:"" },
+    { ar:"أَخْضَر", tr:"akhḍar", ru:"зелёный", cat:"Цвета", pos:"прилагательное", freq:"" },
+    { ar:"أَصْفَر", tr:"aṣfar", ru:"жёлтый", cat:"Цвета", pos:"прилагательное", freq:"" },
+    { ar:"أَبْيَض", tr:"abyaḍ", ru:"белый", cat:"Цвета", pos:"прилагательное", freq:"" },
+    { ar:"أَسْوَد", tr:"aswad", ru:"чёрный", cat:"Цвета", pos:"прилагательное", freq:"" },
+    // прилагательные
+    { ar:"كَبِير", tr:"kabīr", ru:"большой", cat:"Прилагательные", pos:"прилагательное", freq:"" },
+    { ar:"صَغِير", tr:"ṣaghīr", ru:"маленький", cat:"Прилагательные", pos:"прилагательное", freq:"" },
+    { ar:"جَمِيل", tr:"jamīl", ru:"красивый", cat:"Прилагательные", pos:"прилагательное", freq:"" },
+    { ar:"جَدِيد", tr:"jadīd", ru:"новый", cat:"Прилагательные", pos:"прилагательное", freq:"" },
+    { ar:"طَيِّب", tr:"ṭayyib", ru:"хороший, приятный", cat:"Прилагательные", pos:"прилагательное", freq:"" },
+    { ar:"سَعِيد", tr:"saʿīd", ru:"счастливый", cat:"Прилагательные", pos:"прилагательное", freq:"" },
+    // вопросительные слова
+    { ar:"مَنْ", tr:"man", ru:"кто", cat:"Вопросы", pos:"вопрос", freq:"" },
+    { ar:"مَاذَا", tr:"mādhā", ru:"что", cat:"Вопросы", pos:"вопрос", freq:"" },
+    { ar:"أَيْنَ", tr:"ayna", ru:"где", cat:"Вопросы", pos:"вопрос", freq:"" },
+    { ar:"مَتَى", tr:"matā", ru:"когда", cat:"Вопросы", pos:"вопрос", freq:"" },
+    { ar:"كَيْفَ", tr:"kayfa", ru:"как", cat:"Вопросы", pos:"вопрос", freq:"" },
+    { ar:"لِمَاذَا", tr:"limādhā", ru:"почему", cat:"Вопросы", pos:"вопрос", freq:"" },
+    { ar:"كَمْ", tr:"kam", ru:"сколько", cat:"Вопросы", pos:"вопрос", freq:"" },
+    // время
+    { ar:"سَاعَة", tr:"sāʿa", ru:"час; часы", cat:"Время", pos:"имя", freq:"" },
+    { ar:"أُسْبُوع", tr:"usbūʿ", ru:"неделя", cat:"Время", pos:"имя", freq:"" },
+    { ar:"شَهْر", tr:"shahr", ru:"месяц", cat:"Время", pos:"имя", freq:"" },
+    { ar:"سَنَة", tr:"sana", ru:"год", cat:"Время", pos:"имя", freq:"" },
+    { ar:"غَدًا", tr:"ghadan", ru:"завтра", cat:"Время", pos:"наречие", freq:"" },
+    { ar:"أَمْس", tr:"ams", ru:"вчера", cat:"Время", pos:"наречие", freq:"" },
+    // место и направление
+    { ar:"هُنَا", tr:"hunā", ru:"здесь", cat:"Место", pos:"наречие", freq:"" },
+    { ar:"هُنَاكَ", tr:"hunāka", ru:"там", cat:"Место", pos:"наречие", freq:"" },
+    { ar:"فَوْقَ", tr:"fawqa", ru:"над, наверху", cat:"Место", pos:"предлог", freq:"" },
+    { ar:"تَحْتَ", tr:"taḥta", ru:"под", cat:"Место", pos:"предлог", freq:"" },
+    { ar:"أَمَامَ", tr:"amāma", ru:"перед", cat:"Место", pos:"предлог", freq:"" },
+    { ar:"خَلْفَ", tr:"khalfa", ru:"позади", cat:"Место", pos:"предлог", freq:"" },
+    { ar:"يَمِين", tr:"yamīn", ru:"право", cat:"Место", pos:"имя", freq:"" },
+    { ar:"يَسَار", tr:"yasār", ru:"лево", cat:"Место", pos:"имя", freq:"" },
+    // глаголы
     { ar:"قَالَ", tr:"qāla", ru:"он сказал", cat:"Глаголы", pos:"глагол", freq:"1722×" },
     { ar:"كَانَ", tr:"kāna", ru:"он был", cat:"Глаголы", pos:"глагол", freq:"1358×" },
     { ar:"عَلِمَ", tr:"ʿalima", ru:"он узнал, знал", cat:"Глаголы", pos:"глагол", freq:"382×" },
@@ -558,12 +548,14 @@
     { ar:"سَمِعَ", tr:"samiʿa", ru:"он услышал", cat:"Глаголы", pos:"глагол", freq:"" },
     { ar:"ذَهَبَ", tr:"dhahaba", ru:"он ушёл", cat:"Глаголы", pos:"глагол", freq:"" },
     { ar:"دَخَلَ", tr:"dakhala", ru:"он вошёл", cat:"Глаголы", pos:"глагол", freq:"" },
-    // прилагательные
-    { ar:"كَبِير", tr:"kabīr", ru:"большой", cat:"Прилагательные", pos:"прилагательное", freq:"" },
-    { ar:"صَغِير", tr:"ṣaghīr", ru:"маленький", cat:"Прилагательные", pos:"прилагательное", freq:"" },
-    { ar:"جَمِيل", tr:"jamīl", ru:"красивый", cat:"Прилагательные", pos:"прилагательное", freq:"" },
-    { ar:"جَدِيد", tr:"jadīd", ru:"новый", cat:"Прилагательные", pos:"прилагательное", freq:"" },
-    { ar:"طَيِّب", tr:"ṭayyib", ru:"хороший, приятный", cat:"Прилагательные", pos:"прилагательное", freq:"" },
+    { ar:"خَرَجَ", tr:"kharaja", ru:"он вышел", cat:"Глаголы", pos:"глагол", freq:"" },
+    { ar:"رَأَى", tr:"raʾā", ru:"он увидел", cat:"Глаголы", pos:"глагол", freq:"" },
+    { ar:"أَرَادَ", tr:"arāda", ru:"он захотел", cat:"Глаголы", pos:"глагол", freq:"" },
+    { ar:"شَرِبَ", tr:"shariba", ru:"он пил", cat:"Глаголы", pos:"глагол", freq:"" },
+    { ar:"أَكَلَ", tr:"akala", ru:"он ел", cat:"Глаголы", pos:"глагол", freq:"" },
+    { ar:"جَلَسَ", tr:"jalasa", ru:"он сел", cat:"Глаголы", pos:"глагол", freq:"" },
+    { ar:"وَجَدَ", tr:"wajada", ru:"он нашёл", cat:"Глаголы", pos:"глагол", freq:"" },
+    { ar:"أَعْطَى", tr:"aʿṭā", ru:"он дал", cat:"Глаголы", pos:"глагол", freq:"" },
     // числа
     { ar:"وَاحِد", tr:"wāḥid", ru:"один", cat:"Числа", pos:"число", freq:"" },
     { ar:"اثْنَان", tr:"ithnān", ru:"два", cat:"Числа", pos:"число", freq:"" },
@@ -572,10 +564,11 @@
     { ar:"خَمْسَة", tr:"khamsa", ru:"пять", cat:"Числа", pos:"число", freq:"" },
     { ar:"سِتَّة", tr:"sitta", ru:"шесть", cat:"Числа", pos:"число", freq:"" },
     { ar:"سَبْعَة", tr:"sabʿa", ru:"семь", cat:"Числа", pos:"число", freq:"" },
+    { ar:"ثَمَانِيَة", tr:"thamāniya", ru:"восемь", cat:"Числа", pos:"число", freq:"" },
+    { ar:"تِسْعَة", tr:"tisʿa", ru:"девять", cat:"Числа", pos:"число", freq:"" },
     { ar:"عَشَرَة", tr:"ʿashara", ru:"десять", cat:"Числа", pos:"число", freq:"" }
   ];
 
-  // --- Разговорник ---
   const phrases = [
     { g:"Приветствия", items:[
       { ar:"السَّلَامُ عَلَيْكُمْ", tr:"as-salāmu ʿalaykum", ru:"Мир вам (здравствуйте)" },
@@ -583,22 +576,27 @@
       { ar:"صَبَاحُ الْخَيْر", tr:"ṣabāḥu l-khayr", ru:"Доброе утро" },
       { ar:"مَسَاءُ الْخَيْر", tr:"masāʾu l-khayr", ru:"Добрый вечер" },
       { ar:"أَهْلًا وَسَهْلًا", tr:"ahlan wa-sahlan", ru:"Добро пожаловать" },
-      { ar:"مَعَ السَّلَامَة", tr:"maʿa s-salāma", ru:"До свидания" }
+      { ar:"مَعَ السَّلَامَة", tr:"maʿa s-salāma", ru:"До свидания" },
+      { ar:"إِلَى اللِّقَاء", tr:"ilā l-liqāʾ", ru:"До встречи" }
     ]},
-    { g:"Знакомство", items:[
+    { g:"Знакомство и о себе", items:[
       { ar:"مَا اسْمُكَ؟", tr:"mā-smuka?", ru:"Как тебя зовут? (мужчине)" },
       { ar:"اسْمِي...", tr:"ismī...", ru:"Меня зовут..." },
       { ar:"كَيْفَ حَالُكَ؟", tr:"kayfa ḥāluka?", ru:"Как дела? (мужчине)" },
       { ar:"بِخَيْر، الْحَمْدُ لِلّٰه", tr:"bi-khayr, al-ḥamdu li-llāh", ru:"Хорошо, слава Богу" },
       { ar:"مِنْ أَيْنَ أَنْتَ؟", tr:"min ayna anta?", ru:"Откуда ты? (мужчине)" },
+      { ar:"أَنَا مِنْ رُوسِيَا", tr:"anā min rūsiyā", ru:"Я из России" },
+      { ar:"كَمْ عُمْرُكَ؟", tr:"kam ʿumruka?", ru:"Сколько тебе лет?" },
       { ar:"تَشَرَّفْنَا", tr:"tasharrafnā", ru:"Приятно познакомиться" }
     ]},
     { g:"Вежливость", items:[
       { ar:"شُكْرًا", tr:"shukran", ru:"Спасибо" },
+      { ar:"شُكْرًا جَزِيلًا", tr:"shukran jazīlan", ru:"Большое спасибо" },
       { ar:"عَفْوًا", tr:"ʿafwan", ru:"Пожалуйста / Извините" },
       { ar:"مِنْ فَضْلِكَ", tr:"min faḍlika", ru:"Пожалуйста (просьба, мужчине)" },
       { ar:"نَعَمْ", tr:"naʿam", ru:"Да" },
       { ar:"لَا", tr:"lā", ru:"Нет" },
+      { ar:"آسِف", tr:"āsif", ru:"Извини (мужчина о себе)" },
       { ar:"لَا بَأْسَ", tr:"lā baʾsa", ru:"Ничего страшного" }
     ]},
     { g:"В путешествии", items:[
@@ -607,87 +605,187 @@
       { ar:"لَا أَفْهَمُ", tr:"lā afhamu", ru:"Я не понимаю" },
       { ar:"هَلْ تَتَكَلَّمُ الْإِنْجِلِيزِيَّةَ؟", tr:"hal tatakallamu l-inglīziyya?", ru:"Ты говоришь по-английски?" },
       { ar:"سَاعِدْنِي مِنْ فَضْلِكَ", tr:"sāʿidnī min faḍlik", ru:"Помоги мне, пожалуйста" },
-      { ar:"أَيْنَ الْحَمَّامُ؟", tr:"ayna l-ḥammām?", ru:"Где туалет?" }
+      { ar:"أَيْنَ الْحَمَّامُ؟", tr:"ayna l-ḥammām?", ru:"Где туалет?" },
+      { ar:"أَنَا تَائِهٌ", tr:"anā tāʾihun", ru:"Я заблудился" }
+    ]},
+    { g:"В ресторане", items:[
+      { ar:"أَنَا جَائِعٌ", tr:"anā jāʾiʿun", ru:"Я голоден" },
+      { ar:"أَنَا عَطْشَانُ", tr:"anā ʿaṭshānu", ru:"Я хочу пить" },
+      { ar:"الْقَائِمَةَ مِنْ فَضْلِكَ", tr:"al-qāʾimata min faḍlik", ru:"Меню, пожалуйста" },
+      { ar:"مَاءً مِنْ فَضْلِكَ", tr:"māʾan min faḍlik", ru:"Воды, пожалуйста" },
+      { ar:"هٰذَا لَذِيذٌ", tr:"hādhā ladhīdhun", ru:"Это вкусно" },
+      { ar:"الْحِسَابَ مِنْ فَضْلِكَ", tr:"al-ḥisāba min faḍlik", ru:"Счёт, пожалуйста" }
+    ]},
+    { g:"Покупки", items:[
+      { ar:"بِكَمْ هٰذَا؟", tr:"bikam hādhā?", ru:"Сколько это стоит?" },
+      { ar:"هٰذَا غَالٍ", tr:"hādhā ghālin", ru:"Это дорого" },
+      { ar:"هٰذَا رَخِيصٌ", tr:"hādhā rakhīṣun", ru:"Это дёшево" },
+      { ar:"أُرِيدُ هٰذَا", tr:"urīdu hādhā", ru:"Я хочу это" },
+      { ar:"هَلْ عِنْدَكَ...؟", tr:"hal ʿindaka...?", ru:"У тебя есть...?" },
+      { ar:"أَيْنَ السُّوقُ؟", tr:"ayna s-sūq?", ru:"Где рынок?" }
+    ]},
+    { g:"Город и направления", items:[
+      { ar:"أَيْنَ الْمَحَطَّةُ؟", tr:"ayna l-maḥaṭṭa?", ru:"Где станция / вокзал?" },
+      { ar:"عَلَى الْيَمِينِ", tr:"ʿalā l-yamīn", ru:"Направо" },
+      { ar:"عَلَى الْيَسَارِ", tr:"ʿalā l-yasār", ru:"Налево" },
+      { ar:"عَلَى طُولٍ", tr:"ʿalā ṭūl", ru:"Прямо" },
+      { ar:"قَرِيبٌ", tr:"qarībun", ru:"Близко" },
+      { ar:"بَعِيدٌ", tr:"baʿīdun", ru:"Далеко" }
+    ]},
+    { g:"Здоровье и помощь", items:[
+      { ar:"سَاعِدُونِي!", tr:"sāʿidūnī!", ru:"Помогите!" },
+      { ar:"أَنَا مَرِيضٌ", tr:"anā marīḍun", ru:"Я болен" },
+      { ar:"اِتَّصِلْ بِالطَّبِيبِ", tr:"ittaṣil bi-ṭ-ṭabīb", ru:"Вызови врача" },
+      { ar:"أَيْنَ الْمُسْتَشْفَى؟", tr:"ayna l-mustashfā?", ru:"Где больница?" },
+      { ar:"عِنْدِي أَلَمٌ هُنَا", tr:"ʿindī alamun hunā", ru:"У меня здесь болит" }
+    ]},
+    { g:"Учёба и язык", items:[
+      { ar:"كَيْفَ تَقُولُ...؟", tr:"kayfa taqūlu...?", ru:"Как сказать...?" },
+      { ar:"مَا مَعْنَى هٰذَا؟", tr:"mā maʿnā hādhā?", ru:"Что это значит?" },
+      { ar:"تَكَلَّمْ بِبُطْءٍ مِنْ فَضْلِكَ", tr:"takallam bi-buṭʾ min faḍlik", ru:"Говори медленно, пожалуйста" },
+      { ar:"أَعِدْ مِنْ فَضْلِكَ", tr:"aʿid min faḍlik", ru:"Повтори, пожалуйста" },
+      { ar:"أَتَعَلَّمُ الْعَرَبِيَّةَ", tr:"ataʿallamu l-ʿarabiyya", ru:"Я учу арабский" }
+    ]},
+    { g:"Пожелания и выражения", items:[
+      { ar:"بِالتَّوْفِيقِ", tr:"bi-t-tawfīq", ru:"Удачи" },
+      { ar:"مَبْرُوك", tr:"mabrūk", ru:"Поздравляю" },
+      { ar:"إِنْ شَاءَ اللّٰه", tr:"in shāʾa-llāh", ru:"Если пожелает Аллах (дай Бог)" },
+      { ar:"مَا شَاءَ اللّٰه", tr:"mā shāʾa-llāh", ru:"Как пожелал Аллах (восхищение)" },
+      { ar:"بَارَكَ اللّٰهُ فِيكَ", tr:"bāraka-llāhu fīk", ru:"Да благословит тебя Аллах" },
+      { ar:"كُلَّ عَامٍ وَأَنْتَ بِخَيْرٍ", tr:"kulla ʿāmin wa-anta bi-khayr", ru:"С праздником (пожелание)" }
     ]}
   ];
 
-  // --- Грамматика по уровням ---
   const grammar = [
     { lv:"A1", t:"Направление письма и алфавит", body:`
-      <p>Арабское письмо идёт <b>справа налево</b>. В алфавите <b>28 согласных букв</b>; отдельных заглавных букв нет. Большинство букв соединяются с соседними и меняют форму в зависимости от позиции в слове (начальная, срединная, конечная, изолированная).</p>
+      <p>Арабское письмо идёт <b>справа налево</b>. В алфавите <b>28 согласных букв</b>; заглавных букв нет. Большинство букв соединяются с соседними и меняют форму по позиции (начальная, срединная, конечная, изолированная).</p>
       <div class="rule-box"><p><b>Запомни:</b> шесть букв не соединяются с последующей — <span class="ar">ا د ذ ر ز و</span>. После них следующая буква пишется в начальной или изолированной форме.</p></div>` },
     { lv:"A1", t:"Огласовки (харакат)", body:`
-      <p>Краткие гласные обозначаются надстрочными и подстрочными значками. Они не входят в состав букв, но задают чтение.</p>
-      <table class="ex-table"><thead><tr><th>Знак</th><th>Название</th><th>Звук</th></tr></thead><tbody>
+      <p>Краткие гласные обозначаются надстрочными и подстрочными значками. Они не входят в буквы, но задают чтение.</p>
+      <div class="tbl-wrap"><table class="ex-table"><thead><tr><th>Знак</th><th>Название</th><th>Звук</th></tr></thead><tbody>
       <tr><td class="ar-cell">بَ</td><td>фатха</td><td>«ба»</td></tr>
       <tr><td class="ar-cell">بِ</td><td>кясра</td><td>«би»</td></tr>
       <tr><td class="ar-cell">بُ</td><td>дамма</td><td>«бу»</td></tr>
-      <tr><td class="ar-cell">بْ</td><td>сукун</td><td>«б» (без гласного)</td></tr></tbody></table>` },
-    { lv:"A1", t:"Определённый артикль ال", body:`
-      <p>Определённость выражается приставкой <span class="ar">الْ</span> (<span class="tr-cell">al-</span>), которая пишется слитно со словом: <span class="ar">كِتَاب</span> «книга» → <span class="ar">الْكِتَاب</span> «эта книга».</p>
-      <div class="rule-box"><p><b>Солнечные и лунные буквы.</b> Перед «солнечными» буквами (<span class="ar">ت ث د ذ ر ز س ش ص ض ط ظ ل ن</span>) буква <span class="ar">ل</span> артикля не читается, а следующая согласная удваивается: <span class="ar">الشَّمْس</span> → <span class="tr-cell">ash-shams</span> «солнце». Перед «лунными» — читается: <span class="ar">الْقَمَر</span> → <span class="tr-cell">al-qamar</span> «луна».</p></div>` },
+      <tr><td class="ar-cell">بْ</td><td>сукун</td><td>«б» (без гласного)</td></tr></tbody></table></div>` },
+    { lv:"A1", t:"Определённый артикль اَلْ", body:`
+      <p>Определённость выражается приставкой <span class="ar">الْ</span> (<span class="tr-cell">al-</span>), пишется слитно: <span class="ar">كِتَاب</span> «книга» → <span class="ar">الْكِتَاب</span> «эта книга».</p>
+      <div class="rule-box"><p><b>Солнечные и лунные буквы.</b> Перед «солнечными» (<span class="ar">ت ث د ذ ر ز س ش ص ض ط ظ ل ن</span>) <span class="ar">ل</span> не читается, а согласная удваивается: <span class="ar">الشَّمْس</span> → <span class="tr-cell">ash-shams</span> «солнце». Перед «лунными» — читается: <span class="ar">الْقَمَر</span> → <span class="tr-cell">al-qamar</span> «луна».</p></div>` },
     { lv:"A1", t:"Личные местоимения", body:`
-      <table class="ex-table"><thead><tr><th>Местоимение</th><th>Перевод</th><th>Транскр.</th></tr></thead><tbody>
+      <div class="tbl-wrap"><table class="ex-table"><thead><tr><th>Местоимение</th><th>Перевод</th><th>Транскр.</th></tr></thead><tbody>
       <tr><td class="ar-cell">أَنَا</td><td>я</td><td class="tr-cell">anā</td></tr>
       <tr><td class="ar-cell">أَنْتَ / أَنْتِ</td><td>ты (м / ж)</td><td class="tr-cell">anta / anti</td></tr>
       <tr><td class="ar-cell">هُوَ / هِيَ</td><td>он / она</td><td class="tr-cell">huwa / hiya</td></tr>
       <tr><td class="ar-cell">نَحْنُ</td><td>мы</td><td class="tr-cell">naḥnu</td></tr>
       <tr><td class="ar-cell">أَنْتُمْ</td><td>вы (мн.)</td><td class="tr-cell">antum</td></tr>
-      <tr><td class="ar-cell">هُمْ</td><td>они</td><td class="tr-cell">hum</td></tr></tbody></table>` },
+      <tr><td class="ar-cell">هُمْ</td><td>они</td><td class="tr-cell">hum</td></tr></tbody></table></div>` },
+    { lv:"A1", t:"Слитные (притяжательные) местоимения", body:`
+      <p>Принадлежность выражается окончанием, присоединяемым к имени:</p>
+      <div class="tbl-wrap"><table class="ex-table"><thead><tr><th>Значение</th><th>Форма</th><th>Транскр.</th></tr></thead><tbody>
+      <tr><td>моя книга</td><td class="ar-cell">كِتَابِي</td><td class="tr-cell">kitābī</td></tr>
+      <tr><td>твоя книга (м)</td><td class="ar-cell">كِتَابُكَ</td><td class="tr-cell">kitābuka</td></tr>
+      <tr><td>его книга</td><td class="ar-cell">كِتَابُهُ</td><td class="tr-cell">kitābuhu</td></tr>
+      <tr><td>её книга</td><td class="ar-cell">كِتَابُهَا</td><td class="tr-cell">kitābuhā</td></tr>
+      <tr><td>наша книга</td><td class="ar-cell">كِتَابُنَا</td><td class="tr-cell">kitābunā</td></tr></tbody></table></div>` },
     { lv:"A2", t:"Именное предложение", body:`
       <p>Предложение может состоять из двух имён без глагола «быть» в настоящем времени: <b>подлежащее (мубтада)</b> + <b>сказуемое (хабар)</b>.</p>
-      <div class="rule-box"><p><span class="ar" style="font-size:22px">الْبَيْتُ كَبِيرٌ</span><br><span class="tr-cell">al-baytu kabīrun</span> — букв. «дом большой» = <b>Дом большой.</b></p></div>` },
+      <div class="rule-box"><p><span class="ar" style="font-size:22px">الْبَيْتُ كَبِيرٌ</span> — <span class="tr-cell">al-baytu kabīrun</span> — <b>Дом большой.</b><br><span class="ar" style="font-size:22px">الطَّالِبُ مُجْتَهِدٌ</span> — <span class="tr-cell">aṭ-ṭālibu mujtahidun</span> — <b>Студент старательный.</b></p></div>` },
     { lv:"A2", t:"Род: мужской и женский", body:`
       <p>Большинство слов мужского рода. Женский род чаще всего образуется окончанием <b>та марбута</b> <span class="ar">ة</span>:</p>
-      <table class="ex-table"><thead><tr><th>М. род</th><th>Ж. род</th><th>Значение</th></tr></thead><tbody>
+      <div class="tbl-wrap"><table class="ex-table"><thead><tr><th>М. род</th><th>Ж. род</th><th>Значение</th></tr></thead><tbody>
       <tr><td class="ar-cell">مُعَلِّم</td><td class="ar-cell">مُعَلِّمَة</td><td>учитель / учительница</td></tr>
-      <tr><td class="ar-cell">كَبِير</td><td class="ar-cell">كَبِيرَة</td><td>большой / большая</td></tr></tbody></table>` },
+      <tr><td class="ar-cell">كَبِير</td><td class="ar-cell">كَبِيرَة</td><td>большой / большая</td></tr>
+      <tr><td class="ar-cell">طَالِب</td><td class="ar-cell">طَالِبَة</td><td>студент / студентка</td></tr></tbody></table></div>` },
+    { lv:"A2", t:"Множественное число", body:`
+      <p>Есть <b>правильное</b> (по окончанию) и <b>ломаное</b> (меняется основа) множественное число.</p>
+      <div class="tbl-wrap"><table class="ex-table"><thead><tr><th>Ед.ч.</th><th>Мн.ч.</th><th>Тип</th></tr></thead><tbody>
+      <tr><td class="ar-cell">مُعَلِّم</td><td class="ar-cell">مُعَلِّمُونَ</td><td>прав. м.р.</td></tr>
+      <tr><td class="ar-cell">مُعَلِّمَة</td><td class="ar-cell">مُعَلِّمَات</td><td>прав. ж.р.</td></tr>
+      <tr><td class="ar-cell">كِتَاب</td><td class="ar-cell">كُتُب</td><td>ломаное</td></tr>
+      <tr><td class="ar-cell">وَلَد</td><td class="ar-cell">أَوْلَاد</td><td>ломаное</td></tr></tbody></table></div>` },
     { lv:"A2", t:"Идафа — принадлежность", body:`
-      <p><b>Идафа</b> — сопряжённое сочетание двух имён, выражающее принадлежность («книга ученика»). Первое имя — <b>без артикля</b>, второе — в родительном падеже.</p>
-      <div class="rule-box"><p><span class="ar" style="font-size:22px">كِتَابُ الطَّالِبِ</span><br><span class="tr-cell">kitābu ṭ-ṭālibi</span> — <b>книга ученика.</b></p></div>` },
+      <p><b>Идафа</b> — сопряжённое сочетание двух имён («книга ученика»). Первое имя — <b>без артикля</b>, второе — в родительном падеже.</p>
+      <div class="rule-box"><p><span class="ar" style="font-size:22px">كِتَابُ الطَّالِبِ</span> — <span class="tr-cell">kitābu ṭ-ṭālibi</span> — <b>книга ученика.</b><br><span class="ar" style="font-size:22px">بَابُ الْبَيْتِ</span> — <span class="tr-cell">bābu l-bayti</span> — <b>дверь дома.</b></p></div>` },
     { lv:"A2", t:"Указательные местоимения", body:`
-      <table class="ex-table"><thead><tr><th>Слово</th><th>Значение</th><th>Транскр.</th></tr></thead><tbody>
+      <div class="tbl-wrap"><table class="ex-table"><thead><tr><th>Слово</th><th>Значение</th><th>Транскр.</th></tr></thead><tbody>
       <tr><td class="ar-cell">هٰذَا</td><td>этот (м)</td><td class="tr-cell">hādhā</td></tr>
       <tr><td class="ar-cell">هٰذِهِ</td><td>эта (ж)</td><td class="tr-cell">hādhihi</td></tr>
       <tr><td class="ar-cell">ذٰلِكَ</td><td>тот (м)</td><td class="tr-cell">dhālika</td></tr>
-      <tr><td class="ar-cell">تِلْكَ</td><td>та (ж)</td><td class="tr-cell">tilka</td></tr></tbody></table>` },
+      <tr><td class="ar-cell">تِلْكَ</td><td>та (ж)</td><td class="tr-cell">tilka</td></tr></tbody></table></div>
+      <p class="muted">Пример: <span class="ar">هٰذَا كِتَابٌ</span> — <span class="tr-cell">hādhā kitābun</span> — «Это книга».</p>` },
+    { lv:"A2", t:"Предлоги места", body:`
+      <div class="tbl-wrap"><table class="ex-table"><thead><tr><th>Предлог</th><th>Значение</th><th>Транскр.</th></tr></thead><tbody>
+      <tr><td class="ar-cell">فِي</td><td>в</td><td class="tr-cell">fī</td></tr>
+      <tr><td class="ar-cell">عَلَى</td><td>на</td><td class="tr-cell">ʿalā</td></tr>
+      <tr><td class="ar-cell">تَحْتَ</td><td>под</td><td class="tr-cell">taḥta</td></tr>
+      <tr><td class="ar-cell">فَوْقَ</td><td>над</td><td class="tr-cell">fawqa</td></tr>
+      <tr><td class="ar-cell">أَمَامَ</td><td>перед</td><td class="tr-cell">amāma</td></tr>
+      <tr><td class="ar-cell">بَيْنَ</td><td>между</td><td class="tr-cell">bayna</td></tr></tbody></table></div>
+      <p class="muted"><span class="ar">الْكِتَابُ عَلَى الطَّاوِلَةِ</span> — «Книга на столе».</p>` },
     { lv:"B1", t:"Прошедшее время (аль-мади)", body:`
       <p>Глагол прошедшего времени спрягается окончаниями. Основа — 3 л. ед.ч. м.р. (<span class="ar">كَتَبَ</span> «он написал»).</p>
-      <table class="ex-table"><thead><tr><th>Лицо</th><th>Форма</th><th>Транскр.</th></tr></thead><tbody>
+      <div class="tbl-wrap"><table class="ex-table"><thead><tr><th>Лицо</th><th>Форма</th><th>Транскр.</th></tr></thead><tbody>
       <tr><td>я написал</td><td class="ar-cell">كَتَبْتُ</td><td class="tr-cell">katabtu</td></tr>
       <tr><td>ты написал</td><td class="ar-cell">كَتَبْتَ</td><td class="tr-cell">katabta</td></tr>
       <tr><td>он написал</td><td class="ar-cell">كَتَبَ</td><td class="tr-cell">kataba</td></tr>
       <tr><td>она написала</td><td class="ar-cell">كَتَبَتْ</td><td class="tr-cell">katabat</td></tr>
-      <tr><td>мы написали</td><td class="ar-cell">كَتَبْنَا</td><td class="tr-cell">katabnā</td></tr></tbody></table>` },
+      <tr><td>мы написали</td><td class="ar-cell">كَتَبْنَا</td><td class="tr-cell">katabnā</td></tr></tbody></table></div>` },
     { lv:"B1", t:"Настояще-будущее время (аль-мудари)", body:`
-      <p>Образуется приставками и окончаниями от того же корня. От <span class="ar">كَتَبَ</span> → <span class="ar">يَكْتُبُ</span> «он пишет / будет писать».</p>
-      <table class="ex-table"><thead><tr><th>Лицо</th><th>Форма</th><th>Транскр.</th></tr></thead><tbody>
+      <p>Образуется приставками и окончаниями от того же корня. От <span class="ar">كَتَبَ</span> → <span class="ar">يَكْتُبُ</span> «он пишет».</p>
+      <div class="tbl-wrap"><table class="ex-table"><thead><tr><th>Лицо</th><th>Форма</th><th>Транскр.</th></tr></thead><tbody>
       <tr><td>я пишу</td><td class="ar-cell">أَكْتُبُ</td><td class="tr-cell">aktubu</td></tr>
       <tr><td>ты пишешь</td><td class="ar-cell">تَكْتُبُ</td><td class="tr-cell">taktubu</td></tr>
       <tr><td>он пишет</td><td class="ar-cell">يَكْتُبُ</td><td class="tr-cell">yaktubu</td></tr>
-      <tr><td>мы пишем</td><td class="ar-cell">نَكْتُبُ</td><td class="tr-cell">naktubu</td></tr></tbody></table>` },
+      <tr><td>мы пишем</td><td class="ar-cell">نَكْتُبُ</td><td class="tr-cell">naktubu</td></tr></tbody></table></div>` },
+    { lv:"B1", t:"Будущее время (سَـ / سَوْفَ)", body:`
+      <p>Будущее образуется приставкой <span class="ar">سَـ</span> или словом <span class="ar">سَوْفَ</span> перед глаголом настоящего времени.</p>
+      <div class="rule-box"><p><span class="ar" style="font-size:22px">سَيَكْتُبُ</span> — <span class="tr-cell">sa-yaktubu</span> — «он напишет».<br><span class="ar" style="font-size:22px">سَوْفَ أَذْهَبُ</span> — <span class="tr-cell">sawfa adhhabu</span> — «я пойду».</p></div>` },
+    { lv:"B1", t:"Повелительное наклонение (аль-амр)", body:`
+      <p>Приказ/просьба образуется от глагола настоящего времени.</p>
+      <div class="tbl-wrap"><table class="ex-table"><thead><tr><th>Команда</th><th>Форма</th><th>Транскр.</th></tr></thead><tbody>
+      <tr><td>пиши!</td><td class="ar-cell">اُكْتُبْ</td><td class="tr-cell">uktub</td></tr>
+      <tr><td>читай!</td><td class="ar-cell">اِقْرَأْ</td><td class="tr-cell">iqraʾ</td></tr>
+      <tr><td>слушай!</td><td class="ar-cell">اِسْمَعْ</td><td class="tr-cell">ismaʿ</td></tr></tbody></table></div>` },
+    { lv:"B1", t:"Отрицание глагола", body:`
+      <p>Отрицание зависит от времени:</p>
+      <div class="tbl-wrap"><table class="ex-table"><thead><tr><th>Тип</th><th>Пример</th><th>Значение</th></tr></thead><tbody>
+      <tr><td class="ar-cell">لَا</td><td class="ar-cell">لَا يَكْتُبُ</td><td>не пишет (наст.)</td></tr>
+      <tr><td class="ar-cell">لَنْ</td><td class="ar-cell">لَنْ يَكْتُبَ</td><td>не напишет (буд.)</td></tr>
+      <tr><td class="ar-cell">لَمْ</td><td class="ar-cell">لَمْ يَكْتُبْ</td><td>не написал (прош.)</td></tr>
+      <tr><td class="ar-cell">مَا</td><td class="ar-cell">مَا كَتَبَ</td><td>не написал (прош.)</td></tr></tbody></table></div>` },
     { lv:"B1", t:"Трёхбуквенный корень", body:`
-      <p>Основа арабского словообразования — <b>корень</b> из трёх согласных, несущий общий смысл. От корня <span class="ar">ك ت ب</span> (идея письма) образуются:</p>
+      <p>Основа словообразования — <b>корень</b> из трёх согласных, несущий общий смысл. От <span class="ar">ك ت ب</span> (идея письма):</p>
       <div class="rule-box"><p><span class="ar">كَتَبَ</span> писать · <span class="ar">كِتَاب</span> книга · <span class="ar">كَاتِب</span> писатель · <span class="ar">مَكْتَب</span> офис · <span class="ar">مَكْتَبَة</span> библиотека · <span class="ar">مَكْتُوب</span> написанный.</p></div>` },
     { lv:"B2", t:"Падежи (аль-и'раб)", body:`
       <p>У имени три падежа, выражаемых окончанием:</p>
-      <table class="ex-table"><thead><tr><th>Падеж</th><th>Оконч.</th><th>Пример</th></tr></thead><tbody>
+      <div class="tbl-wrap"><table class="ex-table"><thead><tr><th>Падеж</th><th>Оконч.</th><th>Пример</th></tr></thead><tbody>
       <tr><td>именительный (рафʿ)</td><td>-u / -un</td><td class="ar-cell">الْبَيْتُ</td></tr>
       <tr><td>винительный (насб)</td><td>-a / -an</td><td class="ar-cell">الْبَيْتَ</td></tr>
-      <tr><td>родительный (джарр)</td><td>-i / -in</td><td class="ar-cell">الْبَيْتِ</td></tr></tbody></table>
+      <tr><td>родительный (джарр)</td><td>-i / -in</td><td class="ar-cell">الْبَيْتِ</td></tr></tbody></table></div>
       <p class="muted">Определённое имя берёт краткое окончание (-u), неопределённое — танвин (-un).</p>` },
     { lv:"B2", t:"Породы глагола (I–X)", body:`
-      <p>От одного корня образуются до десяти основных <b>пород</b>, меняющих оттенок значения (усиление, причинность, взаимность, возвратность).</p>
-      <table class="ex-table"><thead><tr><th>Порода</th><th>Пример</th><th>Значение</th></tr></thead><tbody>
+      <p>От одного корня образуются до десяти <b>пород</b>, меняющих оттенок значения (усиление, каузатив, взаимность, возвратность).</p>
+      <div class="tbl-wrap"><table class="ex-table"><thead><tr><th>Порода</th><th>Пример</th><th>Значение</th></tr></thead><tbody>
       <tr><td>I</td><td class="ar-cell">عَلِمَ</td><td>знать</td></tr>
-      <tr><td>II</td><td class="ar-cell">عَلَّمَ</td><td>обучать (усиление/каузатив)</td></tr>
+      <tr><td>II</td><td class="ar-cell">عَلَّمَ</td><td>обучать (каузатив)</td></tr>
       <tr><td>V</td><td class="ar-cell">تَعَلَّمَ</td><td>учиться (возвратность)</td></tr>
-      <tr><td>X</td><td class="ar-cell">اسْتَعْلَمَ</td><td>справляться, узнавать</td></tr></tbody></table>` },
+      <tr><td>X</td><td class="ar-cell">اسْتَعْلَمَ</td><td>справляться, узнавать</td></tr></tbody></table></div>` },
     { lv:"B2", t:"Страдательный залог", body:`
-      <p>Пассив образуется изменением огласовки: действующее лицо не называется. <span class="ar">كَتَبَ</span> «он написал» → <span class="ar">كُتِبَ</span> «было написано»; <span class="ar">يَكْتُبُ</span> → <span class="ar">يُكْتَبُ</span> «пишется».</p>` }
+      <p>Пассив образуется изменением огласовки; действующее лицо не называется.</p>
+      <div class="rule-box"><p><span class="ar" style="font-size:22px">كَتَبَ</span> «он написал» → <span class="ar" style="font-size:22px">كُتِبَ</span> «было написано».<br><span class="ar" style="font-size:22px">يَكْتُبُ</span> → <span class="ar" style="font-size:22px">يُكْتَبُ</span> «пишется».</p></div>` },
+    { lv:"B2", t:"Масдар (отглагольное имя)", body:`
+      <p><b>Масдар</b> — имя действия, соответствует русскому существительному на «-ние/-ство».</p>
+      <div class="tbl-wrap"><table class="ex-table"><thead><tr><th>Глагол</th><th>Масдар</th><th>Значение</th></tr></thead><tbody>
+      <tr><td class="ar-cell">كَتَبَ</td><td class="ar-cell">كِتَابَة</td><td>писание</td></tr>
+      <tr><td class="ar-cell">دَرَسَ</td><td class="ar-cell">دِرَاسَة</td><td>учёба</td></tr>
+      <tr><td class="ar-cell">ذَهَبَ</td><td class="ar-cell">ذَهَاب</td><td>уход</td></tr></tbody></table></div>` },
+    { lv:"B2", t:"Сравнительная степень (аф'аль)", body:`
+      <p>Сравнение образуется формой <span class="ar">أَفْعَل</span> + <span class="ar">مِنْ</span> «чем».</p>
+      <div class="rule-box"><p><span class="ar">كَبِير</span> → <span class="ar">أَكْبَر</span> «больше»; <span class="ar" style="font-size:22px">هُوَ أَكْبَرُ مِنْكَ</span> — <span class="tr-cell">huwa akbaru minka</span> — «он больше (старше) тебя».<br><span class="ar">الْعِلْمُ أَنْفَعُ مِنَ الْمَالِ</span> — «знание полезнее богатства».</p></div>` },
+    { lv:"B2", t:"Условные предложения", body:`
+      <p>Реальное условие — <span class="ar">إِنْ / إِذَا</span> «если»; нереальное (сослагательное) — <span class="ar">لَوْ</span> «если бы».</p>
+      <div class="rule-box"><p><span class="ar" style="font-size:22px">إِنْ تَجْتَهِدْ تَنْجَحْ</span> — <span class="tr-cell">in tajtahid tanjaḥ</span> — «Если будешь усерден — преуспеешь».<br><span class="ar" style="font-size:22px">لَوْ دَرَسْتَ لَنَجَحْتَ</span> — <span class="tr-cell">law darasta la-najaḥta</span> — «Если бы ты учился, ты бы преуспел».</p></div>` }
   ];
 
-  // --- Чтение (тексты с разбором) ---
   const readings = [
     { lv:"A1", t:"Первое знакомство", verses:[
       { ar:"أَنَا طَالِبٌ.", tr:"anā ṭālibun.", ru:"Я — студент." },
@@ -699,62 +797,93 @@
       { ar:"السَّلَامُ عَلَيْكُمْ، كَيْفَ حَالُكَ؟", tr:"as-salāmu ʿalaykum, kayfa ḥāluka?", ru:"Мир вам, как дела?" },
       { ar:"وَعَلَيْكُمُ السَّلَام، أَنَا بِخَيْرٍ.", tr:"wa-ʿalaykumu s-salām, anā bi-khayrin.", ru:"И вам мир, у меня всё хорошо." },
       { ar:"مِنْ أَيْنَ أَنْتَ؟", tr:"min ayna anta?", ru:"Откуда ты?" },
-      { ar:"أَنَا مِنْ رُوسِيَا.", tr:"anā min rūsiyā.", ru:"Я из России." }
+      { ar:"أَنَا مِنْ رُوسِيَا، وَأَنْتَ؟", tr:"anā min rūsiyā, wa-anta?", ru:"Я из России, а ты?" }
     ]},
     { lv:"B1", t:"Аль-Фатиха (аяты 1–3)", note:"Открывающая сура Корана", verses:[
       { ar:"بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ", tr:"bismi-llāhi r-raḥmāni r-raḥīm", ru:"Во имя Аллаха, Милостивого, Милосердного." },
       { ar:"الْحَمْدُ لِلّٰهِ رَبِّ الْعَالَمِينَ", tr:"al-ḥamdu li-llāhi rabbi l-ʿālamīn", ru:"Хвала Аллаху, Господу миров," },
       { ar:"الرَّحْمٰنِ الرَّحِيمِ", tr:"ar-raḥmāni r-raḥīm", ru:"Милостивому, Милосердному," }
+    ]},
+    { lv:"B2", t:"Мудрые изречения", note:"Известные пословицы и слова о знании", verses:[
+      { ar:"مَنْ جَدَّ وَجَدَ.", tr:"man jadda wajada.", ru:"Кто старается — находит (добивается)." },
+      { ar:"الْعِلْمُ نُورٌ.", tr:"al-ʿilmu nūrun.", ru:"Знание — свет." },
+      { ar:"خَيْرُ النَّاسِ أَنْفَعُهُمْ لِلنَّاسِ.", tr:"khayru n-nāsi anfaʿuhum li-n-nās.", ru:"Лучший из людей — самый полезный для людей." }
     ]}
   ];
 
-  // --- Уровни ---
   const levels = [
-    { id:"a1", lv:"A1", t:"Начальный — первые шаги", sub:"Алфавит, звуки и простейшие фразы", items:["Все 28 букв и их формы","Огласовки и правила чтения","Артикль, солнечные/лунные буквы","Личные местоимения","Первые 100 слов"] },
-    { id:"a2", lv:"A2", t:"Элементарный — базовое общение", sub:"Простые предложения о себе и быте", items:["Именное предложение","Род и число имён","Идафа (принадлежность)","Указательные местоимения","Разговорник: знакомство и быт"] },
-    { id:"b1", lv:"B1", t:"Средний — уверенная речь", sub:"Глагол, корни и связный текст", items:["Прошедшее и настоящее время","Трёхбуквенный корень","Обзор пород глагола","Чтение адаптированных текстов","Активный словарь ~800 слов"] },
-    { id:"b2", lv:"B2", t:"Выше среднего — свободнее", sub:"Грамматический строй и оригинальные тексты", items:["Система падежей (и'раб)","Страдательный залог","Породы I–X глубже","Условные предложения","Чтение неадаптированных отрывков"] }
+    { id:"a1", lv:"A1", t:"Начальный — первые шаги", sub:"Алфавит, звуки и простейшие фразы",
+      about:"Старт с нуля: вы научитесь читать арабские буквы, произносить звуки и строить самые простые фразы о себе.",
+      items:["Все 28 букв и их формы","Огласовки и правила чтения","Артикль, солнечные/лунные буквы","Личные и притяжательные местоимения","Первые слова"] },
+    { id:"a2", lv:"A2", t:"Элементарный — базовое общение", sub:"Простые предложения о себе и быте",
+      about:"Вы научитесь строить простые предложения, описывать предметы и людей, говорить о принадлежности и вести бытовой разговор.",
+      items:["Именное предложение","Род, число и множественность","Идафа (принадлежность)","Указательные местоимения и предлоги места","Разговорник: знакомство и быт"] },
+    { id:"b1", lv:"B1", t:"Средний — уверенная речь", sub:"Глагол, корни и связный текст",
+      about:"Ключевой уровень: осваиваем глагол во всех временах, корневую систему и учимся читать связные тексты.",
+      items:["Прошедшее, настоящее и будущее время","Повелительное наклонение и отрицание","Трёхбуквенный корень","Чтение адаптированных текстов","Активный словарь"] },
+    { id:"b2", lv:"B2", t:"Выше среднего — свободнее", sub:"Грамматический строй и оригинальные тексты",
+      about:"Углублённая грамматика: падежи, залоги, породы и условные конструкции; чтение оригинальных отрывков и пословиц.",
+      items:["Система падежей (и'раб)","Страдательный залог и масдар","Породы I–X и сравнительная степень","Условные предложения","Чтение неадаптированных отрывков"] }
   ];
 
-  /* =========================================================
-     RENDER
-  ========================================================= */
+  const levelExamples = {
+    a1: [
+      { ar:"أَنَا طَالِبٌ.", tr:"anā ṭālibun.", ru:"Я студент." },
+      { ar:"هٰذَا بَيْتٌ.", tr:"hādhā baytun.", ru:"Это дом." },
+      { ar:"هٰذِهِ أُمِّي.", tr:"hādhihi ummī.", ru:"Это моя мама." }
+    ],
+    a2: [
+      { ar:"عِنْدِي كِتَابٌ جَدِيدٌ.", tr:"ʿindī kitābun jadīdun.", ru:"У меня новая книга." },
+      { ar:"بَيْتُ الْمُعَلِّمِ كَبِيرٌ.", tr:"baytu l-muʿallimi kabīrun.", ru:"Дом учителя большой." },
+      { ar:"الْكِتَابُ عَلَى الطَّاوِلَةِ.", tr:"al-kitābu ʿalā ṭ-ṭāwila.", ru:"Книга на столе." }
+    ],
+    b1: [
+      { ar:"ذَهَبْتُ إِلَى الْمَدْرَسَةِ.", tr:"dhahabtu ilā l-madrasa.", ru:"Я пошёл в школу." },
+      { ar:"سَأَقْرَأُ الْكِتَابَ غَدًا.", tr:"sa-aqraʾu l-kitāba ghadan.", ru:"Я прочту книгу завтра." },
+      { ar:"لَمْ يَكْتُبِ الرِّسَالَةَ.", tr:"lam yaktubi r-risāla.", ru:"Он не написал письмо." }
+    ],
+    b2: [
+      { ar:"إِنْ تَجْتَهِدْ تَنْجَحْ.", tr:"in tajtahid tanjaḥ.", ru:"Если будешь усерден — преуспеешь." },
+      { ar:"الْعِلْمُ أَنْفَعُ مِنَ الْمَالِ.", tr:"al-ʿilmu anfaʿu mina l-māl.", ru:"Знание полезнее богатства." },
+      { ar:"كُتِبَتِ الرِّسَالَةُ.", tr:"kutibati r-risāla.", ru:"Письмо было написано." }
+    ]
+  };
+
+  /* ================= RENDER HELPERS ================= */
   const main = $("#main");
-  const posColors = { "глагол":"pos", "имя":"pos", "прилагательное":"pos" };
-
   function starSvg(on){ return `<svg viewBox="0 0 24 24" fill="${on?'currentColor':'none'}" stroke="currentColor" stroke-width="1.7"><path d="M12 3l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 18.9 6.2 21.9l1.1-6.5L2.6 9.8l6.5-.9z"/></svg>`; }
-
   function vcardHTML(w){
     const on = favs.has(w.ar);
     return `<div class="vcard card">
-      <div class="top">
-        <div>
-          <div class="word">${w.ar}</div>
-          <div class="translit">${w.tr}</div>
-        </div>
-      </div>
+      <div class="word">${w.ar}</div>
+      <div class="translit">${w.tr}</div>
       <div class="mean">${w.ru}</div>
-      <div class="meta">
-        <span class="tag pos">${w.pos}</span>
-        <span class="tag">${w.cat}</span>
-        ${w.freq?`<span class="tag freq">${w.freq}</span>`:""}
-      </div>
+      <div class="meta"><span class="tag pos">${w.pos}</span><span class="tag">${w.cat}</span>${w.freq?`<span class="tag freq">${w.freq}</span>`:""}</div>
       <button class="star ${on?'on':''}" data-fav="${w.ar}" aria-label="В избранное">${starSvg(on)}</button>
     </div>`;
   }
+  function lessonHTML(g, open){
+    return `<details class="lesson card" ${open?"open":""}>
+      <summary><span class="lv">${g.lv}</span><h4>${g.t}</h4>
+        <span class="caret"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg></span>
+      </summary>
+      <div class="content">${g.body}</div>
+    </details>`;
+  }
+  function verseHTML(v){ return `<div class="verse"><div class="ar-line">${v.ar}</div><div class="tl-line">${v.tr}</div><div class="ru-line">${v.ru}</div></div>`; }
 
-  // ---- HOME ----
+  /* ================= VIEWS ================= */
   function viewHome(){
     const learned = store.get("quizBest", 0);
     const favCount = favs.size;
     const totalWords = vocab.length;
     const cards = [
       { v:"alphabet", ico:'<path d="M4 19V5m0 14 4-14 4 14"/><path d="M4.8 14h6.4"/><path d="M20 5v14"/>', t:"Алфавит", d:"28 букв, все формы, огласовки и правила чтения." },
-      { v:"dictionary", ico:'<path d="M4 4h13a2 2 0 0 1 2 2v14H6a2 2 0 0 1-2-2z"/><path d="M8 4v14"/>', t:"Словарь", d:`${totalWords} выверенных слов с частотой в Коране и поиском.` },
-      { v:"phrasebook", ico:'<path d="M21 11.5a8.4 8.4 0 0 1-9 8.4L3 21l1.1-3.6A8.4 8.4 0 1 1 21 11.5z"/>', t:"Разговорник", d:"Живые фразы по ситуациям с транскрипцией." },
-      { v:"grammar", ico:'<path d="M4 5h16M4 12h16M4 19h10"/>', t:"Грамматика", d:"Уроки от A1 до B2: артикль, идафа, глагол, падежи." },
+      { v:"dictionary", ico:'<path d="M4 4h13a2 2 0 0 1 2 2v14H6a2 2 0 0 1-2-2z"/><path d="M8 4v14"/>', t:"Словарь", d:`${totalWords} выверенных слов по категориям с поиском и избранным.` },
+      { v:"phrasebook", ico:'<path d="M21 11.5a8.4 8.4 0 0 1-9 8.4L3 21l1.1-3.6A8.4 8.4 0 1 1 21 11.5z"/>', t:"Разговорник", d:"10 ситуаций: приветствие, покупки, ресторан, город, здоровье…" },
+      { v:"grammar", ico:'<path d="M4 5h16M4 12h16M4 19h10"/>', t:"Грамматика", d:"25 уроков A1–B2 с таблицами и примерами." },
       { v:"reading", ico:'<path d="M12 6C9 3 4 4 4 4v14s5-1 8 2c3-3 8-2 8-2V4s-5-1-8 2z"/>', t:"Чтение", d:"Градуированные тексты с пословным разбором." },
-      { v:"exercises", ico:'<path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/>', t:"Задания", d:"Флешкарты и тест с мгновенной проверкой." }
+      { v:"levels", ico:'<path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>', t:"Уровни A1–B2", d:"Кликабельные мини-курсы: уроки, примеры и слова на каждом уровне." }
     ];
     return `
     <section class="hero">
@@ -762,33 +891,29 @@
         <div class="ar-big">اِقْرَأْ</div>
         <span class="eyebrow" style="color:#ffe6a8">Читай · познавай · говори</span>
         <h1>Изучайте арабский язык и язык Корана — от алфавита до уровня B2</h1>
-        <p>Структурированный путь: буквы и звуки, живой словарь высокочастотной лексики, разговорник, грамматика по уровням, чтение с разбором и интерактивные задания. Всё выверено и разложено по категориям.</p>
+        <p>Буквы и звуки, живой словарь по категориям, большой разговорник, грамматика по уровням с примерами, чтение с разбором и интерактивные задания. Всё выверено.</p>
         <div class="hero-cta">
           <button class="btn btn-gold" data-goto="alphabet">Начать с алфавита</button>
           <button class="btn btn-ghost" data-goto="levels">Программа A1–B2</button>
         </div>
       </div>
     </section>
-
     <div class="stat-row">
       <div class="stat card"><div class="num tab-num">${totalWords}</div><div class="lbl">слов в словаре</div></div>
-      <div class="stat card"><div class="num tab-num">28</div><div class="lbl">букв алфавита</div></div>
+      <div class="stat card"><div class="num tab-num">${grammar.length}</div><div class="lbl">уроков грамматики</div></div>
       <div class="stat card"><div class="num tab-num">${favCount}</div><div class="lbl">в избранном</div></div>
       <div class="stat card">
         <div class="num tab-num">${learned}%</div><div class="lbl">лучший результат теста</div>
         <div class="progress-track"><div class="progress-fill" style="width:${learned}%"></div></div>
       </div>
     </div>
-
     <div class="sec-title"><h3>Разделы портала</h3><div class="rule"></div></div>
     <div class="grid g-auto">
       ${cards.map(c=>`<button class="home-card" data-goto="${c.v}">
         <div class="hc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">${c.ico}</svg></div>
-        <h3>${c.t}</h3><p>${c.d}</p>
-        <span class="go">Открыть →</span>
+        <h3>${c.t}</h3><p>${c.d}</p><span class="go">Открыть →</span>
       </button>`).join("")}
     </div>
-
     <div class="footer-note">
       <span class="ar">وَقُل رَّبِّ زِدْنِي عِلْمًا</span>
       «И скажи: „Господь мой, приумножь мои знания“» (Коран 20:114).<br>
@@ -796,9 +921,8 @@
     </div>`;
   }
 
-  // ---- ALPHABET ----
   function viewAlphabet(){
-    const letterCards = letters.map((L,i)=>{
+    const letterCards = letters.map((L)=>{
       const init = L.con ? L.ar+ZWJ : L.ar;
       const med  = L.con ? ZWJ+L.ar+ZWJ : ZWJ+L.ar;
       const fin  = ZWJ+L.ar;
@@ -806,6 +930,7 @@
         <div class="glyph">${L.ar}</div>
         <div class="lname">${L.name}</div>
         <div class="ltr">${L.tr}</div>
+        <div class="hint2">${L.hint}</div>
         <div class="forms-row">
           <div class="form-cell"><div class="fg">${L.ar}</div><div class="fl">изол.</div></div>
           <div class="form-cell"><div class="fg">${init}</div><div class="fl">нач.</div></div>
@@ -815,13 +940,9 @@
       </div>`;
     }).join("");
     return `
-    <div class="page-head">
-      <span class="eyebrow">Раздел 01</span>
-      <h2>Арабский алфавит</h2>
-      <p>28 букв. Наведите на букву — увидите четыре позиционные формы. Шесть букв <span class="ar">ا د ذ ر ز و</span> не соединяются с последующей.</p>
-    </div>
+    <div class="page-head"><span class="eyebrow">Раздел 01</span><h2>Арабский алфавит</h2>
+      <p>28 букв. На каждой карточке — подсказка произношения и четыре позиционные формы. Шесть букв <span class="ar">ا د ذ ر ز و</span> не соединяются с последующей.</p></div>
     <div class="letters-grid">${letterCards}</div>
-
     <div class="sec-title"><h3>Огласовки (харакат)</h3><div class="rule"></div></div>
     <p class="muted" style="margin-bottom:14px">Краткие гласные и служебные знаки, задающие чтение.</p>
     <div class="harakat-grid">
@@ -829,22 +950,18 @@
     </div>`;
   }
 
-  // ---- DICTIONARY ----
   let dictState = { q:"", cat:"all", pos:"all" };
   function viewDictionary(){
     const cats = ["all", ...Array.from(new Set(vocab.map(v=>v.cat)))];
     return `
-    <div class="page-head">
-      <span class="eyebrow">Раздел 02</span>
-      <h2>Словарь</h2>
-      <p>Высокочастотная лексика (около 90% слов Корана — это ~500 корней). Ищите по арабскому написанию, транслитерации или переводу.</p>
-    </div>
+    <div class="page-head"><span class="eyebrow">Раздел 02</span><h2>Словарь</h2>
+      <p>${vocab.length} слов по категориям — от предлогов и божественных атрибутов до семьи, еды, тела и цветов. Ищите по написанию, транслитерации или переводу.</p></div>
     <div class="search-wrap">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
       <input id="dictSearch" type="search" placeholder="Поиск: слово, транслитерация или перевод…" value="${dictState.q}" />
     </div>
     <div class="chips" id="posChips">
-      ${["all","глагол","имя","прилагательное","число"].map(p=>`<button class="chip ${dictState.pos===p?'active':''}" data-pos="${p}">${p==="all"?"Все части речи":p[0].toUpperCase()+p.slice(1)}</button>`).join("")}
+      ${["all","глагол","имя","прилагательное","число","вопрос"].map(p=>`<button class="chip ${dictState.pos===p?'active':''}" data-pos="${p}">${p==="all"?"Все части речи":p[0].toUpperCase()+p.slice(1)}</button>`).join("")}
       <button class="chip gold ${dictState.cat==='__fav'?'active':''}" data-cat="__fav">★ Избранное</button>
     </div>
     <div class="chips" id="catChips">
@@ -859,106 +976,110 @@
       if(dictState.cat==="__fav"){ if(!favs.has(w.ar)) return false; }
       else if(dictState.cat!=="all" && w.cat!==dictState.cat) return false;
       if(dictState.pos!=="all" && w.pos!==dictState.pos) return false;
-      if(q){
-        const hay = (w.ar+" "+w.tr+" "+w.ru).toLowerCase();
-        if(!hay.includes(q)) return false;
-      }
+      if(q){ if(!(w.ar+" "+w.tr+" "+w.ru).toLowerCase().includes(q)) return false; }
       return true;
     });
     if(!list.length){ grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="ar">لا شيء</div><p>Ничего не найдено. Измените запрос или фильтры.</p></div>`; return; }
     grid.innerHTML = list.map(vcardHTML).join("");
   }
 
-  // ---- PHRASEBOOK ----
   function viewPhrasebook(){
     return `
-    <div class="page-head">
-      <span class="eyebrow">Раздел 03</span>
-      <h2>Разговорник</h2>
-      <p>Готовые фразы для повседневного общения — с транслитерацией и переводом. Формы приведены для обращения к мужчине; к женщине окончания меняются.</p>
-    </div>
+    <div class="page-head"><span class="eyebrow">Раздел 03</span><h2>Разговорник</h2>
+      <p>10 жизненных ситуаций с транслитерацией и переводом. Формы даны для обращения к мужчине; к женщине окончания меняются.</p></div>
     ${phrases.map(group=>`
       <div class="sec-title"><h3>${group.g}</h3><div class="rule"></div></div>
       ${group.items.map((p,i)=>`<div class="phrase card">
         <div class="num tab-num">${String(i+1).padStart(2,'0')}</div>
-        <div class="body">
-          <div class="ar-ph">${p.ar}</div>
-          <div class="translit">${p.tr}</div>
-          <div class="ru">${p.ru}</div>
-        </div>
-      </div>`).join("")}
-    `).join("")}`;
+        <div class="body"><div class="ar-ph">${p.ar}</div><div class="translit">${p.tr}</div><div class="ru">${p.ru}</div></div>
+      </div>`).join("")}`).join("")}`;
   }
 
-  // ---- GRAMMAR ----
   function viewGrammar(){
     return `
-    <div class="page-head">
-      <span class="eyebrow">Раздел 04</span>
-      <h2>Грамматика</h2>
-      <p>Ключевые темы, разложенные по уровням. Нажмите на урок, чтобы раскрыть объяснение, таблицы и примеры.</p>
-    </div>
+    <div class="page-head"><span class="eyebrow">Раздел 04</span><h2>Грамматика</h2>
+      <p>${grammar.length} тем, разложенных по уровням. Нажмите на урок — раскроются объяснение, таблицы и примеры.</p></div>
     ${["A1","A2","B1","B2"].map(lv=>{
       const items = grammar.filter(g=>g.lv===lv);
       if(!items.length) return "";
       return `<div class="sec-title"><h3>Уровень ${lv}</h3><div class="rule"></div></div>
-      ${items.map((g,idx)=>`<details class="lesson card" ${lv==="A1"&&idx===0?"open":""}>
-        <summary><span class="lv">${g.lv}</span><h4>${g.t}</h4>
-          <span class="caret"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg></span>
-        </summary>
-        <div class="content">${g.body}</div>
-      </details>`).join("")}`;
+      ${items.map((g,idx)=>lessonHTML(g, lv==="A1"&&idx===0)).join("")}`;
     }).join("")}`;
   }
 
-  // ---- READING ----
   function viewReading(){
     return `
-    <div class="page-head">
-      <span class="eyebrow">Раздел 05</span>
-      <h2>Чтение</h2>
-      <p>Тексты с нарастающей сложностью. Каждая строка дана с транслитерацией и переводом для пословного разбора.</p>
-    </div>
+    <div class="page-head"><span class="eyebrow">Раздел 05</span><h2>Чтение</h2>
+      <p>Тексты с нарастающей сложностью. Каждая строка дана с транслитерацией и переводом для пословного разбора.</p></div>
     ${readings.map(r=>`<div class="reader card">
       <div class="r-head"><span class="lv">${r.lv}</span><h4>${r.t}</h4></div>
       ${r.note?`<p class="muted" style="margin:-8px 0 12px">${r.note}</p>`:""}
-      ${r.verses.map(v=>`<div class="verse">
-        <div class="ar-line">${v.ar}</div>
-        <div class="tl-line">${v.tr}</div>
-        <div class="ru-line">${v.ru}</div>
-      </div>`).join("")}
+      ${r.verses.map(verseHTML).join("")}
     </div>`).join("")}`;
   }
 
-  // ---- LEVELS ----
   function viewLevels(){
     return `
-    <div class="page-head">
-      <span class="eyebrow">Раздел 06</span>
-      <h2>Уровни A1 – B2</h2>
-      <p>Понятная траектория по шкале CEFR: от первых букв до чтения оригинальных текстов. Каждый уровень опирается на предыдущий.</p>
-    </div>
+    <div class="page-head"><span class="eyebrow">Раздел 06</span><h2>Уровни A1 – B2</h2>
+      <p>Понятная траектория по шкале CEFR. <b>Нажмите на уровень</b> — откроется мини-курс с уроками грамматики, примерами предложений и ключевыми словами.</p></div>
     <div class="level-track">
-      ${levels.map(L=>`<div class="level card">
+      ${levels.map(L=>`<button class="level card" data-level="${L.id}">
         <div class="badge ${L.id}">${L.lv}</div>
-        <div>
-          <h4>${L.t}</h4>
-          <div class="sub">${L.sub}</div>
-          <ul>${L.items.map(i=>`<li>${i}</li>`).join("")}</ul>
-        </div>
-      </div>`).join("")}
+        <div><h4>${L.t}</h4><div class="sub">${L.sub}</div><ul>${L.items.map(i=>`<li>${i}</li>`).join("")}</ul></div>
+        <div class="arrow">›</div>
+      </button>`).join("")}
     </div>`;
   }
 
-  // ---- EXERCISES ----
+  function viewLevelDetail(id){
+    const L = levels.find(x=>x.id===id) || levels[0];
+    const lessons = grammar.filter(g=>g.lv===L.lv);
+    const reads = readings.filter(r=>r.lv===L.lv);
+    const ex = levelExamples[L.id] || [];
+    // ключевые слова: подберём по уровню (первые из релевантных категорий)
+    const wordPick = {
+      a1: ["مِنْ","فِي","اللّٰه","أَب","أُمّ","وَاحِد","اثْنَان","بَيْت"],
+      a2: ["هٰذَا","هٰذِهِ","كَبِير","صَغِير","مَدْرَسَة","كِتَاب","فَوْقَ","تَحْتَ"],
+      b1: ["كَتَبَ","قَرَأَ","ذَهَبَ","سَمِعَ","خَرَجَ","غَدًا","أَمْس","عَمَل"],
+      b2: ["عِلْم","حَقّ","إِنْسَان","خَلَقَ","جَعَلَ","نُور","قَلْب","حَقّ"]
+    };
+    const picks = (wordPick[L.id]||[]).map(a=>vocab.find(v=>v.ar===a)).filter(Boolean);
+    return `
+    <button class="backlink" data-goto="levels"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 18-6-6 6-6"/></svg> Все уровни</button>
+    <div class="ld-hero">
+      <div class="badge">${L.lv}</div>
+      <div class="t"><span class="eyebrow" style="color:#ffe6a8">Уровень ${L.lv} · CEFR</span><h2>${L.t}</h2><p>${L.about}</p></div>
+    </div>
+
+    <div class="sec-title"><h3>Что вы освоите</h3><div class="rule"></div></div>
+    <div class="goals">
+      ${L.items.map(i=>`<div class="goal"><span class="ck"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12 5 5L20 6"/></svg></span><span>${i}</span></div>`).join("")}
+    </div>
+
+    <div class="sec-title"><h3>Уроки грамматики</h3><div class="rule"></div></div>
+    ${lessons.length ? lessons.map((g,i)=>lessonHTML(g, i===0)).join("") : `<p class="muted">Уроки этого уровня скоро появятся.</p>`}
+
+    <div class="sec-title"><h3>Примеры предложений</h3><div class="rule"></div></div>
+    <div class="reader card">${ex.map(verseHTML).join("")}</div>
+
+    ${reads.length ? `<div class="sec-title"><h3>Текст для чтения</h3><div class="rule"></div></div>
+      ${reads.map(r=>`<div class="reader card"><div class="r-head"><span class="lv">${r.lv}</span><h4>${r.t}</h4></div>${r.note?`<p class="muted" style="margin:-8px 0 12px">${r.note}</p>`:""}${r.verses.map(verseHTML).join("")}</div>`).join("")}` : ""}
+
+    <div class="sec-title"><h3>Ключевые слова уровня</h3><div class="rule"></div></div>
+    <div class="vocab-grid">${picks.map(vcardHTML).join("")}</div>
+
+    <div class="ld-cta" style="margin-top:24px">
+      <button class="btn btn-solid" data-goto="exercises">Тренироваться на заданиях</button>
+      <button class="btn btn-outline" data-goto="dictionary">Полный словарь</button>
+      <button class="btn btn-outline" data-goto="grammar">Вся грамматика</button>
+    </div>`;
+  }
+
   let exMode = "flash";
   function viewExercises(){
     return `
-    <div class="page-head">
-      <span class="eyebrow">Раздел 07</span>
-      <h2>Задания</h2>
-      <p>Закрепите изученное: переворачивайте флешкарты и проверяйте себя в тесте на перевод.</p>
-    </div>
+    <div class="page-head"><span class="eyebrow">Раздел 07</span><h2>Задания</h2>
+      <p>Закрепите изученное: переворачивайте флешкарты и проверяйте себя в тесте на перевод.</p></div>
     <div class="ex-switch">
       <button class="${exMode==='flash'?'active':''}" data-ex="flash">Флешкарты</button>
       <button class="${exMode==='quiz'?'active':''}" data-ex="quiz">Тест</button>
@@ -966,7 +1087,6 @@
     <div id="exBody"></div>`;
   }
 
-  // flashcards
   let fcIndex = 0, fcFlipped = false, fcDeck = [];
   function renderFlash(){
     const body = $("#exBody"); if(!body) return;
@@ -985,7 +1105,7 @@
         <span class="fc-count tab-num">${fcIndex+1} / ${fcDeck.length}</span>
         <button class="btn btn-solid" id="fcNext">Далее →</button>
       </div>
-      <button class="btn btn-ghost" id="fcShuffle" style="color:var(--emerald);border-color:var(--line-strong);background:var(--surface)">⟳ Перемешать колоду</button>
+      <button class="btn btn-outline" id="fcShuffle">⟳ Перемешать колоду</button>
     </div>`;
     $("#flashcard").addEventListener("click", ()=>{ fcFlipped=!fcFlipped; $("#flashcard").classList.toggle("flipped"); });
     $("#fcPrev").addEventListener("click", ()=>{ fcIndex=(fcIndex-1+fcDeck.length)%fcDeck.length; fcFlipped=false; renderFlash(); });
@@ -993,19 +1113,14 @@
     $("#fcShuffle").addEventListener("click", ()=>{ fcDeck=shuffle(vocab.slice()); fcIndex=0; fcFlipped=false; renderFlash(); });
   }
 
-  // quiz
   let quiz = null;
-  function newQuiz(){
-    const pool = shuffle(vocab.slice());
-    quiz = { qs: pool.slice(0, 10), i:0, score:0, answered:false };
-  }
+  function newQuiz(){ const pool = shuffle(vocab.slice()); quiz = { qs: pool.slice(0, 10), i:0, score:0, answered:false }; }
   function renderQuiz(){
     const body = $("#exBody"); if(!body) return;
     if(!quiz) newQuiz();
     if(quiz.i >= quiz.qs.length){
       const pct = Math.round(quiz.score/quiz.qs.length*100);
-      const best = store.get("quizBest", 0);
-      if(pct>best) store.set("quizBest", pct);
+      const best = store.get("quizBest", 0); if(pct>best) store.set("quizBest", pct);
       body.innerHTML = `<div class="quiz-card card" style="text-align:center">
         <div class="ar" style="font-size:56px;color:var(--gold)">${pct>=80?"مُمْتَاز":pct>=50?"جَيِّد":"وَاصِلْ"}</div>
         <h3 style="font-size:26px;margin:10px 0">Результат: ${quiz.score} из ${quiz.qs.length} (${pct}%)</h3>
@@ -1019,127 +1134,88 @@
     const wrong = shuffle(vocab.filter(v=>v.ru!==q.ru)).slice(0,3);
     const opts = shuffle([q, ...wrong]);
     body.innerHTML = `<div class="quiz-card card">
-      <div class="quiz-q">
-        <div class="prompt">Выберите перевод слова:</div>
-        <div class="ar">${q.ar}</div>
-        <div class="translit">${q.tr}</div>
-      </div>
-      <div class="quiz-opts" id="quizOpts">
-        ${opts.map(o=>`<button class="opt" data-ru="${o.ru}">${o.ru}</button>`).join("")}
-      </div>
-      <div class="quiz-foot">
-        <span class="quiz-score tab-num">Вопрос ${quiz.i+1}/${quiz.qs.length} · очки: ${quiz.score}</span>
-        <button class="btn btn-outline" id="quizNext" style="visibility:hidden">Далее →</button>
-      </div>
+      <div class="quiz-q"><div class="prompt">Выберите перевод слова:</div><div class="ar">${q.ar}</div><div class="translit">${q.tr}</div></div>
+      <div class="quiz-opts" id="quizOpts">${opts.map(o=>`<button class="opt" data-ru="${o.ru}">${o.ru}</button>`).join("")}</div>
+      <div class="quiz-foot"><span class="quiz-score tab-num">Вопрос ${quiz.i+1}/${quiz.qs.length} · очки: ${quiz.score}</span>
+        <button class="btn btn-outline" id="quizNext" style="visibility:hidden">Далее →</button></div>
     </div>`;
     $$("#quizOpts .opt").forEach(btn=>{
       btn.addEventListener("click", ()=>{
-        if(quiz.answered) return;
-        quiz.answered = true;
+        if(quiz.answered) return; quiz.answered = true;
         const chosen = btn.dataset.ru;
-        $$("#quizOpts .opt").forEach(b=>{
-          b.disabled = true;
-          if(b.dataset.ru===q.ru) b.classList.add("correct");
-          else if(b.dataset.ru===chosen) b.classList.add("wrong");
-        });
+        $$("#quizOpts .opt").forEach(b=>{ b.disabled = true; if(b.dataset.ru===q.ru) b.classList.add("correct"); else if(b.dataset.ru===chosen) b.classList.add("wrong"); });
         if(chosen===q.ru) quiz.score++;
         const nx = $("#quizNext"); nx.style.visibility="visible"; nx.focus();
       });
     });
     $("#quizNext").addEventListener("click", ()=>{ quiz.i++; quiz.answered=false; renderQuiz(); });
   }
-
   function renderExBody(){ if(exMode==="flash") renderFlash(); else renderQuiz(); }
-
   function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 
-  /* =========================================================
-     ROUTER
-  ========================================================= */
-  const views = { home:viewHome, alphabet:viewAlphabet, dictionary:viewDictionary, phrasebook:viewPhrasebook, grammar:viewGrammar, reading:viewReading, exercises:viewExercises, levels:viewLevels };
-  let current = "home";
+  /* ================= ROUTER ================= */
+  let activeLevel = "a1";
+  const views = { home:viewHome, alphabet:viewAlphabet, dictionary:viewDictionary, phrasebook:viewPhrasebook, grammar:viewGrammar, reading:viewReading, exercises:viewExercises, levels:viewLevels, levelDetail:()=>viewLevelDetail(activeLevel) };
 
   function go(name){
     if(!views[name]) name = "home";
-    current = name;
     main.innerHTML = views[name]();
-    main.scrollTop = 0; window.scrollTo({top:0,behavior:"instant"});
-    $$(".nav-item").forEach(n=>n.classList.toggle("active", n.dataset.view===name));
-    store.set("lastView", name);
-    // per-view wiring
+    window.scrollTo({top:0,behavior:"instant"});
+    const navName = name==="levelDetail" ? "levels" : name;
+    $$(".nav-item").forEach(n=>n.classList.toggle("active", n.dataset.view===navName));
+    if(name!=="levelDetail") store.set("lastView", name);
     if(name==="dictionary"){ renderVocab(); wireDict(); }
     if(name==="exercises"){ renderExBody(); wireEx(); }
     closeMenu();
   }
-
   function wireDict(){
     const s = $("#dictSearch");
     if(s){ s.addEventListener("input", e=>{ dictState.q = e.target.value; renderVocab(); }); }
-    $("#posChips") && $$("#posChips .chip").forEach(c=>c.addEventListener("click", ()=>{
+    $$("#posChips .chip").forEach(c=>c.addEventListener("click", ()=>{
       if(c.dataset.cat==="__fav"){ dictState.cat = dictState.cat==="__fav"?"all":"__fav"; }
       else { dictState.pos = c.dataset.pos; }
       go("dictionary");
     }));
-    $("#catChips") && $$("#catChips .chip").forEach(c=>c.addEventListener("click", ()=>{
-      dictState.cat = c.dataset.cat; go("dictionary");
-    }));
+    $$("#catChips .chip").forEach(c=>c.addEventListener("click", ()=>{ dictState.cat = c.dataset.cat; go("dictionary"); }));
   }
-  function wireEx(){
-    $$(".ex-switch button").forEach(b=>b.addEventListener("click", ()=>{
-      exMode = b.dataset.ex; go("exercises");
-    }));
-  }
+  function wireEx(){ $$(".ex-switch button").forEach(b=>b.addEventListener("click", ()=>{ exMode = b.dataset.ex; go("exercises"); })); }
 
-  // delegated clicks (goto buttons, favorites)
   document.addEventListener("click", e=>{
+    const lvl = e.target.closest("[data-level]");
+    if(lvl){ activeLevel = lvl.dataset.level; go("levelDetail"); return; }
     const goto = e.target.closest("[data-goto]");
     if(goto){ go(goto.dataset.goto); return; }
     const fav = e.target.closest("[data-fav]");
     if(fav){
       const key = fav.dataset.fav;
       if(favs.has(key)) favs.delete(key); else favs.add(key);
-      saveFavs();
-      fav.classList.toggle("on", favs.has(key));
-      fav.innerHTML = starSvg(favs.has(key));
-      return;
+      saveFavs(); fav.classList.toggle("on", favs.has(key)); fav.innerHTML = starSvg(favs.has(key)); return;
     }
   });
 
-  // sidebar nav
   $$(".nav-item").forEach(n=>n.addEventListener("click", ()=>go(n.dataset.view)));
 
-  // mobile menu
   const shell = $("#shell");
   function openMenu(){ shell.classList.add("open"); }
   function closeMenu(){ shell.classList.remove("open"); }
   $("#menuBtn").addEventListener("click", openMenu);
   $("#backdrop").addEventListener("click", closeMenu);
 
-  // theme
   const themeBtn = $("#themeBtn");
   function applyTheme(t){
-    document.documentElement.setAttribute("data-theme", t);
-    store.set("theme", t);
+    document.documentElement.setAttribute("data-theme", t); store.set("theme", t);
     themeBtn.innerHTML = t==="dark"
       ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M5 5l1.8 1.8M17.2 17.2 19 19M19 5l-1.8 1.8M6.8 17.2 5 19"/></svg>`
       : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>`;
   }
   const savedTheme = store.get("theme", null);
-  if(savedTheme) applyTheme(savedTheme);
-  else applyTheme(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-  themeBtn.addEventListener("click", ()=>{
-    const cur = document.documentElement.getAttribute("data-theme");
-    applyTheme(cur==="dark"?"light":"dark");
-  });
+  applyTheme(savedTheme || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+  themeBtn.addEventListener("click", ()=>{ const cur = document.documentElement.getAttribute("data-theme"); applyTheme(cur==="dark"?"light":"dark"); });
 
-  // keyboard: Enter/Space on letter cards
   document.addEventListener("keydown", e=>{
-    if((e.key==="Enter"||e.key===" ") && e.target.classList && e.target.classList.contains("letter")){
-      e.preventDefault(); e.target.classList.toggle("flipped");
-    }
+    if((e.key==="Enter"||e.key===" ") && e.target.classList && e.target.classList.contains("letter")){ e.preventDefault(); e.target.classList.toggle("flipped"); }
   });
 
-  // init
   go(store.get("lastView","home"));
 })();
 </script>
