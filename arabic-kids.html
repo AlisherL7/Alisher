@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
+<title>تعلم العربية | Арабский для малышей</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+body{
+  font-family:'Segoe UI','Tahoma','Arabic Typesetting','Geeza Pro','Arial Unicode MS',Arial,sans-serif;
+  background:linear-gradient(160deg,#0f0c29 0%,#302b63 50%,#24243e 100%);
+  min-height:100dvh;overflow-x:hidden;
+}
+
+/* ── Animations ──────────────────────────────────── */
+@keyframes bounceIn{
+  0%{transform:scale(0) rotate(-12deg);opacity:0}
+  60%{transform:scale(1.28) rotate(4deg);opacity:1}
+  80%{transform:scale(0.9) rotate(-2deg)}
+  100%{transform:scale(1) rotate(0deg)}
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes tada{
+  0%,100%{transform:scale(1)}
+  10%,20%{transform:scale(0.88) rotate(-3deg)}
+  30%,50%,70%,90%{transform:scale(1.3) rotate(3deg)}
+  40%,60%,80%{transform:scale(1.3) rotate(-3deg)}
+}
+@keyframes pop{
+  0%{transform:scale(1)}
+  40%{transform:scale(1.4) rotate(8deg)}
+  70%{transform:scale(0.9)}
+  100%{transform:scale(1)}
+}
+@keyframes slideUp{
+  from{transform:translateY(30px) translateX(-50%);opacity:0}
+  to{transform:translateY(0) translateX(-50%);opacity:1}
+}
+@keyframes ripple{to{transform:scale(4);opacity:0}}
+@keyframes twinkle{
+  0%,100%{opacity:0.15;transform:scale(1)}
+  50%{opacity:0.9;transform:scale(1.4)}
+}
+@keyframes spin-slow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.3)}28%{transform:scale(1)}}
+
+.bounce-in{animation:bounceIn .55s cubic-bezier(.68,-.55,.265,1.55) both}
+.float-anim{animation:float 3s ease-in-out infinite}
+.tada-anim{animation:tada .8s ease both}
+.pop-anim{animation:pop .4s ease both}
+.slide-up{animation:slideUp .4s ease both}
+
+/* ── Screens ─────────────────────────────────────── */
+.screen{display:none}
+.screen.active{display:block}
+
+/* ── Letter cards ────────────────────────────────── */
+.lcard{
+  border:2.5px solid rgba(255,255,255,.2);
+  transition:transform .14s ease,box-shadow .14s ease;
+  cursor:pointer;touch-action:manipulation;
+}
+.lcard:active{transform:scale(.86)!important}
+.lcard.sel{
+  border-color:rgba(255,255,255,.75)!important;
+  transform:scale(1.1)!important;
+  box-shadow:0 0 0 4px rgba(255,255,255,.25)!important;
+}
+
+/* ── Word cards ──────────────────────────────────── */
+.wcard{
+  border:2px solid rgba(255,255,255,.18);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  transition:transform .14s ease;
+  cursor:pointer;touch-action:manipulation;
+}
+.wcard:active{transform:scale(.88) rotate(-2deg)!important}
+
+/* ── Number cards ────────────────────────────────── */
+.ncard{
+  transition:transform .14s ease;
+  cursor:pointer;touch-action:manipulation;
+}
+.ncard:active{transform:scale(.91)!important}
+
+/* ── Count emojis ────────────────────────────────── */
+.cem{
+  display:inline-block;
+  transition:all .22s cubic-bezier(.34,1.56,.64,1);
+  cursor:pointer;touch-action:manipulation;line-height:1;
+}
+.cem.lit{transform:scale(1.55);filter:drop-shadow(0 0 10px gold)}
+
+/* ── Ripple ──────────────────────────────────────── */
+.rip{
+  position:absolute;border-radius:50%;
+  background:rgba(255,255,255,.45);pointer-events:none;
+  animation:ripple .65s ease-out forwards;
+}
+
+/* ── Confetti canvas ─────────────────────────────── */
+#cc{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9999}
+
+/* ── Level buttons ───────────────────────────────── */
+.lbtn{
+  transition:transform .14s ease,opacity .14s ease;
+  touch-action:manipulation;cursor:pointer;
+}
+.lbtn:active{transform:scale(.88)!important}
+.lbtn.on{opacity:1!important;transform:scale(1.06)!important}
+
+/* ── Category tabs ───────────────────────────────── */
+.ctab{
+  transition:all .2s ease;touch-action:manipulation;cursor:pointer;
+  flex-shrink:0;
+}
+.ctab.on{background:rgba(255,255,255,.38)!important;transform:scale(1.06)}
+
+/* ── Featured card ───────────────────────────────── */
+#feat{
+  background:rgba(255,255,255,.11);
+  border:2px solid rgba(255,255,255,.3);
+  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  transition:background .4s ease;
+}
+
+/* ── Stars ───────────────────────────────────────── */
+.sdot{
+  position:absolute;background:white;border-radius:50%;
+  animation:twinkle ease-in-out infinite;
+}
+
+/* ── Praise popup ────────────────────────────────── */
+.praise{
+  position:fixed;left:50%;
+  transform:translateX(-50%);
+  font-size:clamp(18px,5vw,24px);
+  font-weight:900;padding:13px 26px;border-radius:18px;color:#fff;
+  z-index:9998;pointer-events:none;white-space:nowrap;
+  border:2.5px solid rgba(255,255,255,.45);
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+  animation:slideUp .4s ease both;
+}
+
+/* ── Big letter size ─────────────────────────────── */
+.ar-big{font-size:clamp(70px,18vw,120px);line-height:1.05;text-shadow:0 8px 32px rgba(0,0,0,.45)}
+
+/* ── Speak btn ───────────────────────────────────── */
+.spk{touch-action:manipulation;transition:all .14s ease}
+.spk:active{transform:scale(.88)}
+
+/* ── Scrollbar ───────────────────────────────────── */
+::-webkit-scrollbar{width:5px;height:4px}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:3px}
+
+/* ── Celebration modal bg ────────────────────────── */
+#celeb{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+</style>
+</head>
+<body>
+
+<canvas id="cc"></canvas>
+<div id="starbg" style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden"></div>
+
+<!-- ═══════════════════════════════ APP ═══════════════════════════════ -->
+<div class="relative z-10 min-h-screen pb-8">
+
+  <!-- HEADER -->
+  <header class="text-center pt-5 pb-2 px-4">
+    <div class="float-anim inline-block text-5xl mb-1">🌙</div>
+    <h1 class="text-white font-black text-2xl leading-tight" style="text-shadow:0 4px 18px rgba(0,0,0,.5)">تعلم العربية</h1>
+    <p class="text-white/55 text-xs mt-0.5">Арабский для малышей ✨</p>
+  </header>
+
+  <!-- LEVEL SELECTOR -->
+  <div class="flex justify-center gap-3 px-4 mb-4">
+    <button id="lb1" class="lbtn on flex-1 max-w-[105px] rounded-2xl py-3 text-white font-bold text-xs"
+      style="background:linear-gradient(135deg,#f093fb,#f5576c);box-shadow:0 6px 22px #f5576c66"
+      onclick="goLevel(1)">
+      <div class="text-2xl mb-0.5">🔤</div>
+      <div class="font-black text-sm">Буквы</div>
+      <div class="opacity-65 text-[10px]">Уровень 1</div>
+    </button>
+    <button id="lb2" class="lbtn opacity-65 flex-1 max-w-[105px] rounded-2xl py-3 text-white font-bold text-xs"
+      style="background:linear-gradient(135deg,#4facfe,#00f2fe);box-shadow:0 6px 22px #4facfe55"
+      onclick="goLevel(2)">
+      <div class="text-2xl mb-0.5">🦁</div>
+      <div class="font-black text-sm">Слова</div>
+      <div class="opacity-65 text-[10px]">Уровень 2</div>
+    </button>
+    <button id="lb3" class="lbtn opacity-65 flex-1 max-w-[105px] rounded-2xl py-3 text-white font-bold text-xs"
+      style="background:linear-gradient(135deg,#43e97b,#38f9d7);box-shadow:0 6px 22px #43e97b55"
+      onclick="goLevel(3)">
+      <div class="text-2xl mb-0.5">🔢</div>
+      <div class="font-black text-sm">Цифры</div>
+      <div class="opacity-65 text-[10px]">Уровень 3</div>
+    </button>
+  </div>
+
+  <!-- ─── SCREEN 1: LETTERS ─── -->
+  <section id="s1" class="screen active px-3">
+    <!-- Featured big letter -->
+    <div id="feat" class="rounded-3xl p-5 text-center mb-4 mx-auto max-w-sm">
+      <div id="fl" class="ar-big font-black text-white">ا</div>
+      <div id="fn" class="text-white text-xl font-black mt-1">ألف</div>
+      <div id="ft" class="text-white/58 text-sm mt-0.5">أسد — Лев</div>
+      <div id="fe" class="text-5xl mt-2">🦁</div>
+      <button class="spk mt-3 mx-auto flex items-center gap-2 bg-white/20 text-white rounded-full px-5 py-2 text-sm font-bold"
+        onclick="spkFeat()">
+        <i class="fas fa-volume-up"></i> Произнести
+      </button>
+    </div>
+    <!-- Grid of 28 letters -->
+    <div class="grid grid-cols-4 gap-2" id="lgrid"></div>
+  </section>
+
+  <!-- ─── SCREEN 2: WORDS ─── -->
+  <section id="s2" class="screen px-3">
+    <!-- Category tabs -->
+    <div class="flex gap-2 mb-4 overflow-x-auto pb-1" id="ctabs" style="scrollbar-width:none">
+      <button class="ctab on px-4 py-2 rounded-full text-white font-bold text-sm" id="ct-animals"
+        style="background:rgba(255,255,255,.28)" onclick="setCat('animals')">🐾 Животные</button>
+      <button class="ctab px-4 py-2 rounded-full text-white font-bold text-sm" id="ct-fruits"
+        style="background:rgba(255,255,255,.14)" onclick="setCat('fruits')">🍎 Фрукты</button>
+      <button class="ctab px-4 py-2 rounded-full text-white font-bold text-sm" id="ct-colors"
+        style="background:rgba(255,255,255,.14)" onclick="setCat('colors')">🎨 Цвета</button>
+      <button class="ctab px-4 py-2 rounded-full text-white font-bold text-sm" id="ct-body"
+        style="background:rgba(255,255,255,.14)" onclick="setCat('body')">👋 Тело</button>
+    </div>
+    <div class="grid grid-cols-2 gap-3" id="wgrid"></div>
+  </section>
+
+  <!-- ─── SCREEN 3: NUMBERS ─── -->
+  <section id="s3" class="screen px-3">
+    <div class="grid grid-cols-2 gap-3" id="ngrid"></div>
+  </section>
+
+</div>
+
+<!-- CELEBRATION MODAL -->
+<div id="celeb" class="hidden fixed inset-0 z-[9990] flex items-center justify-center" style="background:rgba(0,0,0,.65)">
+  <div class="bounce-in text-center p-8 rounded-3xl mx-4 max-w-xs w-full"
+    style="background:linear-gradient(135deg,#667eea,#764ba2);border:3px solid rgba(255,255,255,.4)">
+    <div id="cem2" class="text-7xl mb-3">🌟</div>
+    <div class="text-white text-3xl font-black mb-1">مبروك!</div>
+    <div class="text-white/78 text-base mb-5">Молодец! Отлично! 🎊</div>
+    <button class="bg-white text-purple-700 font-black px-8 py-3 rounded-2xl text-lg active:scale-95 transition-all"
+      onclick="closeCeleb()">Продолжить 🚀</button>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════
+const LETTERS=[
+  {l:'ا',n:'ألف',  w:'أسد',   e:'🦁',r:'Лев'},
+  {l:'ب',n:'باء',  w:'بطة',   e:'🦆',r:'Утка'},
+  {l:'ت',n:'تاء',  w:'تفاح',  e:'🍎',r:'Яблоко'},
+  {l:'ث',n:'ثاء',  w:'ثعلب',  e:'🦊',r:'Лиса'},
+  {l:'ج',n:'جيم',  w:'جمل',   e:'🐪',r:'Верблюд'},
+  {l:'ح',n:'حاء',  w:'حصان',  e:'🐴',r:'Лошадь'},
+  {l:'خ',n:'خاء',  w:'خروف',  e:'🐑',r:'Овца'},
+  {l:'د',n:'دال',  w:'دب',    e:'🐻',r:'Медведь'},
+  {l:'ذ',n:'ذال',  w:'ذئب',   e:'🐺',r:'Волк'},
+  {l:'ر',n:'راء',  w:'رمان',  e:'🍎',r:'Гранат'},
+  {l:'ز',n:'زاي',  w:'زرافة', e:'🦒',r:'Жираф'},
+  {l:'س',n:'سين',  w:'سمك',   e:'🐟',r:'Рыба'},
+  {l:'ش',n:'شين',  w:'شمس',   e:'☀️',r:'Солнце'},
+  {l:'ص',n:'صاد',  w:'صقر',   e:'🦅',r:'Сокол'},
+  {l:'ض',n:'ضاد',  w:'ضفدع',  e:'🐸',r:'Лягушка'},
+  {l:'ط',n:'طاء',  w:'طاووس', e:'🦚',r:'Павлин'},
+  {l:'ظ',n:'ظاء',  w:'ظبي',   e:'🦌',r:'Олень'},
+  {l:'ع',n:'عين',  w:'عصفور', e:'🐦',r:'Птица'},
+  {l:'غ',n:'غين',  w:'غزال',  e:'🦌',r:'Газель'},
+  {l:'ف',n:'فاء',  w:'فيل',   e:'🐘',r:'Слон'},
+  {l:'ق',n:'قاف',  w:'قط',    e:'🐱',r:'Кошка'},
+  {l:'ك',n:'كاف',  w:'كلب',   e:'🐶',r:'Собака'},
+  {l:'ل',n:'لام',  w:'ليمون', e:'🍋',r:'Лимон'},
+  {l:'م',n:'ميم',  w:'موز',   e:'🍌',r:'Банан'},
+  {l:'ن',n:'نون',  w:'نمر',   e:'🐯',r:'Тигр'},
+  {l:'ه',n:'هاء',  w:'هلال',  e:'🌙',r:'Луна'},
+  {l:'و',n:'واو',  w:'وردة',  e:'🌹',r:'Роза'},
+  {l:'ي',n:'ياء',  w:'يمامة', e:'🕊️',r:'Голубь'},
+];
+
+const LC=[
+  ['#FF6B6B','#FF8E53'],['#4facfe','#00f2fe'],['#43e97b','#38f9d7'],
+  ['#f093fb','#f5576c'],['#fa709a','#fee140'],['#a18cd1','#fbc2eb'],
+  ['#fccb90','#d57eeb'],['#a1c4fd','#c2e9fb'],['#fd7043','#f4511e'],
+  ['#66bb6a','#43a047'],['#26c6da','#00acc1'],['#ab47bc','#8e24aa'],
+  ['#ef5350','#e53935'],['#42a5f5','#1e88e5'],['#26a69a','#00897b'],
+  ['#d4e157','#c0ca33'],['#ff7043','#e64a19'],['#ec407a','#d81b60'],
+  ['#7e57c2','#5e35b1'],['#ff5722','#f4511e'],['#26c6da','#0097a7'],
+  ['#66bb6a','#388e3c'],['#ffa726','#fb8c00'],['#ef5350','#c62828'],
+  ['#42a5f5','#1565c0'],['#26a69a','#004d40'],['#ab47bc','#6a1b9a'],
+  ['#f06292','#e91e63'],
+];
+
+const DS={
+  animals:[
+    {e:'🦁',a:'أسد',r:'Лев'},{e:'🐘',a:'فيل',r:'Слон'},
+    {e:'🦒',a:'زرافة',r:'Жираф'},{e:'🐒',a:'قرد',r:'Обезьяна'},
+    {e:'🐰',a:'أرنب',r:'Кролик'},{e:'🐴',a:'حصان',r:'Лошадь'},
+    {e:'🐶',a:'كلب',r:'Собака'},{e:'🐱',a:'قطة',r:'Кошка'},
+    {e:'🦆',a:'بطة',r:'Утка'},{e:'🐟',a:'سمكة',r:'Рыба'},
+    {e:'🐯',a:'نمر',r:'Тигр'},{e:'🐻',a:'دب',r:'Медведь'},
+    {e:'🦊',a:'ثعلب',r:'Лиса'},{e:'🐺',a:'ذئب',r:'Волк'},
+    {e:'🐪',a:'جمل',r:'Верблюд'},{e:'🐸',a:'ضفدع',r:'Лягушка'},
+    {e:'🦋',a:'فراشة',r:'Бабочка'},{e:'🐝',a:'نحلة',r:'Пчела'},
+    {e:'🦅',a:'نسر',r:'Орёл'},{e:'🐢',a:'سلحفاة',r:'Черепаха'},
+  ],
+  fruits:[
+    {e:'🍎',a:'تفاح',r:'Яблоко'},{e:'🍌',a:'موز',r:'Банан'},
+    {e:'🍊',a:'برتقال',r:'Апельсин'},{e:'🍇',a:'عنب',r:'Виноград'},
+    {e:'🍓',a:'فراولة',r:'Клубника'},{e:'🍉',a:'بطيخ',r:'Арбуз'},
+    {e:'🍋',a:'ليمون',r:'Лимон'},{e:'🥭',a:'مانجا',r:'Манго'},
+    {e:'🍑',a:'خوخ',r:'Персик'},{e:'🍐',a:'كمثرى',r:'Груша'},
+    {e:'🍒',a:'كرز',r:'Вишня'},{e:'🥥',a:'جوز هند',r:'Кокос'},
+  ],
+  colors:[
+    {e:'🔴',a:'أحمر',r:'Красный'},{e:'🔵',a:'أزرق',r:'Синий'},
+    {e:'🟡',a:'أصفر',r:'Жёлтый'},{e:'🟢',a:'أخضر',r:'Зелёный'},
+    {e:'🟠',a:'برتقالي',r:'Оранжевый'},{e:'🟣',a:'بنفسجي',r:'Фиолетовый'},
+    {e:'🩷',a:'وردي',r:'Розовый'},{e:'⬛',a:'أسود',r:'Чёрный'},
+    {e:'⬜',a:'أبيض',r:'Белый'},{e:'🟤',a:'بني',r:'Коричневый'},
+  ],
+  body:[
+    {e:'👁️',a:'عين',r:'Глаз'},{e:'👂',a:'أذن',r:'Ухо'},
+    {e:'👃',a:'أنف',r:'Нос'},{e:'👄',a:'فم',r:'Рот'},
+    {e:'✋',a:'يد',r:'Рука'},{e:'🦶',a:'قدم',r:'Нога'},
+    {e:'🦷',a:'سن',r:'Зуб'},{e:'💆',a:'رأس',r:'Голова'},
+  ],
+};
+
+const NUMS=[
+  {n:1,a:'واحد',d:'١',e:'⭐',b:['#FF6B6B','#FF8E53']},
+  {n:2,a:'اثنان',d:'٢',e:'🌸',b:['#f093fb','#f5576c']},
+  {n:3,a:'ثلاثة',d:'٣',e:'🍀',b:['#43e97b','#38f9d7']},
+  {n:4,a:'أربعة',d:'٤',e:'🦋',b:['#4facfe','#00f2fe']},
+  {n:5,a:'خمسة',d:'٥',e:'🐝',b:['#fa709a','#fee140']},
+  {n:6,a:'ستة',d:'٦',e:'🌈',b:['#a18cd1','#fbc2eb']},
+  {n:7,a:'سبعة',d:'٧',e:'🌟',b:['#fccb90','#d57eeb']},
+  {n:8,a:'ثمانية',d:'٨',e:'🍒',b:['#43e97b','#38f9d7']},
+  {n:9,a:'تسعة',d:'٩',e:'🌺',b:['#f093fb','#f5576c']},
+  {n:10,a:'عشرة',d:'١٠',e:'🎉',b:['#667eea','#764ba2']},
+];
+
+const PRAISES=['🌟 رائع!','✨ أحسنت!','🎉 ممتاز!','⭐ جميل!','🔥 بارك الله!','💫 عظيم!','🏆 بطل!','👑 رائع جداً!'];
+const CELEBEM=['🌟','🎉','🏆','👑','🌈','⭐','🎊','✨','💫','🦁'];
+
+// ════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════
+let curLv=1, curLi=0, curCat='animals';
+let arVoice=null, ac=null;
+const seenL=new Set();
+
+// ════════════════════════════════════════════
+// VOICE
+// ════════════════════════════════════════════
+function initVoice(){
+  const load=()=>{
+    const ar=speechSynthesis.getVoices().filter(v=>v.lang.startsWith('ar'));
+    arVoice=ar.find(v=>/Maged|Laila|Tarik|Majed/i.test(v.name))||ar[0]||null;
+  };
+  load();
+  if(speechSynthesis.onvoiceschanged!==undefined) speechSynthesis.addEventListener('voiceschanged',load);
+}
+
+function say(txt,rt=0.62){
+  if(!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(txt.replace(/[ً-ٰٟ]/g,''));
+  u.lang='ar-SA'; u.rate=rt; u.pitch=1.05;
+  if(arVoice) u.voice=arVoice;
+  speechSynthesis.speak(u);
+}
+
+// ════════════════════════════════════════════
+// WEB AUDIO
+// ════════════════════════════════════════════
+function getAC(){
+  if(!ac) ac=new(window.AudioContext||window.webkitAudioContext)();
+  if(ac.state==='suspended') ac.resume();
+  return ac;
+}
+
+function tone(freq,type='sine',dur=0.3,vol=0.26,delay=0){
+  try{
+    const a=getAC(),t=a.currentTime+delay;
+    const o=a.createOscillator(),g=a.createGain();
+    o.connect(g);g.connect(a.destination);
+    o.type=type;o.frequency.setValueAtTime(freq,t);
+    o.frequency.exponentialRampToValueAtTime(freq*.5,t+dur);
+    g.gain.setValueAtTime(0,t);
+    g.gain.linearRampToValueAtTime(vol,t+.02);
+    g.gain.exponentialRampToValueAtTime(.001,t+dur);
+    o.start(t);o.stop(t+dur+.05);
+  }catch(_){}
+}
+
+function chime(notes=[523,659,784],gap=.11){notes.forEach((f,i)=>tone(f,'sine',.45,.22,i*gap));}
+
+function whoosh(){
+  try{
+    const a=getAC(),t=a.currentTime;
+    const buf=a.createBuffer(1,a.sampleRate*.3,a.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length);
+    const src=a.createBufferSource();src.buffer=buf;
+    const f=a.createBiquadFilter();f.type='bandpass';
+    f.frequency.setValueAtTime(700,t);f.frequency.exponentialRampToValueAtTime(150,t+.3);
+    const g=a.createGain();g.gain.setValueAtTime(.35,t);g.gain.exponentialRampToValueAtTime(.001,t+.3);
+    src.connect(f);f.connect(g);g.connect(a.destination);src.start(t);
+  }catch(_){}
+}
+
+function pop2(){tone(880,'sine',.12,.3);tone(1108,'sine',.1,.2,.06);}
+
+const LF=[262,277,294,311,330,349,370,392,415,440,466,494,523,554,587,622,659,698,740,784,831,880,932,988,1047,1109,1175,1245];
+function ltone(i){tone(LF[i%LF.length],'triangle',.5,.25);}
+
+// ════════════════════════════════════════════
+// CONFETTI
+// ════════════════════════════════════════════
+const cc=document.getElementById('cc'),cctx=cc.getContext('2d');
+let cparts=[];
+function szcc(){cc.width=window.innerWidth;cc.height=window.innerHeight;}
+szcc();window.addEventListener('resize',szcc);
+
+function confetti(n=90){
+  const cols=['#FF6B6B','#4ECDC4','#45B7D1','#96CEB4','#FFEAA7','#DDA0DD','#F7DC6F','#BB8FCE'];
+  for(let i=0;i<n;i++){
+    cparts.push({
+      x:Math.random()*cc.width,y:-10,
+      vx:(Math.random()-.5)*7,vy:Math.random()*4+2,
+      rot:Math.random()*360,rs:(Math.random()-.5)*12,
+      c:cols[Math.floor(Math.random()*cols.length)],
+      sz:Math.random()*10+4,sh:Math.random()>.5?'r':'c',
+      life:1,decay:Math.random()*.012+.005
+    });
+  }
+  requestAnimationFrame(drawConf);
+}
+
+function drawConf(){
+  cctx.clearRect(0,0,cc.width,cc.height);
+  cparts=cparts.filter(p=>p.life>0);
+  for(const p of cparts){
+    p.x+=p.vx;p.y+=p.vy;p.vy+=.12;p.rot+=p.rs;p.life-=p.decay;
+    cctx.save();cctx.globalAlpha=p.life;
+    cctx.translate(p.x,p.y);cctx.rotate(p.rot*Math.PI/180);
+    cctx.fillStyle=p.c;
+    if(p.sh==='r') cctx.fillRect(-p.sz/2,-p.sz/4,p.sz,p.sz/2);
+    else{cctx.beginPath();cctx.arc(0,0,p.sz/2,0,Math.PI*2);cctx.fill();}
+    cctx.restore();
+  }
+  if(cparts.length>0) requestAnimationFrame(drawConf);
+}
+
+// ════════════════════════════════════════════
+// RIPPLE
+// ════════════════════════════════════════════
+function ripple(el,e){
+  const r=el.getBoundingClientRect();
+  const cx=(e.clientX||e.touches?.[0]?.clientX||r.left+r.width/2)-r.left;
+  const cy=(e.clientY||e.touches?.[0]?.clientY||r.top+r.height/2)-r.top;
+  const sz=Math.max(r.width,r.height);
+  const d=document.createElement('span');
+  d.className='rip';
+  d.style.cssText=`width:${sz}px;height:${sz}px;left:${cx-sz/2}px;top:${cy-sz/2}px;`;
+  el.style.position='relative';el.style.overflow='hidden';
+  el.appendChild(d);setTimeout(()=>d.remove(),700);
+}
+
+// ════════════════════════════════════════════
+// PRAISE POPUP
+// ════════════════════════════════════════════
+const PCOLS=[
+  'linear-gradient(135deg,#f093fb,#f5576c)',
+  'linear-gradient(135deg,#4facfe,#00f2fe)',
+  'linear-gradient(135deg,#43e97b,#38f9d7)',
+  'linear-gradient(135deg,#fa709a,#fee140)',
+];
+function showPraise(){
+  const d=document.createElement('div');
+  d.className='praise';
+  d.textContent=PRAISES[Math.floor(Math.random()*PRAISES.length)];
+  d.style.background=PCOLS[Math.floor(Math.random()*PCOLS.length)];
+  d.style.top=(18+Math.random()*38)+'%';
+  document.body.appendChild(d);
+  setTimeout(()=>{d.style.transition='all .5s';d.style.opacity='0';d.style.transform='translateX(-50%) translateY(-30px)';},1100);
+  setTimeout(()=>d.remove(),1700);
+}
+
+// ════════════════════════════════════════════
+// STARS BG
+// ════════════════════════════════════════════
+function initStars(){
+  const bg=document.getElementById('starbg');
+  for(let i=0;i<28;i++){
+    const d=document.createElement('div');
+    d.className='sdot';
+    const sz=Math.random()*5+2;
+    d.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-duration:${(Math.random()*3+2).toFixed(1)}s;animation-delay:${(Math.random()*2).toFixed(1)}s;`;
+    bg.appendChild(d);
+  }
+}
+
+// ════════════════════════════════════════════
+// CELEBRATION
+// ════════════════════════════════════════════
+function celebrate(){
+  document.getElementById('cem2').textContent=CELEBEM[Math.floor(Math.random()*CELEBEM.length)];
+  document.getElementById('celeb').classList.remove('hidden');
+  confetti(130);
+  chime([523,659,784,1047,1319],.1);
+  say('مبروك');
+}
+function closeCeleb(){document.getElementById('celeb').classList.add('hidden');}
+
+// ════════════════════════════════════════════
+// LEVEL SWITCHING
+// ════════════════════════════════════════════
+function goLevel(n){
+  whoosh();
+  ['s1','s2','s3'].forEach((id,i)=>{
+    document.getElementById(id).classList.toggle('active',i+1===n);
+  });
+  [1,2,3].forEach(i=>{
+    const b=document.getElementById('lb'+i);
+    if(i===n){b.classList.add('on');b.style.opacity='1';}
+    else{b.classList.remove('on');b.style.opacity='0.65';}
+  });
+  curLv=n;
+  // Stagger entrance
+  setTimeout(()=>{
+    const cards=document.querySelectorAll(`#s${n} .lcard,#s${n} .wcard,#s${n} .ncard`);
+    cards.forEach((el,i)=>{
+      el.style.opacity='0';el.style.transform='scale(0.55)';
+      setTimeout(()=>{
+        el.style.transition=`all .42s cubic-bezier(.34,1.56,.64,1) ${i*.04}s`;
+        el.style.opacity='1';el.style.transform='scale(1)';
+      },15);
+    });
+  },40);
+}
+
+// ════════════════════════════════════════════
+// LEVEL 1 — LETTERS
+// ════════════════════════════════════════════
+function renderLetters(){
+  const g=document.getElementById('lgrid');
+  g.innerHTML='';
+  LETTERS.forEach((lt,i)=>{
+    const [c1,c2]=LC[i];
+    const btn=document.createElement('button');
+    btn.className='lcard rounded-2xl p-3 text-center';
+    btn.style.cssText=`background:linear-gradient(135deg,${c1},${c2});box-shadow:0 4px 15px ${c1}55;`;
+    btn.innerHTML=`<div class="text-4xl font-black text-white leading-tight">${lt.l}</div><div class="text-white/72 text-[11px] mt-0.5 font-semibold">${lt.n}</div>`;
+    btn.addEventListener('click',e=>{ripple(btn,e);pickLetter(i);});
+    g.appendChild(btn);
+  });
+}
+
+function updateFeat(i){
+  const lt=LETTERS[i],[c1,c2]=LC[i];
+  document.getElementById('fl').textContent=lt.l;
+  document.getElementById('fn').textContent=lt.n;
+  document.getElementById('ft').textContent=`${lt.w} — ${lt.r}`;
+  document.getElementById('fe').textContent=lt.e;
+  const fc=document.getElementById('feat');
+  fc.style.background=`linear-gradient(135deg,${c1}55,${c2}33)`;
+  fc.classList.remove('tada-anim');void fc.offsetWidth;fc.classList.add('tada-anim');
+}
+
+function pickLetter(i){
+  curLi=i;
+  ltone(i);
+  setTimeout(()=>say(LETTERS[i].n,.55),180);
+  updateFeat(i);
+  showPraise();
+  seenL.add(i);
+  document.querySelectorAll('.lcard').forEach((c,j)=>c.classList.toggle('sel',j===i));
+  document.getElementById('feat').scrollIntoView({behavior:'smooth',block:'nearest'});
+  if(seenL.size===LETTERS.length) setTimeout(celebrate,400);
+}
+
+function spkFeat(){
+  ltone(curLi);
+  setTimeout(()=>say(LETTERS[curLi].n,.52),160);
+  const fc=document.getElementById('feat');
+  fc.classList.remove('tada-anim');void fc.offsetWidth;fc.classList.add('tada-anim');
+  pop2();
+}
+
+// ════════════════════════════════════════════
+// LEVEL 2 — WORDS
+// ════════════════════════════════════════════
+function setCat(cat){
+  curCat=cat;
+  document.querySelectorAll('.ctab').forEach(t=>t.classList.toggle('on',t.id==='ct-'+cat));
+  renderWords();
+  whoosh();
+}
+
+function renderWords(){
+  const g=document.getElementById('wgrid');g.innerHTML='';
+  DS[curCat].forEach((item,i)=>{
+    const card=document.createElement('button');
+    card.className='wcard rounded-3xl p-4 text-center';
+    card.style.background='rgba(255,255,255,.11)';
+    card.innerHTML=`
+      <div class="text-6xl mb-2 leading-none">${item.e}</div>
+      <div class="text-white text-2xl font-black">${item.a}</div>
+      <div class="text-white/58 text-xs mt-1 font-medium">${item.r}</div>
+      <div class="mt-2 text-white/38 text-xs"><i class="fas fa-volume-up"></i></div>`;
+    card.addEventListener('click',e=>{
+      ripple(card,e);
+      say(item.a,.62);pop2();showPraise();
+      card.classList.remove('pop-anim');void card.offsetWidth;card.classList.add('pop-anim');
+    });
+    card.style.opacity='0';card.style.transform='scale(0.55) rotate(-6deg)';
+    g.appendChild(card);
+    setTimeout(()=>{
+      card.style.transition=`all .5s cubic-bezier(.34,1.56,.64,1) ${i*.055}s`;
+      card.style.opacity='1';card.style.transform='scale(1) rotate(0deg)';
+    },30);
+  });
+}
+
+// ════════════════════════════════════════════
+// LEVEL 3 — NUMBERS
+// ════════════════════════════════════════════
+function renderNumbers(){
+  const g=document.getElementById('ngrid');g.innerHTML='';
+  NUMS.forEach((num,idx)=>{
+    const [c1,c2]=num.b;
+    const card=document.createElement('div');
+    card.className='ncard rounded-3xl p-4 text-center relative overflow-hidden';
+    card.style.cssText=`background:linear-gradient(135deg,${c1},${c2});box-shadow:0 6px 22px ${c1}55;`;
+
+    const ems=Array.from({length:num.n},(_,i)=>
+      `<span class="cem text-xl" onclick="tapCem(this,${idx})">${num.e}</span>`
+    ).join('');
+
+    card.innerHTML=`
+      <div class="text-5xl font-black text-white leading-tight">${num.d}</div>
+      <div class="text-white/88 font-bold text-sm mt-0.5">${num.a}</div>
+      <div class="flex flex-wrap justify-center gap-1 my-3 min-h-8">${ems}</div>
+      <button class="spk bg-white/25 text-white rounded-full px-4 py-1.5 text-sm font-bold flex items-center gap-1.5 mx-auto"
+        onclick="spkNum(event,${idx})">
+        <i class="fas fa-volume-up text-xs"></i> ${num.n}
+      </button>`;
+    g.appendChild(card);
+  });
+}
+
+function tapCem(el,ni){
+  el.classList.toggle('lit');
+  tone(392+ni*35,'triangle',.18,.25);
+  el.style.transform='scale(1.7)';
+  setTimeout(()=>el.style.transform='',240);
+  const card=el.closest('.ncard');
+  const lit=card.querySelectorAll('.cem.lit').length;
+  if(lit===NUMS[ni].n){
+    say(NUMS[ni].a,.62);chime();showPraise();
+    setTimeout(()=>card.querySelectorAll('.cem').forEach(e=>e.classList.remove('lit')),1600);
+  }
+}
+
+function spkNum(e,ni){
+  e.stopPropagation();
+  const num=NUMS[ni];
+  say(num.a,.62);
+  chime([262+ni*45,330+ni*45,392+ni*45]);
+  showPraise();
+  const card=e.target.closest('.ncard');
+  card.querySelectorAll('.cem').forEach((em,i)=>{
+    setTimeout(()=>{
+      em.style.transition='all .15s';em.style.transform='scale(1.65) rotate(14deg)';
+      setTimeout(()=>em.style.transform='scale(1) rotate(0)',200);
+    },i*75);
+  });
+}
+
+// ════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════
+function init(){
+  initVoice();
+  initStars();
+  renderLetters();
+  renderWords();
+  renderNumbers();
+  document.getElementById('lb1').classList.add('on');
+  setTimeout(()=>pickLetter(0),380);
+}
+
+document.addEventListener('DOMContentLoaded',init);
+
+// Unlock AudioContext on first gesture (required on iOS/Safari)
+['click','touchstart'].forEach(ev=>
+  document.addEventListener(ev,()=>{try{getAC();}catch(_){}},{once:true,passive:true})
+);
+</script>
+</body>
+</html>

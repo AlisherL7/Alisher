@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ALISHER_KARIMOV — SYSTEM ACCESS</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #000;
+      color: #4ade80;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* scanline overlay */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px, transparent 2px,
+        rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 4px
+      );
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    canvas#matrix {
+      position: fixed;
+      inset: 0;
+      opacity: 0.18;
+      z-index: 0;
+    }
+
+    #app {
+      position: relative;
+      z-index: 10;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+    }
+
+    /* terminal lines */
+    .line {
+      line-height: 1.7;
+      opacity: 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .line.show { opacity: 1; }
+
+    .c-green   { color: #4ade80; }
+    .c-green2  { color: #86efac; }
+    .c-blue    { color: #60a5fa; }
+    .c-yellow  { color: #facc15; }
+    .c-red     { color: #f87171; }
+    .c-purple  { color: #c084fc; }
+
+    /* glitch */
+    @keyframes glitch {
+      0%,100% { color: #4ade80; text-shadow: none; }
+      50%      { color: #f87171; text-shadow: 2px 0 #f87171, -2px 0 #60a5fa; }
+    }
+    .glitch { animation: glitch 0.12s infinite; }
+
+    /* progress bar */
+    .progress-wrap {
+      margin: 8px 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .progress-wrap.show { opacity: 1; }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 4px;
+    }
+    .progress-track {
+      height: 6px;
+      background: #1f2937;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #4ade80;
+      width: 0%;
+      transition: width 1.5s ease;
+      border-radius: 3px;
+    }
+
+    /* final box */
+    #final-box {
+      border: 1px solid #4ade80;
+      border-radius: 6px;
+      padding: 16px;
+      margin-top: 12px;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    #final-box.show { opacity: 1; }
+
+    /* scanning widget */
+    #scan-widget {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      width: 320px;
+      background: rgba(0,0,0,0.92);
+      border: 1px solid #4ade80;
+      border-radius: 8px;
+      padding: 12px;
+      z-index: 50;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.4s, transform 0.4s;
+    }
+    #scan-widget.show { opacity: 1; transform: translateY(0); }
+
+    .scan-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .scan-dot {
+      width: 8px; height: 8px;
+      background: #4ade80;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    @keyframes dotPulse {
+      0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+    }
+    .scan-dot { animation: dotPulse 1s infinite; }
+
+    .scan-bar-track {
+      flex: 1;
+      height: 4px;
+      background: #374151;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    @keyframes scanMove {
+      0%   { transform: translateX(-100%); }
+      50%  { transform: translateX(0%); }
+      100% { transform: translateX(100%); }
+    }
+    .scan-bar-fill {
+      height: 100%;
+      width: 100%;
+      background: #4ade80;
+      animation: scanMove 2s ease-in-out infinite;
+    }
+    .scan-stats {
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 8px;
+    }
+
+    /* cursor blink */
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+    #cursor { display: inline-block; animation: blink 0.8s infinite; }
+
+    /* footer */
+    #footer {
+      text-align: center;
+      margin-top: 60px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+      opacity: 0;
+      transition: opacity 1s;
+      line-height: 2;
+    }
+    #footer.show { opacity: 1; }
+
+    @media (max-width: 480px) {
+      #scan-widget { left: 12px; right: 12px; width: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div id="app">
+  <div id="output"></div>
+  <span id="cursor">▮</span>
+  <div id="final-box"></div>
+  <div id="footer">
+    <p>[SYSTEM] This simulation was created just for you, Alisher.</p>
+    <p>[SYSTEM] Session will self-destruct in 00:05:00</p>
+  </div>
+</div>
+
+<div id="scan-widget">
+  <div class="scan-row">
+    <div class="scan-dot"></div>
+    <span style="font-size:13px;">SCANNING: ALISHER_KARIMOV</span>
+    <div class="scan-bar-track"><div class="scan-bar-fill"></div></div>
+  </div>
+  <div class="scan-stats">MEMORY: 98% &nbsp;|&nbsp; DNA: 100% &nbsp;|&nbsp; PERSONALITY: 95%</div>
+</div>
+
+<script>
+/* ── Matrix Rain ── */
+(function() {
+  const canvas = document.getElementById('matrix');
+  const ctx    = canvas.getContext('2d');
+  const chars  = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const fs     = 14;
+  let cols, drops, animId;
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    cols  = Math.floor(canvas.width / fs);
+    drops = Array(cols).fill(1);
+  }
+
+  function draw() {
+    ctx.fillStyle = 'rgba(0,0,0,0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#00ff41';
+    ctx.font = fs + 'px monospace';
+    for (let i = 0; i < drops.length; i++) {
+      const ch = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(ch, i * fs, drops[i] * fs);
+      if (drops[i] * fs > canvas.height && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
+    }
+    animId = requestAnimationFrame(draw);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  draw();
+})();
+
+/* ── Terminal Engine ── */
+const USER       = 'ALISHER_KARIMOV';
+const SESSION_ID = 'X7F3#9K2@L1M6';
+const NOW        = new Date().toISOString().slice(0,19).replace('T',' ');
+const out        = document.getElementById('output');
+const finalBox   = document.getElementById('final-box');
+const footer     = document.getElementById('footer');
+const scanWidget = document.getElementById('scan-widget');
+
+// queue of actions: {type, ...}
+const queue = [];
+let running = false;
+
+function enqueue(item) { queue.push(item); if (!running) processQueue(); }
+
+function processQueue() {
+  if (!queue.length) { running = false; return; }
+  running = true;
+  const item = queue.shift();
+
+  if (item.type === 'line') {
+    printLine(item.text, item.cls, item.typeSpeed || 0, () => processQueue());
+  } else if (item.type === 'blank') {
+    const d = document.createElement('div');
+    d.style.height = '6px';
+    out.appendChild(d);
+    processQueue();
+  } else if (item.type === 'delay') {
+    setTimeout(() => processQueue(), item.ms);
+  } else if (item.type === 'progress') {
+    showProgress(item.label, item.pct, () => processQueue());
+  } else if (item.type === 'final') {
+    showFinal(() => processQueue());
+  } else if (item.type === 'scan') {
+    scanWidget.classList.add('show');
+    processQueue();
+  } else if (item.type === 'footer') {
+    footer.classList.add('show');
+    running = false;
+  }
+}
+
+function printLine(text, cls, speed, cb) {
+  const div = document.createElement('div');
+  div.className = 'line show ' + (cls || 'c-green');
+  out.appendChild(div);
+  div.scrollIntoView({ block: 'end', behavior: 'smooth' });
+
+  if (!speed) {
+    div.textContent = text;
+    cb();
+    return;
+  }
+
+  let i = 0;
+  function tick() {
+    div.textContent = text.slice(0, ++i);
+    div.scrollIntoView({ block: 'end', behavior: 'smooth' });
+    if (i < text.length) setTimeout(tick, speed);
+    else {
+      // random glitch after typing
+      let glitchCount = 0;
+      const g = setInterval(() => {
+        if (Math.random() > 0.93) {
+          div.classList.add('glitch');
+          setTimeout(() => div.classList.remove('glitch'), 100);
+          glitchCount++;
+        }
+        if (glitchCount > 2) clearInterval(g);
+      }, 200);
+      cb();
+    }
+  }
+  tick();
+}
+
+function showProgress(label, pct, cb) {
+  const wrap = document.createElement('div');
+  wrap.className = 'progress-wrap';
+  wrap.innerHTML = `
+    <div class="progress-label"><span>${label}</span><span>${pct}%</span></div>
+    <div class="progress-track"><div class="progress-fill" id="pf-${label.replace(/\s/g,'')}"></div></div>
+  `;
+  out.appendChild(wrap);
+  requestAnimationFrame(() => {
+    wrap.classList.add('show');
+    setTimeout(() => {
+      const fill = wrap.querySelector('.progress-fill');
+      fill.style.width = pct + '%';
+      setTimeout(cb, 1600);
+    }, 50);
+  });
+}
+
+function showFinal(cb) {
+  const lines = [
+    { t: '========================================', cls: 'c-green'  },
+    { t: '  *** ANALYSIS COMPLETE ***',              cls: 'c-green2' },
+    { t: '========================================', cls: 'c-green'  },
+    { t: '',                                          cls: ''         },
+    { t: `  USER: ${USER}`,                           cls: 'c-blue'   },
+    { t: '  STATUS: APPROVED',                        cls: 'c-green2' },
+    { t: '  LEVEL: ADMINISTRATOR',                    cls: 'c-green2' },
+    { t: '  ACCESS: GRANTED',                         cls: 'c-green2' },
+    { t: '',                                          cls: ''         },
+    { t: '  >>> SYSTEM MESSAGE: <<<',                 cls: 'c-purple' },
+    { t: '  You have been selected for a special mission.', cls: 'c-yellow' },
+    { t: '  Your unique code: ALISHER_2026_X7F3',    cls: 'c-blue'   },
+    { t: '  Do not share this with anyone.',          cls: 'c-red'    },
+    { t: '========================================', cls: 'c-green'  },
+  ];
+
+  finalBox.classList.add('show');
+
+  let i = 0;
+  function next() {
+    if (i >= lines.length) { cb(); return; }
+    const l = lines[i++];
+    if (!l.t) {
+      const d = document.createElement('div'); d.style.height = '6px';
+      finalBox.appendChild(d);
+      setTimeout(next, 50);
+      return;
+    }
+    const div = document.createElement('div');
+    div.className = 'line show ' + l.cls;
+    div.textContent = l.t;
+    finalBox.appendChild(div);
+    setTimeout(next, 120);
+  }
+  next();
+}
+
+/* ── Random helpers ── */
+function randIP() { return Array.from({length:4}, () => Math.floor(Math.random()*256)).join('.'); }
+function randIPs() { return [randIP(), randIP(), randIP()].join(' | '); }
+
+const POSITIVE = ['LEADER','CREATIVE','INTELLIGENT','AMBITIOUS','CHARISMATIC','INNOVATIVE','ANALYTICAL'];
+const NEGATIVE = ['STUBBORN','IMPATIENT','SECRETIVE','PERFECTIONIST','RESTLESS'];
+function pickTraits() {
+  const pos = [...POSITIVE].sort(()=>Math.random()-.5).slice(0,3);
+  const neg = [...NEGATIVE].sort(()=>Math.random()-.5).slice(0,2);
+  return [...pos,...neg].sort(()=>Math.random()-.5);
+}
+const traits = pickTraits();
+const ips    = randIPs();
+
+/* ── Build script ── */
+function L(text, cls, speed) { enqueue({ type:'line', text, cls, typeSpeed: speed||0 }); }
+function B() { enqueue({ type:'blank' }); }
+function D(ms) { enqueue({ type:'delay', ms }); }
+function P(label, pct) { enqueue({ type:'progress', label, pct }); }
+
+// Header
+L(`[${NOW}] SYSTEM INITIALIZED`,        'c-blue');
+L(`[${NOW}] SESSION: ${SESSION_ID}`,    'c-blue');
+L(`[${NOW}] USER: ${USER}`,             'c-yellow');
+B();
+L('========================================');
+L('  *** SECURE CONNECTION ESTABLISHED ***', 'c-green2');
+L('========================================');
+B();
+
+D(800);
+
+// Stage 1
+L('[SYSTEM] Initializing neural interface...', 'c-green',  28);
+D(300);
+L('[SYSTEM] Loading personality matrix...',    'c-green',  28);
+D(200);
+P('NEURAL INTERFACE', 35);
+
+D(1200);
+
+// Stage 2
+L('[SCANNER] Searching for user signature...', 'c-purple', 24);
+D(400);
+L(`[SCANNER] FOUND: ${USER}`,                 'c-green2', 20);
+D(200);
+L('[SCANNER] Analyzing digital footprint...',  'c-purple', 24);
+D(200);
+L(`[NETWORK] TRACING: ${ips}`,                'c-blue',   16);
+B();
+
+D(1200);
+
+// Stage 3
+L('[BIO-SCAN] DNA sequence detected...',     'c-yellow', 24);
+D(300);
+L('[BIO-SCAN] Genetic markers: UNIQUE',      'c-green2', 20);
+D(200);
+L('[BIO-SCAN] Cognitive patterns: ADVANCED', 'c-green2', 20);
+B();
+P('DNA ANALYSIS', 72);
+
+D(1000);
+
+// Stage 4
+L('[ANALYZER] Personality traits detected:', 'c-blue', 24);
+D(200);
+traits.forEach(t => {
+  const cls = POSITIVE.includes(t) ? 'c-green2' : 'c-yellow';
+  L(`  >> ${t}`, cls, 22);
+  enqueue({ type:'delay', ms: 180 });
+});
+B();
+
+D(1000);
+
+// Stage 5
+L('[MEMORY] Scanning past experiences...', 'c-purple', 24);
+D(300);
+L('[MEMORY] Key events: CLASSIFIED',       'c-yellow', 20);
+D(200);
+L('[MEMORY] Emotional patterns: COMPLEX',  'c-blue',   20);
+B();
+P('MEMORY SCAN', 89);
+
+D(1000);
+
+// Stage 6
+L('[ORACLE] Future probability analysis...', 'c-purple', 24);
+D(400);
+L('[ORACLE] SUCCESS RATE: 92.7%',           'c-green2', 20);
+D(300);
+L('[ORACLE] WARNING: UNEXPECTED OPPORTUNITY IN 3 DAYS', 'c-yellow', 18);
+B();
+P('PREDICTION ENGINE', 100);
+
+D(1200);
+
+// Show scan widget
+enqueue({ type:'scan' });
+
+D(500);
+
+// Stage 7 - final
+enqueue({ type:'final' });
+
+D(1500);
+
+// Footer
+enqueue({ type:'footer' });
+</script>
+</body>
+</html>
