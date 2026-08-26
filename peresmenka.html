@@ -1,0 +1,1162 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ПЕРЕСМЕНКА</title>
+<meta name="description" content="Планировщик сна и риска засыпания для сменных работников: считает запас внимания по двухпроцессной модели и подбирает окна сна под ваш график смен.">
+<style>
+:root{
+  --bg:#f4f6fa; --panel:#ffffff; --panel2:#eef2f8; --ink:#111827; --muted:#5b6472;
+  --line:#d3dae5; --accent:#1d4ed8; --accent-ink:#ffffff;
+  --ok:#15803d; --warn:#b45309; --bad:#b91c1c; --sleep:#0f766e; --work:#334155;
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 8px 24px rgba(16,24,40,.06);
+  --radius:12px;
+}
+:root:not([data-theme="light"]){}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1117; --panel:#161b23; --panel2:#1d232d; --ink:#e8edf5; --muted:#9aa6b6;
+    --line:#2c3542; --accent:#5b8cff; --accent-ink:#0b0f16;
+    --ok:#4ade80; --warn:#fbbf24; --bad:#f87171; --sleep:#2dd4bf; --work:#94a3b8;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1117; --panel:#161b23; --panel2:#1d232d; --ink:#e8edf5; --muted:#9aa6b6;
+  --line:#2c3542; --accent:#5b8cff; --accent-ink:#0b0f16;
+  --ok:#4ade80; --warn:#fbbf24; --bad:#f87171; --sleep:#2dd4bf; --work:#94a3b8;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  -webkit-text-size-adjust:100%}
+.wrap{max-width:1080px;margin:0 auto;padding:16px 14px 64px}
+header.top{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;justify-content:space-between;margin:8px 0 18px}
+h1{font-size:26px;margin:0;letter-spacing:.02em}
+h1 span{color:var(--accent)}
+.sub{color:var(--muted);font-size:14px;margin:4px 0 0;max-width:62ch}
+h2{font-size:18px;margin:0 0 10px}
+h3{font-size:15px;margin:18px 0 6px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin:0 0 14px;box-shadow:var(--shadow)}
+.grid{display:grid;gap:12px}
+@media(min-width:760px){.cols2{grid-template-columns:1fr 1fr}}
+label{display:block;font-size:13px;color:var(--muted);margin:0 0 4px}
+input,select,button,textarea{font:inherit;color:var(--ink)}
+input[type=time],input[type=number],input[type=text],select,textarea{
+  width:100%;padding:8px 10px;background:var(--panel2);border:1px solid var(--line);
+  border-radius:8px}
+textarea{min-height:80px;font-size:13px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+input:focus-visible,select:focus-visible,button:focus-visible,textarea:focus-visible,a:focus-visible{
+  outline:3px solid var(--accent);outline-offset:2px}
+.row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:8px}
+.row.blk{grid-template-columns:1fr 1fr 1.4fr auto}
+@media(max-width:560px){.row,.row.blk{grid-template-columns:1fr 1fr;}
+  .row .full,.row.blk .full{grid-column:1/-1}}
+button{cursor:pointer;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 12px}
+button:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+button.ghost{background:transparent}
+button.mini{padding:6px 9px;font-size:13px}
+button.del{padding:8px 10px;line-height:1;color:var(--bad)}
+.btnbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.chips button{font-size:13px;padding:6px 10px;border-radius:999px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:.03em}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tl{min-width:620px;width:100%;height:auto;display:block}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}
+.p-ok{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
+.p-mid{background:color-mix(in srgb,var(--warn) 20%,transparent);color:var(--warn)}
+.p-bad{background:color-mix(in srgb,var(--bad) 18%,transparent);color:var(--bad)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:6px 0 4px}
+.kpi{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px}
+.kpi b{display:block;font-size:22px;line-height:1.15}
+.kpi small{color:var(--muted);font-size:12px;display:block;margin-top:2px}
+.delta{font-size:12px;font-weight:700}
+.plan li{margin-bottom:6px}
+.muted{color:var(--muted)}
+.note{font-size:13px;color:var(--muted);background:var(--panel2);border-left:3px solid var(--accent);
+  padding:8px 10px;border-radius:0 8px 8px 0;margin:10px 0}
+.err{border-left-color:var(--bad);color:var(--bad)}
+details{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;background:var(--panel)}
+summary{cursor:pointer;font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:14px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.tabbar{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.tabbar button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+@media print{
+  body{background:#fff;color:#000}
+  .noprint{display:none !important}
+  .card{box-shadow:none;border:1px solid #999;break-inside:avoid}
+  a{color:#000}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div>
+    <h1>ПЕРЕ<span>СМЕНКА</span></h1>
+    <p class="sub">Не сила воли, а расписание: считаем, где именно вы отключитесь за рулём — и куда переложить сон, чтобы этого не случилось.</p>
+  </div>
+  <div class="btnbar noprint">
+    <button id="btnExample" class="primary">▶ Показать на примере</button>
+    <button id="btnTheme" class="ghost" title="Светлая/тёмная тема">◐ Тема</button>
+  </div>
+</header>
+
+<section class="card noprint" aria-labelledby="h-in">
+  <h2 id="h-in">1. Кто вы и как добираетесь</h2>
+  <div class="grid cols2">
+    <div>
+      <label for="wake">Во сколько вы просыпаетесь в выходной, без будильника</label>
+      <input type="time" id="wake" value="07:00">
+      <p class="sub" style="margin-top:4px">Это задаёт вашу внутреннюю фазу (хронотип). «Сова» — 10:00, «жаворонок» — 05:30.</p>
+    </div>
+    <div>
+      <label for="need">Сколько сна вам нужно в сутки, часов</label>
+      <input type="number" id="need" value="7.5" min="5" max="10" step="0.25">
+    </div>
+    <div>
+      <label for="commute">Дорога в одну сторону, минут</label>
+      <input type="number" id="commute" value="35" min="0" max="180" step="5">
+    </div>
+    <div>
+      <label for="drives">Как вы добираетесь</label>
+      <select id="drives">
+        <option value="1" selected>За рулём сам</option>
+        <option value="0">Транспорт / пешком / везут</option>
+      </select>
+    </div>
+    <div>
+      <label for="caffeine">Кофеин</label>
+      <select id="caffeine">
+        <option value="1" selected>Использую, нужен план по времени</option>
+        <option value="0">Не употребляю</option>
+      </select>
+    </div>
+    <div>
+      <label for="prep">Сборы дома перед выходом, минут</label>
+      <input type="number" id="prep" value="45" min="10" max="120" step="5">
+    </div>
+  </div>
+</section>
+
+<section class="card noprint" aria-labelledby="h-sh">
+  <h2 id="h-sh">2. График смен</h2>
+  <div class="chips" role="group" aria-label="Готовые графики">
+    <button data-preset="nurse" class="mini">2 ночные подряд (12 ч)</button>
+    <button data-preset="2x2" class="mini">2 дня / 2 ночи (12 ч)</button>
+    <button data-preset="sutki" class="mini">Сутки через трое</button>
+    <button data-preset="slide" class="mini">Утро → вечер → ночь</button>
+    <button data-preset="oncall" class="mini">Дежурство 4 ночи по 8 ч</button>
+  </div>
+  <div id="shiftRows"></div>
+  <div class="btnbar">
+    <button id="addShift" class="mini">+ Смена</button>
+    <button id="clearShifts" class="mini ghost">Очистить</button>
+  </div>
+  <h3>Часы, когда спать нельзя (дети, учёба, вторая работа, приём врача)</h3>
+  <div id="blockRows"></div>
+  <div class="btnbar">
+    <button id="addBlock" class="mini">+ Запрет</button>
+  </div>
+  <div class="btnbar">
+    <button id="btnCalc" class="primary">Рассчитать план сна</button>
+    <button id="btnReset" class="ghost">Сбросить всё</button>
+  </div>
+  <p id="inputErr" class="note err" hidden role="alert"></p>
+</section>
+
+<div id="results" hidden>
+
+<section class="card" aria-labelledby="h-kpi">
+  <h2 id="h-kpi">3. Что даёт план по сравнению с «как обычно»</h2>
+  <div class="kpis" id="kpis"></div>
+  <p class="note" id="verdict"></p>
+</section>
+
+<section class="card" aria-labelledby="h-tl">
+  <h2 id="h-tl">4. Карта суток: работа, сон, провалы внимания</h2>
+  <div class="tabbar noprint" role="tablist" aria-label="Сценарий">
+    <button id="tabPlan" role="tab" aria-selected="true" aria-controls="tlWrap">План ПЕРЕСМЕНКИ</button>
+    <button id="tabBase" role="tab" aria-selected="false" aria-controls="tlWrap">Как обычно</button>
+  </div>
+  <div class="scroll" id="tlWrap" role="tabpanel"><svg class="tl" id="timeline" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  <div class="legend">
+    <span><i style="background:var(--work)"></i>смена</span>
+    <span><i style="background:var(--sleep)"></i>сон (прогноз)</span>
+    <span><i style="background:repeating-linear-gradient(45deg,var(--muted),var(--muted) 2px,transparent 2px,transparent 5px)"></i>спать нельзя</span>
+    <span><i style="background:var(--bad)"></i>запас внимания ниже 45</span>
+    <span><i style="background:var(--accent)"></i>кривая запаса внимания (0–100)</span>
+  </div>
+</section>
+
+<section class="card" aria-labelledby="h-risk">
+  <h2 id="h-risk">5. Опасные моменты по одному</h2>
+  <div class="scroll"><table id="riskTable"><caption class="sr">Оценка риска по каждой смене и каждой дороге</caption></table></div>
+  <p class="note">Короткая дремота (20 минут) в расчёт <b>не заложена</b>: двухпроцессная модель плохо описывает такой сон. Это рекомендация из практики управления усталостью, а не результат вычисления. Цифры в таблице показывают риск <i>без</i> дремоты.</p>
+</section>
+
+<section class="card" aria-labelledby="h-plan">
+  <h2 id="h-plan">6. Что делать по часам</h2>
+  <div id="planText" aria-live="polite"></div>
+  <div class="btnbar noprint">
+    <button id="btnCopy">Скопировать план текстом</button>
+    <button id="btnCsv">Скачать CSV</button>
+    <button id="btnJson">Скачать JSON</button>
+    <button id="btnPrint">Печать / PDF</button>
+  </div>
+  <p id="copyMsg" class="muted" style="font-size:13px" aria-live="polite"></p>
+</section>
+</div>
+
+<section class="card noprint" aria-labelledby="h-io">
+  <h2 id="h-io">Сохранить и перенести</h2>
+  <p class="sub">Состояние живёт в памяти вкладки. Если браузер разрешает — дублируется в localStorage; если запрещает, ничего не ломается. Надёжный способ переноса — файл JSON.</p>
+  <div class="btnbar">
+    <button id="btnSaveLs" class="mini">Сохранить в браузере</button>
+    <button id="btnLoadLs" class="mini">Загрузить из браузера</button>
+    <label for="fileJson" class="mini" style="display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer;color:var(--ink)">Импорт файла JSON<input type="file" id="fileJson" accept="application/json,.json" style="display:none"></label>
+  </div>
+  <details>
+    <summary>Вставить JSON текстом</summary>
+    <label for="jsonPaste">Содержимое файла</label>
+    <textarea id="jsonPaste" placeholder='{"wake":"07:00", ...}'></textarea>
+    <div class="btnbar"><button id="btnPaste" class="mini">Загрузить из текста</button></div>
+  </details>
+  <p id="ioMsg" class="muted" style="font-size:13px" aria-live="polite"></p>
+</section>
+
+<details>
+  <summary>Версия без телефона: «линейка сменщика» на листе бумаги</summary>
+  <p style="font-size:14px">Те же правила, выведенные из модели, но считаются карандашом за 5 минут. Работает, когда телефона нет, батарея села или вы не хотите ничего вводить в чужую программу.</p>
+  <ol style="font-size:14px">
+    <li>Нарисуйте линейку суток от 0 до 24 на каждый день блока смен. Закрасьте смену и дорогу.</li>
+    <li>Найдите <b>час Х</b> = ваш свободный подъём минус 2 часа (встаёте в 07:00 → Х = 05:00). Это дно ваших внутренних суток. Всё, что попадает в интервал Х ± 2 часа, — красная зона: там ошибаются и засыпают.</li>
+    <li>Перед каждой дорогой домой посчитайте <b>часы без сна</b> и сверьтесь с таблицей ниже.</li>
+    <li><b>Главный сон</b> ставьте так, чтобы его середина попадала как можно ближе к часу Х. Если это невозможно (дневной сон после ночной смены), заранее считайте его коротким: 4–5 часов вместо 7–8. Недостающее добирайте вторым заходом за 3–4 часа до выхода на смену.</li>
+    <li><b>Кофеин</b>: последняя чашка — не позже чем за 6 часов до того, как ляжете.</li>
+    <li><b>Свет</b>: яркий в первую половину смены, тёмные очки на дороге домой, плотные шторы в спальне.</li>
+  </ol>
+  <div class="scroll"><table>
+    <thead><tr><th>Часов без сна к моменту выезда</th><th>Что это значит</th><th>Решение</th></tr></thead>
+    <tbody>
+      <tr><td>до 12</td><td>обычное состояние</td><td>ехать можно</td></tr>
+      <tr><td>13–16</td><td>реакция заметно хуже</td><td>ехать после 15 минут на воздухе, без ночной трассы</td></tr>
+      <tr><td>17–20</td><td>по данным Dawson &amp; Reid (Nature, 1997) 17 часов без сна ≈ 0,05 % алкоголя в крови, 24 часа ≈ 0,10 %</td><td>сон 20 минут + кофеин, выезд через 25 минут</td></tr>
+      <tr><td>21 и больше</td><td>сопоставимо с состоянием опьянения</td><td>за руль не садиться: такси, попутчик, сон на месте</td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:14px" class="muted">Бумажная версия грубее программы: она не считает накопленный дефицит сна и не подбирает окна, а даёт правило «куда двигать сон» и жёсткий порог по часам без сна.</p>
+</details>
+
+<details>
+  <summary>Как это считается (модель, допущения, границы применимости)</summary>
+  <p style="font-size:14px">Внутри — двухпроцессная модель регуляции сна (Borbély, 1982; переоценка — Borbély et al., J Sleep Research, 2016).</p>
+  <ul style="font-size:14px">
+    <li><b>Процесс S</b> — давление сна. Растёт во время бодрствования по экспоненте с постоянной времени 18,2 ч, спадает во сне с постоянной 4,2 ч.</li>
+    <li><b>Процесс C</b> — циркадный ритм. Минимум внутренней «дневной» готовности принят за 2 часа до вашего свободного подъёма; отсюда считается фаза на все сутки. Модель <b>не</b> закладывает перестройку фазы под ночную работу — у большинства сменных работников она не происходит, поэтому оценка консервативная.</li>
+    <li><b>Длительность сна не задаётся вами, а вычисляется</b>: сон заканчивается, когда S опускается ниже порога пробуждения, а этот порог поднимается в вашу биологическую «дневную» фазу. Поэтому дневной сон после ночной смены в модели сам собой выходит коротким (4–6 ч) — как в полевых исследованиях.</li>
+    <li><b>Засыпание</b>: латентность растёт, если S низкий, а фаза «дневная». В «запретной зоне сна» (за 2–3 ч до привычного отбоя) попытка поспать в модели проваливается — так же, как в жизни.</li>
+    <li><b>Запас внимания</b> (0–100) = 100 − 58·S + 20·C − 18·(накопленный дефицит) − инерция после подъёма. Это относительная шкала для сравнения вариантов, а не медицинский показатель.</li>
+    <li><b>Подбор плана</b>: лучевой поиск (beam search) по вариантам расстановки сна в каждом свободном окне; цель — поднять минимум внимания на смене и на дороге и при этом набрать больше сна, не залезая в ваши запретные часы.</li>
+  </ul>
+  <p style="font-size:14px"><b>Границы.</b> Это не медицинский прибор и не диагноз. Модель не знает про ваши лекарства, апноэ, беременность, алкоголь, детей, которые будят, и про то, что бывает «просто не спится». Если вы засыпаете за рулём, клюёте носом на смене или спите меньше 5 часов больше недели — это к врачу, а не к калькулятору.</p>
+</details>
+
+<p class="muted" style="font-size:12.5px">Работает офлайн, без сервера и регистрации. Один файл — можно переслать в мессенджере и открыть с телефона.</p>
+</div>
+<script>
+"use strict";
+/* ============================================================
+   ПЕРЕСМЕНКА — движок
+   Двухпроцессная модель регуляции сна + подбор окон сна.
+   Ось времени: абсолютные часы, t=0 — начало Дня 1 (00:00).
+   ============================================================ */
+const DT = 1/6;                 // шаг симуляции, 10 минут
+const TAU_R = 18.2;             // рост давления сна во время бодрствования, ч
+const TAU_D = 4.2;              // спад давления сна во сне, ч
+const W_S = 58, W_C = 20, W_DEBT = 18;   // веса в формуле запаса внимания
+const THR_WORK = 60;            // ниже — работать рискованно
+const THR_DRIVE = 60;           // ниже — за руль нельзя
+const THR_RED = 45;             // красная зона
+
+const clamp = (x,a,b)=>x<a?a:(x>b?b:x);
+
+function parseHM(s){
+  if(typeof s!=='string') return null;
+  const m=/^(\d{1,2}):(\d{2})$/.exec(s.trim());
+  if(!m) return null;
+  const h=+m[1], mi=+m[2];
+  if(h>23||mi>59) return null;
+  return h+mi/60;
+}
+function hm(t){                                  // 12.5 -> "12:30"
+  let x=((t%24)+24)%24;
+  let h=Math.floor(x+1e-9), mi=Math.round((x-h)*60);
+  if(mi===60){mi=0;h=(h+1)%24;}
+  return String(h).padStart(2,'0')+':'+String(mi).padStart(2,'0');
+}
+function dayOf(t){ return Math.floor(t/24)+1; }
+function stamp(t){                               // 31.5 -> "Д2 07:30"
+  const d=dayOf(t);
+  return (d<1?'накануне':'Д'+d)+' '+hm(t);
+}
+function dur(h){
+  const m=Math.round(h*60);
+  return Math.floor(m/60)+' ч '+String(m%60).padStart(2,'0')+' мин';
+}
+
+/* ---------- циркадный процесс C ---------- */
+function circ(t,cfg){
+  const tmin = cfg.wakeH - 2;          // минимум внутренней активации ≈ за 2 ч до свободного подъёма
+  const peak = tmin + 11;
+  const th = 2*Math.PI*(t-peak)/24;
+  return (Math.cos(th)+0.17*Math.cos(2*th))/1.17;   // -1..1
+}
+function wakeThreshold(c){ return clamp(0.20+0.16*c, 0.05, 0.42); }  // порог самопробуждения
+function latencyH(S,c){
+  const need = wakeThreshold(c)+0.30;
+  return clamp(0.12 + 1.35*Math.max(0, need-S), 0.12, 2.2);
+}
+function alertness(S,c,debtFrac,sinceWake){
+  const inertia = sinceWake<1 ? 25*Math.exp(-sinceWake/0.45) : 0;
+  return clamp(100 - W_S*S + W_C*c - W_DEBT*debtFrac - inertia, 0, 100);
+}
+function band(a){
+  if(a>=75) return {k:'ok',  t:'норма',        cls:'p-ok'};
+  if(a>=60) return {k:'mid', t:'снижено',      cls:'p-mid'};
+  if(a>=45) return {k:'bad', t:'высокий риск', cls:'p-bad'};
+  return            {k:'crit',t:'критично',    cls:'p-bad'};
+}
+
+/* ---------- интервалы ---------- */
+function overlap(a,b){ return Math.max(0, Math.min(a.end,b.end)-Math.max(a.start,b.start)); }
+function subtract(iv, holes){          // iv минус список дыр -> массив кусков
+  let parts=[iv];
+  for(const h of holes){
+    const out=[];
+    for(const p of parts){
+      if(h.end<=p.start||h.start>=p.end){ out.push(p); continue; }
+      if(h.start>p.start) out.push({start:p.start,end:h.start});
+      if(h.end<p.end)     out.push({start:h.end,end:p.end});
+    }
+    parts=out;
+  }
+  return parts;
+}
+/* запретные окна повторяются каждые сутки на всём горизонте */
+function blockIntervals(cfg){
+  const out=[];
+  const d0=Math.floor(cfg.t0/24)-1, d1=Math.floor(cfg.t1/24)+1;
+  for(const b of cfg.blocks){
+    for(let d=d0; d<=d1; d++){
+      let s=d*24+b.from, e=d*24+b.to;
+      if(b.to<=b.from) e+=24;                    // окно через полночь
+      if(e>cfg.t0 && s<cfg.t1) out.push({start:s,end:e,label:b.label});
+    }
+  }
+  return out;
+}
+
+/* ---------- расписание: работа и дороги ---------- */
+function buildSchedule(cfg){
+  const work=[], drives=[], busy=[];
+  cfg.shifts.forEach((sh,i)=>{
+    const s=(sh.day-1)*24+sh.startH, e=s+sh.durH;
+    const com=cfg.commuteH, prep=cfg.prepH;
+    work.push({start:s,end:e,i});
+    drives.push({start:s-com,end:s,type:'to',i});
+    drives.push({start:e,end:e+com,type:'home',i});
+    busy.push({start:s-com-prep,end:e+com});
+  });
+  busy.sort((a,b)=>a.start-b.start);
+  const merged=[];
+  for(const b of busy){
+    const last=merged[merged.length-1];
+    if(last && b.start<=last.end+0.01) last.end=Math.max(last.end,b.end);
+    else merged.push({start:b.start,end:b.end});
+  }
+  return {work,drives,busy:merged};
+}
+function buildGaps(cfg,sched){
+  const gaps=[];
+  let cur=cfg.t0;
+  for(const b of sched.busy){
+    if(b.start>cur) gaps.push({start:cur,end:Math.min(b.start,cfg.t1)});
+    cur=Math.max(cur,b.end);
+  }
+  if(cur<cfg.t1) gaps.push({start:cur,end:cfg.t1});
+  return splitLongGaps(gaps.filter(g=>g.end-g.start>0.4),cfg);
+}
+/* Окно длиннее суток режем по привычному времени подъёма:
+   иначе планировщик пытается уложить трое суток в один сон. */
+function splitLongGaps(gaps,cfg){
+  const out=[];
+  for(const g of gaps){
+    let s=g.start, guard=0;
+    while(g.end-s>20 && guard++<20){
+      let cut=Math.floor((s+8)/24)*24+cfg.wakeH;
+      while(cut<=s+8) cut+=24;
+      if(cut>=g.end-4) break;
+      out.push({start:s,end:cut}); s=cut;
+    }
+    out.push({start:s,end:g.end});
+  }
+  return out;
+}
+
+/* ---------- симуляция отрезка ---------- */
+/* init: {S, debt, lastWake}; opps: окна, когда человек ложится
+   Возвращает состояние, выборки и стоимость отрезка.            */
+function simulateRange(init, opps, from, to, cfg, masks){
+  let S=init.S, debt=init.debt, lastWake=init.lastWake;
+  let mode='wake', tryStart=0, lat=0, sleepStart=0, curOpp=null;
+  const samples=[], sleeps=[];
+  const rate = cfg.need/(24-cfg.need);
+  let cost=0, sleepGot=0, fails=0;
+  const list=opps.slice().sort((a,b)=>a.start-b.start);
+  let oi=0;
+  for(let t=from; t<to-1e-9; t+=DT){
+    const c=circ(t,cfg);
+    // начало попытки уснуть
+    if(mode==='wake'){
+      while(oi<list.length && list[oi].end<=t+1e-9) oi++;
+      if(oi<list.length && t>=list[oi].start-1e-9 && t<list[oi].end-1e-9){
+        curOpp=list[oi]; mode='try'; tryStart=t; lat=latencyH(S,c);
+      }
+    }
+    const debtFrac=clamp(debt/(cfg.need*1.5),0,1);
+    const A=alertness(S,c,debtFrac,t-lastWake);
+    const asleep=(mode==='sleep');
+    samples.push({t,A,S,c,asleep,aw:asleep?0:(t-lastWake)});
+    // стоимость
+    if(!asleep && masks){
+      if(A<THR_RED) cost += 0.8*(THR_RED-A)*DT;      // держаться на ногах в красной зоне — тоже цена
+      if(masks.work(t)) cost += Math.pow(Math.max(0,THR_WORK-A),2)*DT/100;
+      if(masks.drive(t)) cost += 4*Math.pow(Math.max(0,THR_DRIVE-A),2)*DT/100 + (A<THR_RED?15*DT:0);
+    }
+    // динамика
+    if(asleep){
+      S = S*Math.exp(-DT/TAU_D);
+      debt = Math.max(0, debt-DT);
+      sleepGot += DT;
+    } else {
+      S = 1-(1-S)*Math.exp(-DT/TAU_R);
+      debt += DT*rate;
+    }
+    // переходы
+    const tn=t+DT, cn=circ(tn,cfg);
+    if(mode==='try'){
+      if(tn-tryStart>=lat){ mode='sleep'; sleepStart=tn; }
+      else if(curOpp && tn>=curOpp.end-1e-9){ mode='wake'; lastWake=tn; fails++;
+        sleeps.push({start:curOpp.start,end:curOpp.end,got:0,failed:true}); curOpp=null; oi++; }
+    } else if(mode==='sleep'){
+      const spont = (S<=wakeThreshold(cn)) && (tn-sleepStart>=0.75);
+      const alarm = curOpp && tn>=curOpp.end-1e-9;
+      if(spont||alarm){
+        sleeps.push({start:sleepStart,end:tn,got:tn-sleepStart,failed:false,
+                     alarm:!!alarm&&!spont, lieDown:curOpp?curOpp.start:sleepStart});
+        mode='wake'; lastWake=tn; curOpp=null; oi++;
+      }
+    }
+  }
+  if(mode==='sleep'){ sleeps.push({start:sleepStart,end:to,got:to-sleepStart,failed:false,alarm:false,
+                                   lieDown:curOpp?curOpp.start:sleepStart}); }
+  return {S,debt,lastWake,samples,sleeps,cost,sleepGot,fails,mode};
+}
+
+/* ---------- варианты расстановки сна в одном свободном окне ---------- */
+function trimByBlocks(eps,holes){
+  const out=[];
+  for(const e of eps) for(const p of subtract(e,holes)) if(p.end-p.start>=0.75) out.push(p);
+  return out.sort((a,b)=>a.start-b.start);
+}
+function gapCandidates(gap,cfg,holes){
+  const g0=gap.start,g1=gap.end,L=g1-g0,raw=[];
+  const push=eps=>raw.push(trimByBlocks(eps,holes));
+  push([]);
+  if(L>=0.9){
+    for(const d of [0,0.5,1,1.5,2,2.5,3,4,5,6,7,8,9,10]){
+      if(d+0.9>L) break;
+      push([{start:g0+d,end:Math.min(g0+d+11,g1)}]);
+    }
+    push([{start:Math.max(g0,g1-8),end:g1}]);
+    push([{start:Math.max(g0,g1-5.5),end:g1}]);
+    if(L>=1.2&&L<=5) push([{start:g1-Math.min(1.5,L),end:g1}]);
+    if(L>=9){
+      push([{start:g0,end:g0+4},{start:g1-4.5,end:g1}]);
+      push([{start:g0,end:g0+5.5},{start:g1-3.5,end:g1}]);
+      push([{start:g0+1,end:g0+4.5},{start:g1-5,end:g1}]);
+      push([{start:g0,end:g0+3},{start:g1-6,end:g1}]);
+    }
+    const bed=cfg.wakeH-cfg.need;
+    for(let d=Math.floor(g0/24)-1;d<=Math.floor(g1/24)+1;d++){
+      const st=Math.max(d*24+bed,g0), en=Math.min(d*24+cfg.wakeH,g1);
+      if(en-st>=3) push([{start:st,end:en}]);
+    }
+  }
+  const seen=new Set(),out=[];
+  for(const c of raw){
+    const key=c.map(e=>e.start.toFixed(2)+'-'+e.end.toFixed(2)).join('|');
+    if(!seen.has(key)){ seen.add(key); out.push(c); }
+  }
+  return out;
+}
+function inAny(t,list){ for(const iv of list) if(t>=iv.start&&t<iv.end) return true; return false; }
+function maskFns(sched,cfg){
+  return { work:t=>inAny(t,sched.work),
+           drive:t=>cfg.drives&&inAny(t,sched.drives) };
+}
+
+/* Старт горизонта: привычный подъём накануне первой смены.
+   Допущение: до первой смены человек выспался нормально. */
+function initState(cfg){ return {S:0.18, debt:0, lastWake:cfg.t0-0.75}; }
+
+/* ---------- подбор плана: лучевой поиск по окнам ---------- */
+function planSleep(cfg,sched){
+  const gaps=buildGaps(cfg,sched), holes=blockIntervals(cfg), masks=maskFns(sched,cfg);
+  const I=initState(cfg);
+  let beam=[{S:I.S,debt:I.debt,lastWake:I.lastWake,score:0,opps:[],hist:[]}];
+  for(let i=0;i<gaps.length;i++){
+    const segEnd=(i+1<gaps.length)?gaps[i+1].start:cfg.t1;
+    const cands=gapCandidates(gaps[i],cfg,holes);
+    const next=[];
+    for(const st of beam){
+      for(const cd of cands){
+        const r=simulateRange({S:st.S,debt:st.debt,lastWake:st.lastWake},cd,gaps[i].start,segEnd,cfg,masks);
+        const eps=r.sleeps.filter(x=>!x.failed&&x.got>0.05);
+        const stubs=eps.filter(x=>x.got<0.6).length;
+        const cap=cfg.need*((segEnd-gaps[i].start)/24)*1.15;   // спать про запас нельзя
+        const starts=eps.map(x=>x.start), hist=st.hist.concat(starts);
+        let frag=0;                                            // не больше двух заходов сна в сутки
+        for(const x of eps) if(x.alarm && x.end<segEnd-4) frag+=8;   // будильник посреди ночи без причины
+        for(const e of starts){
+          const n=hist.filter(x=>x>e-24&&x<=e).length;
+          if(n>2) frag+=15*(n-2);
+        }
+        const gain=6*Math.min(r.sleepGot,cap)-r.cost-6*Math.max(0,cd.length-1)-2.5*eps.length-8*r.fails-12*stubs-frag;
+        next.push({S:r.S,debt:r.debt,lastWake:r.lastWake,score:st.score+gain,opps:st.opps.concat(cd),hist});
+      }
+    }
+    next.sort((a,b)=>b.score-a.score);
+    beam=next.slice(0,8);
+  }
+  return beam.length?beam[0].opps:[];
+}
+/* «как обычно»: привычное ночное окно, если оно попадает в промежуток,
+   иначе — лечь сразу, как пришёл домой, и спать сколько спится */
+function baselinePlan(cfg,sched){
+  const gaps=buildGaps(cfg,sched), holes=blockIntervals(cfg), out=[];
+  const bed=cfg.wakeH-cfg.need;
+  for(const g of gaps){
+    if(g.end-g.start<0.9) continue;
+    let best=null;
+    for(let d=Math.floor(g.start/24)-1;d<=Math.floor(g.end/24)+1;d++){
+      const st=Math.max(d*24+bed,g.start), en=Math.min(d*24+cfg.wakeH,g.end);
+      if(en-st>=3&&(!best||en-st>best.end-best.start)) best={start:st,end:en};
+    }
+    const afterShift=sched.busy.some(b=>Math.abs(b.end-g.start)<0.12);
+    if(!best && !afterShift) continue;           // спать «сразу» человек идёт только придя со смены
+    const eps=best?[best]:[{start:g.start,end:Math.min(g.start+9,g.end)}];
+    trimByBlocks(eps,holes).forEach(e=>out.push(e));
+  }
+  return out;
+}
+
+/* ---------- сводные показатели ---------- */
+function measure(res,cfg,sched){
+  let redWork=0,subWork=0,redDrive=0,subDrive=0,minWork=100,minDrive=100,sleep=0;
+  for(const p of res.samples){
+    if(p.asleep){ sleep+=DT; continue; }
+    if(inAny(p.t,sched.work)){
+      if(p.A<THR_RED) redWork+=DT;
+      if(p.A<THR_WORK) subWork+=DT;
+      minWork=Math.min(minWork,p.A);
+    }
+    if(cfg.drives&&inAny(p.t,sched.drives)){
+      if(p.A<THR_RED) redDrive+=DT;
+      if(p.A<THR_DRIVE) subDrive+=DT;
+      minDrive=Math.min(minDrive,p.A);
+    }
+  }
+  const days=(cfg.t1-cfg.t0)/24;
+  return {redWork,subWork,redDrive,subDrive,minWork,minDrive,
+          sleep,sleepPerDay:sleep/days,days};
+}
+function sampleAt(res,t){
+  const i=Math.round((t-res.samples[0].t)/DT);
+  return res.samples[clamp(i,0,res.samples.length-1)];
+}
+function statsOver(res,iv){
+  let min=100,sum=0,n=0,at0=null;
+  for(const p of res.samples){
+    if(p.t<iv.start-1e-9||p.t>=iv.end) continue;
+    if(at0===null) at0=p;
+    if(!p.asleep){ min=Math.min(min,p.A); sum+=p.A; n++; }
+  }
+  return {min:n?min:null, mean:n?sum/n:null, first:at0};
+}
+
+/* ---------- события для таблицы риска ---------- */
+function riskEvents(res,cfg,sched){
+  const ev=[];
+  sched.work.forEach((w,i)=>{
+    const st=statsOver(res,w), endS=sampleAt(res,w.end-DT);
+    ev.push({kind:'Смена '+(i+1), when:stamp(w.start)+' → '+stamp(w.end),
+             min:st.min, at:endS.A, aw:endS.aw, iv:w});
+  });
+  if(cfg.drives) sched.drives.forEach(d=>{
+    const st=statsOver(res,d), s=sampleAt(res,(d.start+d.end)/2);
+    ev.push({kind:d.type==='home'?'Дорога домой':'Дорога на смену',
+             when:stamp(d.start)+' → '+stamp(d.end),
+             min:st.min, at:s.A, aw:s.aw, iv:d, drive:true});
+  });
+  ev.sort((a,b)=>a.iv.start-b.iv.start);
+  return ev;
+}
+
+/* ---------- кофеин и свет ---------- */
+function caffeinePlan(res,cfg,sched){
+  if(!cfg.caffeine) return [];
+  const out=[], sleeps=res.sleeps.filter(s=>!s.failed&&s.got>0.5);
+  sched.work.forEach((w,i)=>{
+    const next=sleeps.find(s=>s.start>=w.end-1.5);
+    const stop=next?next.lieDown-6:w.end;
+    const times=[];
+    if(sampleAt(res,w.start+0.25).A<78) times.push(w.start+0.25);
+    let mn=null;
+    for(const p of res.samples) if(p.t>=w.start&&p.t<w.end&&!p.asleep&&(!mn||p.A<mn.A)) mn=p;
+    if(mn&&mn.A<72) times.push(mn.t-0.75);
+    const cand=[...new Set(times.map(t=>Math.round(t*6)/6))]
+      .filter(t=>t>=w.start-0.5&&t<=Math.min(w.end,stop)).sort((a,b)=>a-b);
+    const fin=[];
+    for(const t of cand) if(!fin.length||t-fin[fin.length-1]>=3) fin.push(t);
+    out.push({shift:i+1,times:fin,stop,hasNext:!!next});
+  });
+  return out;
+}
+function lightPlan(res,cfg,sched){
+  const out=[];
+  sched.work.forEach((w,i)=>{
+    const nightOverlap=(()=>{ let n=0;
+      for(let t=w.start;t<w.end;t+=DT){ const h=((t%24)+24)%24; if(h<6||h>=23) n+=DT; } return n; })();
+    if(nightOverlap>=1){
+      out.push({shift:i+1,
+        bright:{start:w.start,end:Math.max(w.start,w.end-2)},
+        dim:{start:Math.max(w.start,w.end-2),end:w.end+cfg.commuteH},
+        night:true});
+    } else {
+      out.push({shift:i+1,bright:{start:w.start,end:Math.min(w.end,w.start+2)},dim:null,night:false});
+    }
+  });
+  return out;
+}
+
+/* ============================================================
+   ОТРИСОВКА
+   ============================================================ */
+function renderTimeline(res,cfg,sched){
+  const W=980,padL=46,padR=10,rowH=68,gapY=10,top=24;
+  const dmin=Math.floor(cfg.t0/24), dmax=Math.floor((cfg.t1-0.001)/24);
+  const rows=dmax-dmin+1, H=top+rows*(rowH+gapY)+16, plotW=W-padL-padR;
+  const x=t=>padL+((t-dmin*24)%24)/24*plotW;
+  const rowY=t=>top+(Math.floor(t/24)-dmin)*(rowH+gapY);
+  const holes=blockIntervals(cfg);
+  let s=`<svg class="tl" id="timeline" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Карта суток: смены, сон и запас внимания по часам">`;
+  s+=`<defs><pattern id="hatch" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+      <rect width="6" height="6" fill="var(--panel2)"/><line x1="0" y1="0" x2="0" y2="6" stroke="var(--muted)" stroke-width="2"/></pattern></defs>`;
+  // сетка часов
+  for(let h=0;h<=24;h+=3){
+    const xx=padL+h/24*plotW;
+    s+=`<line x1="${xx}" y1="${top-6}" x2="${xx}" y2="${H-14}" stroke="var(--line)" stroke-width="1"/>`;
+    s+=`<text x="${xx}" y="${top-10}" font-size="11" fill="var(--muted)" text-anchor="middle">${String(h%24).padStart(2,'0')}</text>`;
+  }
+  for(let d=dmin;d<=dmax;d++){
+    const y=top+(d-dmin)*(rowH+gapY);
+    s+=`<rect x="${padL}" y="${y}" width="${plotW}" height="${rowH}" fill="var(--panel2)" rx="6"/>`;
+    s+=`<text x="6" y="${y+20}" font-size="12" fill="var(--muted)">${d+1<1?'нак.':'Д'+(d+1)}</text>`;
+  }
+  const drawBand=(iv,yOff,h,fill,op)=>{
+    let a=iv.start,b=iv.end,out='';
+    while(a<b){
+      const dayEnd=(Math.floor(a/24)+1)*24, seg=Math.min(b,dayEnd);
+      if(seg>a&&a>=dmin*24&&a<(dmax+1)*24){
+        const y=rowY(a)+yOff, x1=x(a), x2=padL+((seg-Math.floor(a/24)*24)/24)*plotW;
+        out+=`<rect x="${x1.toFixed(1)}" y="${y}" width="${Math.max(1,x2-x1).toFixed(1)}" height="${h}" fill="${fill}" opacity="${op||1}" rx="2"/>`;
+      }
+      a=seg;
+    }
+    return out;
+  };
+  holes.forEach(b=>{ s+=drawBand(b,8,13,'url(#hatch)',1); });
+  sched.work.forEach(w=>{ s+=drawBand(w,8,13,'var(--work)',1); });
+  res.sleeps.filter(sl=>!sl.failed&&sl.got>0.5).forEach(sl=>{ s+=drawBand(sl,24,13,'var(--sleep)',1); });
+  // красная зона
+  let runStart=null;
+  for(const p of res.samples){
+    const red=!p.asleep&&p.A<THR_RED;
+    if(red&&runStart===null) runStart=p.t;
+    if((!red||p===res.samples[res.samples.length-1])&&runStart!==null){
+      s+=drawBand({start:runStart,end:p.t},40,26,'var(--bad)',0.35); runStart=null;
+    }
+  }
+  // порог 45
+  for(let d=dmin;d<=dmax;d++){
+    const y=top+(d-dmin)*(rowH+gapY)+40+26*(1-THR_RED/100);
+    s+=`<line x1="${padL}" y1="${y.toFixed(1)}" x2="${padL+plotW}" y2="${y.toFixed(1)}" stroke="var(--bad)" stroke-width="1" stroke-dasharray="3 3" opacity=".6"/>`;
+  }
+  // кривая внимания
+  let path='',prevDay=null;
+  for(const p of res.samples){
+    if(p.t<dmin*24||p.t>=(dmax+1)*24) continue;
+    const d=Math.floor(p.t/24), y=rowY(p.t)+40+26*(1-p.A/100), xx=x(p.t);
+    if(d!==prevDay){ path+=` M${xx.toFixed(1)},${y.toFixed(1)}`; prevDay=d; }
+    else path+=` L${xx.toFixed(1)},${y.toFixed(1)}`;
+  }
+  s+=`<path d="${path.trim()}" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linejoin="round"/>`;
+  s+=`<text x="${padL}" y="${H-2}" font-size="11" fill="var(--muted)">верхняя полоса — смена и запреты, средняя — сон, нижняя — запас внимания (0–100)</text>`;
+  s+='</svg>';
+  return s;
+}
+function fmtDelta(v,better){          // better: 'up' | 'down'
+  if(Math.abs(v)<0.5) return `<span class="delta muted">без изменений</span>`;
+  const good=(better==='up')?v>0:v<0;
+  const sign=v>0?'+':'−';
+  return `<span class="delta" style="color:${good?'var(--ok)':'var(--bad)'}">${sign}${Math.abs(Math.round(v))}</span>`;
+}
+function renderKpis(mp,mb,cfg){
+  const k=[];
+  k.push(`<div class="kpi"><b>${mp.sleepPerDay.toFixed(1)} ч</b><small>сна в среднем за сутки<br>как обычно: ${mb.sleepPerDay.toFixed(1)} ч ${fmtDelta((mp.sleepPerDay-mb.sleepPerDay)*60,'up')} мин</small></div>`);
+  k.push(`<div class="kpi"><b>${Math.round(mp.minWork)}</b><small>минимум внимания на смене<br>как обычно: ${Math.round(mb.minWork)} ${fmtDelta(mp.minWork-mb.minWork,'up')}</small></div>`);
+  if(cfg.drives){
+    k.push(`<div class="kpi"><b>${Math.round(mp.redDrive*60)} мин</b><small>за рулём в красной зоне<br>как обычно: ${Math.round(mb.redDrive*60)} мин ${fmtDelta((mp.redDrive-mb.redDrive)*60,'down')}</small></div>`);
+    k.push(`<div class="kpi"><b>${Math.round(mp.minDrive)}</b><small>минимум внимания за рулём<br>как обычно: ${Math.round(mb.minDrive)} ${fmtDelta(mp.minDrive-mb.minDrive,'up')}</small></div>`);
+  }
+  k.push(`<div class="kpi"><b>${Math.round(mp.subWork*60)} мин</b><small>на смене ниже порога 60<br>как обычно: ${Math.round(mb.subWork*60)} мин ${fmtDelta((mp.subWork-mb.subWork)*60,'down')}</small></div>`);
+  return k.join('');
+}
+
+function renderRisk(ev,cfg){
+  let s=`<thead><tr><th>Что</th><th>Когда</th><th>Запас внимания</th><th>Без сна</th><th>Что делать</th></tr></thead><tbody>`;
+  for(const e of ev){
+    const a=e.drive?e.at:Math.min(e.at,e.min===null?100:e.min);
+    const b=band(a);
+    let advice;
+    if(e.drive){
+      if(a>=THR_DRIVE) advice='Ехать можно. Окно свежести не растягивайте.';
+      else if(a>=THR_RED) advice='Перед выездом 20 мин сна в машине + кофеин, ехать через 25 мин. Открытое окно и радио не работают.';
+      else advice='<b>Не садиться за руль.</b> Такси, коллега, попутчик или сон 90 мин на месте. Это самый опасный пункт списка.';
+    } else {
+      if(a>=THR_WORK) advice='Обычный режим. Самые сложные задачи — в первую половину.';
+      else if(a>=THR_RED) advice='Провал ближе к концу. Ответственные действия (расчёт дозы, документы, погрузка) — двойная проверка вслух.';
+      else advice='Провал глубокий. Договоритесь о подмене на 20–30 мин или сместите сон по плану ниже.';
+    }
+    s+=`<tr><td><b>${e.kind}</b></td><td>${e.when}</td>
+        <td><span class="pill ${b.cls}">${Math.round(a)} · ${b.t}</span>${e.min!==null&&!e.drive?`<br><small class="muted">минимум ${Math.round(e.min)}</small>`:''}</td>
+        <td>${e.aw>=17?'<b style="color:var(--bad)">'+e.aw.toFixed(1)+' ч</b>':e.aw.toFixed(1)+' ч'}</td>
+        <td>${advice}</td></tr>`;
+  }
+  return s+'</tbody>';
+}
+
+function renderPlanText(res,cfg,sched){
+  const caf=caffeinePlan(res,cfg,sched), lit=lightPlan(res,cfg,sched);
+  const items=[];
+  res.sleeps.forEach(sl=>{
+    if(sl.failed){
+      items.push({t:sl.start,txt:`<b>${stamp(sl.start)}</b> — попытка уснуть в это окно провалится (внутренние часы держат вас в бодрствовании). Не ложитесь, займитесь чем-то спокойным.`});
+      return;
+    }
+    if(sl.got<0.5) return;
+    const lat=Math.round((sl.start-sl.lieDown)*60);
+    if(sl.end>=cfg.t1-1e-6){
+      items.push({t:sl.lieDown,txt:`<b>${stamp(sl.lieDown)}</b> — лечь спать и спать сколько спится: смен впереди нет, расчёт на этом заканчивается.`});
+      return;
+    }
+    const how=sl.alarm
+      ? `встать по будильнику в ${hm(sl.end)} — <b>обязательно поставьте будильник</b>`
+      : `проснётесь сами около ${hm(sl.end)}`;
+    const nextShift=sched.work.find(w=>w.start>sl.end);
+    const why=(sl.alarm&&(!nextShift||nextShift.start-sl.end>10))
+      ? ' Коротко — намеренно: так вы уснёте вечером в обычное время и быстрее вернётесь в нормальный ритм.' : '';
+    items.push({t:sl.lieDown,txt:`<b>${stamp(sl.lieDown)}</b> — лечь спать. Уснёте примерно за ${lat} мин, ${how}. Итого сна: <b>${dur(sl.got)}</b>.${why}`});
+  });
+  caf.forEach(c=>{
+    const w=sched.work[c.shift-1];
+    if(!c.times.length&&w) items.push({t:w.start+0.05,
+      txt:`<b>${stamp(w.start)}</b> — <b>кофеин на эту смену не планируем.</b> Доза, которая помогла бы к концу смены, придётся на время, когда она испортит ближайший сон. Работают свет, движение и разговор.`});
+    c.times.forEach(t=>items.push({t,txt:`<b>${stamp(t)}</b> — кофеин (≈1 чашка кофе, 80–100 мг). Действует через 20–40 мин.`}));
+    if(c.hasNext) items.push({t:c.stop,txt:`<b>${stamp(c.stop)}</b> — <b>стоп-кофеин.</b> Позже — испортите ближайший сон: половина дозы держится в крови 5–6 часов.`});
+  });
+  lit.forEach(l=>{
+    if(l.night){
+      items.push({t:l.bright.start,txt:`<b>${stamp(l.bright.start)}–${hm(l.bright.end)}</b> — максимально яркий свет на рабочем месте: он держит внимание.`});
+      items.push({t:l.dim.start,txt:`<b>${stamp(l.dim.start)}</b> — приглушить свет; на улице и в дороге домой — тёмные очки. Утренний свет в глаза сломает дневной сон.`});
+    } else {
+      items.push({t:l.bright.start,txt:`<b>${stamp(l.bright.start)}</b> — яркий свет в первые 2 часа смены, чтобы добить инерцию после подъёма.`});
+    }
+  });
+  const sleepsReal=res.sleeps.filter(s=>!s.failed&&s.got>0.3);
+  if(sleepsReal.length) items.push({t:sleepsReal[0].lieDown-0.02,
+    txt:`<b>Спальня один раз и навсегда:</b> плотные шторы или маска, беруши, телефон в авиарежим, температура 18–19 °C. Дневной сон рвётся от света и звонков, а не от «неумения спать».`});
+  items.sort((a,b)=>a.t-b.t);
+  let cur=null,html='';
+  for(const it of items){
+    const d=dayOf(it.t);
+    if(d!==cur){ if(cur!==null) html+='</ul>'; html+=`<h3>${d<1?'Накануне':'День '+d}</h3><ul class="plan">`; cur=d; }
+    html+=`<li>${it.txt}</li>`;
+  }
+  if(cur!==null) html+='</ul>';
+  return html||'<p class="muted">Свободных окон для сна в этом графике нет — уберите часть смен или запретов.</p>';
+}
+function planAsPlainText(res,cfg,sched,mp,mb){
+  const div=document.createElement('div');
+  div.innerHTML=renderPlanText(res,cfg,sched);
+  const lines=['ПЕРЕСМЕНКА — план сна под ваш график',''];
+  div.querySelectorAll('h3,li').forEach(n=>{
+    lines.push(n.tagName==='H3'?('\n== '+n.textContent+' =='):('— '+n.textContent));
+  });
+  lines.push('','Итог по сравнению с обычным режимом:');
+  lines.push(`сон за сутки: ${mp.sleepPerDay.toFixed(1)} ч (было ${mb.sleepPerDay.toFixed(1)} ч)`);
+  lines.push(`минимум внимания на смене: ${Math.round(mp.minWork)} (было ${Math.round(mb.minWork)})`);
+  if(cfg.drives) lines.push(`минут за рулём в красной зоне: ${Math.round(mp.redDrive*60)} (было ${Math.round(mb.redDrive*60)})`);
+  lines.push('','Это расчёт по модели, а не медицинский документ.');
+  return lines.join('\n');
+}
+function toCsv(res,cfg,sched,ev){
+  const rows=[['тип','начало','конец','запас_внимания','минимум','часов_без_сна','примечание']];
+  res.sleeps.forEach(s=>rows.push(['сон',stamp(s.lieDown!==undefined?s.lieDown:s.start),stamp(s.end),'','',
+    '', s.failed?'окно не сработает':(s.alarm?'подъём по будильнику, '+dur(s.got):'самопробуждение, '+dur(s.got))]));
+  ev.forEach(e=>rows.push([e.kind,stamp(e.iv.start),stamp(e.iv.end),Math.round(e.at),
+    e.min===null?'':Math.round(e.min),e.aw.toFixed(1),band(e.drive?e.at:Math.min(e.at,e.min||100)).t]));
+  return rows.map(r=>r.map(v=>{
+    const s=String(v);
+    return /[;"\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;
+  }).join(';')).join('\n');
+}
+
+/* ============================================================
+   ИНТЕРФЕЙС
+   ============================================================ */
+const $=id=>document.getElementById(id);
+const ST={ wake:'07:00',need:7.5,commute:35,prep:45,drives:true,caffeine:true,
+           shifts:[{day:1,start:'19:00',dur:12}], blocks:[] };
+let LAST=null, TAB='plan';
+
+const PRESETS={
+  nurse:[{day:1,start:'19:00',dur:12},{day:2,start:'19:00',dur:12}],
+  '2x2':[{day:1,start:'08:00',dur:12},{day:2,start:'08:00',dur:12},{day:3,start:'20:00',dur:12},{day:4,start:'20:00',dur:12}],
+  sutki:[{day:1,start:'08:00',dur:24},{day:5,start:'08:00',dur:24}],
+  slide:[{day:1,start:'06:00',dur:8},{day:2,start:'14:00',dur:8},{day:3,start:'22:00',dur:8}],
+  oncall:[{day:1,start:'23:00',dur:8},{day:2,start:'23:00',dur:8},{day:3,start:'23:00',dur:8},{day:4,start:'23:00',dur:8}]
+};
+
+function renderShiftRows(){
+  const box=$('shiftRows'); box.innerHTML='';
+  ST.shifts.forEach((sh,i)=>{
+    const d=document.createElement('div'); d.className='row';
+    d.innerHTML=`<div><label for="sd${i}">День</label><input type="number" id="sd${i}" min="1" max="14" step="1" value="${sh.day}"></div>
+      <div><label for="ss${i}">Начало</label><input type="time" id="ss${i}" value="${sh.start}"></div>
+      <div><label for="su${i}">Длина, ч</label><input type="number" id="su${i}" min="1" max="24" step="0.5" value="${sh.dur}"></div>
+      <div><label for="sx${i}" class="sr">Удалить смену ${i+1}</label><button class="del" id="sx${i}" aria-label="Удалить смену ${i+1}">✕</button></div>`;
+    box.appendChild(d);
+    $('sd'+i).addEventListener('input',e=>ST.shifts[i].day=+e.target.value||1);
+    $('ss'+i).addEventListener('input',e=>ST.shifts[i].start=e.target.value);
+    $('su'+i).addEventListener('input',e=>ST.shifts[i].dur=+e.target.value||1);
+    $('sx'+i).addEventListener('click',()=>{ST.shifts.splice(i,1);renderShiftRows();});
+  });
+  if(!ST.shifts.length) box.innerHTML='<p class="muted">Смен нет. Добавьте хотя бы одну или возьмите готовый график выше.</p>';
+}
+function renderBlockRows(){
+  const box=$('blockRows'); box.innerHTML='';
+  ST.blocks.forEach((b,i)=>{
+    const d=document.createElement('div'); d.className='row blk';
+    d.innerHTML=`<div><label for="bf${i}">С</label><input type="time" id="bf${i}" value="${b.from}"></div>
+      <div><label for="bt${i}">До</label><input type="time" id="bt${i}" value="${b.to}"></div>
+      <div class="full"><label for="bl${i}">Почему</label><input type="text" id="bl${i}" value="${b.label.replace(/"/g,'&quot;')}" placeholder="дети из школы"></div>
+      <div><label for="bx${i}" class="sr">Удалить запрет ${i+1}</label><button class="del" id="bx${i}" aria-label="Удалить запрет ${i+1}">✕</button></div>`;
+    box.appendChild(d);
+    $('bf'+i).addEventListener('input',e=>ST.blocks[i].from=e.target.value);
+    $('bt'+i).addEventListener('input',e=>ST.blocks[i].to=e.target.value);
+    $('bl'+i).addEventListener('input',e=>ST.blocks[i].label=e.target.value);
+    $('bx'+i).addEventListener('click',()=>{ST.blocks.splice(i,1);renderBlockRows();});
+  });
+  if(!ST.blocks.length) box.innerHTML='<p class="muted">Запретов нет — модель считает, что спать можно в любое время суток.</p>';
+}
+function pullTop(){
+  ST.wake=$('wake').value; ST.need=+$('need').value; ST.commute=+$('commute').value;
+  ST.prep=+$('prep').value; ST.drives=$('drives').value==='1'; ST.caffeine=$('caffeine').value==='1';
+}
+function pushTop(){
+  $('wake').value=ST.wake; $('need').value=ST.need; $('commute').value=ST.commute;
+  $('prep').value=ST.prep; $('drives').value=ST.drives?'1':'0'; $('caffeine').value=ST.caffeine?'1':'0';
+}
+function buildCfg(){
+  pullTop();
+  const wakeH=parseHM(ST.wake);
+  if(wakeH===null) throw new Error('Время свободного подъёма указано неверно. Формат ЧЧ:ММ.');
+  if(!(ST.need>=4&&ST.need<=11)) throw new Error('Потребность во сне должна быть от 4 до 11 часов.');
+  if(!ST.shifts.length) throw new Error('Добавьте хотя бы одну смену — иначе планировать нечего.');
+  if(ST.shifts.length>10) throw new Error('Больше 10 смен за раз считать незачем: планируйте блок из 2–6 смен.');
+  const shifts=ST.shifts.map((s,i)=>{
+    const st=parseHM(s.start);
+    if(st===null) throw new Error(`Смена ${i+1}: время начала в формате ЧЧ:ММ.`);
+    if(!(s.dur>0&&s.dur<=24)) throw new Error(`Смена ${i+1}: длина смены от 0,5 до 24 часов.`);
+    if(!(s.day>=1&&s.day<=14)) throw new Error(`Смена ${i+1}: номер дня от 1 до 14.`);
+    return {day:+s.day,startH:st,durH:+s.dur};
+  }).sort((a,b)=>((a.day-1)*24+a.startH)-((b.day-1)*24+b.startH));
+  const blocks=ST.blocks.map((b,i)=>{
+    const f=parseHM(b.from),t=parseHM(b.to);
+    if(f===null||t===null) throw new Error(`Запрет ${i+1}: время в формате ЧЧ:ММ.`);
+    if(Math.abs(t-f)<0.01) throw new Error(`Запрет ${i+1}: начало и конец совпадают.`);
+    return {from:f,to:t,label:b.label||'занято'};
+  });
+  const cfg={wakeH,need:+ST.need,commuteH:(+ST.commute||0)/60,prepH:(+ST.prep||45)/60,
+             drives:ST.drives,caffeine:ST.caffeine,shifts,blocks,t0:0,t1:0};
+  const sched=buildSchedule(cfg);
+  let a=Infinity,b=-Infinity;
+  sched.busy.forEach(x=>{a=Math.min(a,x.start);b=Math.max(b,x.end);});
+  const target=a-12;
+  let w=Math.floor(target/24)*24+cfg.wakeH;
+  if(w>target) w-=24;
+  cfg.t0=w; cfg.t1=Math.ceil(b+20);
+  // проверка пересечения смен
+  for(let i=1;i<sched.work.length;i++)
+    if(sched.work[i].start<sched.work[i-1].end)
+      throw new Error(`Смены ${i} и ${i+1} накладываются друг на друга — проверьте день и длину.`);
+  return {cfg,sched};
+}
+function runAll(){
+  const {cfg,sched}=buildCfg();
+  const masks=maskFns(sched,cfg);
+  const oppsPlan=planSleep(cfg,sched);
+  const oppsBase=baselinePlan(cfg,sched);
+  const resPlan=simulateRange(initState(cfg),oppsPlan,cfg.t0,cfg.t1,cfg,masks);
+  const resBase=simulateRange(initState(cfg),oppsBase,cfg.t0,cfg.t1,cfg,masks);
+  const mp=measure(resPlan,cfg,sched), mb=measure(resBase,cfg,sched);
+  const ev=riskEvents(resPlan,cfg,sched);
+  let cf=null;
+  if(cfg.blocks.length){
+    const cfg2=Object.assign({},cfg,{blocks:[]});
+    const r2=simulateRange(initState(cfg2),planSleep(cfg2,sched),cfg2.t0,cfg2.t1,cfg2,masks);
+    const m2=measure(r2,cfg2,sched);
+    if((m2.sleepPerDay-mp.sleepPerDay)>0.25||(m2.minWork-mp.minWork)>3) cf=m2;
+  }
+  LAST={cfg,sched,resPlan,resBase,mp,mb,ev,cf};
+  return LAST;
+}
+
+function verdictText(L){
+  const {mp,mb,cfg}=L;
+  const dMin=Math.round(mp.minWork-mb.minWork);
+  const dDrive=Math.round((mb.redDrive-mp.redDrive)*60);
+  const dSleep=Math.round((mp.sleepPerDay-mb.sleepPerDay)*60);
+  let s='';
+  if(cfg.drives&&mb.redDrive>0.08) s+=`При обычном режиме у вас <b>${Math.round(mb.redDrive*60)} мин за рулём в красной зоне</b> — это тот самый момент, когда люди «моргают» на три секунды. ${dDrive>0?('План убирает '+dDrive+' из них. '):''}`;
+  if(cfg.drives&&mp.redDrive>0.08) s+=`<b>Полностью убрать риск не удалось: график этого не позволяет.</b> Опасные выезды перечислены ниже — на них нужен не план сна, а другой способ добраться. `;
+  s+=`Сна за сутки ${dSleep>=0?'+':'−'}${Math.abs(dSleep)} мин; минимум внимания на смене ${Math.round(mb.minWork)} → ${Math.round(mp.minWork)}. `;
+  if(mp.minWork<THR_RED) s+='Даже с планом остаётся провал ниже 45 — это сигнал, что сам график смен небезопасен, и разговор нужно вести с тем, кто его составляет.';
+  else if(dMin<=1&&dSleep<=5) s+='Ваш обычный режим уже близок к оптимальному — менять почти нечего, и это тоже результат.';
+  else s+='План не требует силы воли: он требует только двигать время отбоя и будильник.';
+  if(L.cf){
+    const dm=Math.round((L.cf.sleepPerDay-mp.sleepPerDay)*60), da=Math.round(L.cf.minWork-mp.minWork);
+    s+=` <br><br><b>Что именно у вас забирает сон.</b> Ваши запретные часы (${cfg.blocks.map(b=>hm(b.from)+'–'+hm(b.to)+(b.label?' — '+b.label:'')).join('; ')}) стоят ${dm>0?dm+' мин сна за сутки':'сна немного'}${da>0?' и '+da+' пунктов минимума внимания':''}. Если освободить их хотя бы в дни ночных смен — это дешевле любых таблеток и переговоров с начальством.`;
+  }
+  return s;
+}
+function paint(){
+  const L=LAST; if(!L) return;
+  $('results').hidden=false;
+  $('kpis').innerHTML=renderKpis(L.mp,L.mb,L.cfg);
+  $('verdict').innerHTML=verdictText(L);
+  const res=TAB==='plan'?L.resPlan:L.resBase;
+  $('tlWrap').innerHTML=renderTimeline(res,L.cfg,L.sched);
+  $('tabPlan').setAttribute('aria-selected',TAB==='plan');
+  $('tabBase').setAttribute('aria-selected',TAB==='base');
+  const ev=TAB==='plan'?L.ev:riskEvents(L.resBase,L.cfg,L.sched);
+  $('riskTable').innerHTML=renderRisk(ev,L.cfg);
+  $('planText').innerHTML=renderPlanText(L.resPlan,L.cfg,L.sched);
+}
+function calc(){
+  try{
+    $('inputErr').hidden=true;
+    runAll(); paint();
+    $('results').scrollIntoView({behavior:'smooth',block:'start'});
+  }catch(e){
+    $('inputErr').hidden=false;
+    $('inputErr').textContent=e.message||String(e);
+  }
+}
+/* ---------- выдача файлов и текста ---------- */
+function deliver(name,text,mime){
+  let downloaded=false;
+  try{
+    const blob=new Blob([text],{type:mime+';charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url; a.download=name; document.body.appendChild(a); a.click();
+    setTimeout(()=>{URL.revokeObjectURL(url);a.remove();},1000);
+    downloaded=true;
+  }catch(e){ downloaded=false; }
+  showPayload(name,text,downloaded);
+}
+function showPayload(name,text,downloaded){
+  let box=$('payload');
+  if(!box){
+    box=document.createElement('div'); box.id='payload'; box.className='card noprint';
+    box.innerHTML=`<h2>Готовый файл: <span id="plName"></span></h2>
+      <p class="sub" id="plMsg"></p>
+      <label for="plText" class="sr">Содержимое файла</label>
+      <textarea id="plText" readonly style="min-height:160px"></textarea>
+      <div class="btnbar"><button id="plCopy" class="mini">Скопировать содержимое</button>
+      <button id="plClose" class="mini ghost">Закрыть</button></div>`;
+    $('results').appendChild(box);
+    $('plCopy').addEventListener('click',()=>copyText($('plText').value,'plMsg'));
+    $('plClose').addEventListener('click',()=>box.remove());
+  }
+  $('plName').textContent=name;
+  $('plMsg').textContent=downloaded
+    ? 'Скачивание запущено. Если браузер его заблокировал — скопируйте текст ниже и сохраните сами.'
+    : 'Браузер не дал скачать файл. Скопируйте текст ниже и сохраните в файл вручную.';
+  $('plText').value=text;
+  box.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function copyText(text,msgId){
+  const done=()=>{ const m=$(msgId); if(m) m.textContent='Скопировано в буфер обмена.'; };
+  const fail=()=>{ const m=$(msgId); if(m) m.textContent='Не удалось скопировать автоматически — выделите текст вручную.'; };
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done,()=>fallback());
+  } else fallback();
+  function fallback(){
+    try{
+      const ta=document.createElement('textarea'); ta.value=text;
+      ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta);
+      ta.select(); const ok=document.execCommand('copy'); ta.remove(); ok?done():fail();
+    }catch(e){ fail(); }
+  }
+}
+/* ---------- сохранение состояния ---------- */
+function snapshot(){ pullTop(); return JSON.parse(JSON.stringify(ST)); }
+function restore(o){
+  if(!o||typeof o!=='object') throw new Error('Это не похоже на сохранённые настройки.');
+  ST.wake=typeof o.wake==='string'?o.wake:ST.wake;
+  ST.need=+o.need||ST.need; ST.commute=+o.commute||0; ST.prep=+o.prep||45;
+  ST.drives=!!o.drives; ST.caffeine=!!o.caffeine;
+  ST.shifts=Array.isArray(o.shifts)?o.shifts.map(s=>({day:+s.day||1,start:String(s.start||'08:00'),dur:+s.dur||8})):[];
+  ST.blocks=Array.isArray(o.blocks)?o.blocks.map(b=>({from:String(b.from||'00:00'),to:String(b.to||'00:00'),label:String(b.label||'')})):[];
+  pushTop(); renderShiftRows(); renderBlockRows();
+}
+function lsSet(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ return false; } }
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+
+/* ---------- события ---------- */
+document.querySelectorAll('[data-preset]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    ST.shifts=JSON.parse(JSON.stringify(PRESETS[b.dataset.preset]));
+    renderShiftRows(); $('inputErr').hidden=true;
+  });
+});
+$('addShift').addEventListener('click',()=>{
+  const last=ST.shifts[ST.shifts.length-1];
+  ST.shifts.push(last?{day:Math.min(14,last.day+1),start:last.start,dur:last.dur}:{day:1,start:'08:00',dur:12});
+  renderShiftRows();
+});
+$('clearShifts').addEventListener('click',()=>{ST.shifts=[];renderShiftRows();});
+$('addBlock').addEventListener('click',()=>{ST.blocks.push({from:'16:00',to:'19:00',label:'дети дома'});renderBlockRows();});
+$('btnCalc').addEventListener('click',calc);
+$('btnReset').addEventListener('click',()=>{
+  ST.wake='07:00';ST.need=7.5;ST.commute=35;ST.prep=45;ST.drives=true;ST.caffeine=true;
+  ST.shifts=[{day:1,start:'19:00',dur:12}];ST.blocks=[];
+  pushTop();renderShiftRows();renderBlockRows();
+  $('results').hidden=true;$('inputErr').hidden=true;LAST=null;
+});
+$('tabPlan').addEventListener('click',()=>{TAB='plan';paint();});
+$('tabBase').addEventListener('click',()=>{TAB='base';paint();});
+$('btnExample').addEventListener('click',()=>{
+  ST.wake='07:00';ST.need=7.5;ST.commute=35;ST.prep=45;ST.drives=true;ST.caffeine=true;
+  ST.shifts=JSON.parse(JSON.stringify(PRESETS.nurse));
+  ST.blocks=[{from:'16:00',to:'19:00',label:'дети из школы, спать нельзя'}];
+  pushTop();renderShiftRows();renderBlockRows();calc();
+});
+$('btnCopy').addEventListener('click',()=>{
+  if(!LAST) return;
+  copyText(planAsPlainText(LAST.resPlan,LAST.cfg,LAST.sched,LAST.mp,LAST.mb),'copyMsg');
+});
+$('btnCsv').addEventListener('click',()=>{
+  if(!LAST) return;
+  deliver('peresmenka-plan.csv','﻿'+toCsv(LAST.resPlan,LAST.cfg,LAST.sched,LAST.ev),'text/csv');
+});
+$('btnJson').addEventListener('click',()=>{
+  if(!LAST) return;
+  const out={
+    формат:'peresmenka/1',
+    настройки:snapshot(),
+    итоги:{сон_за_сутки_ч:+LAST.mp.sleepPerDay.toFixed(2),
+           минимум_внимания_на_смене:Math.round(LAST.mp.minWork),
+           минут_за_рулём_в_красной_зоне:Math.round(LAST.mp.redDrive*60),
+           как_обычно:{сон_за_сутки_ч:+LAST.mb.sleepPerDay.toFixed(2),
+             минимум_внимания_на_смене:Math.round(LAST.mb.minWork),
+             минут_за_рулём_в_красной_зоне:Math.round(LAST.mb.redDrive*60)}},
+    сон:LAST.resPlan.sleeps.map(s=>({лечь:stamp(s.lieDown!==undefined?s.lieDown:s.start),
+      подъём:stamp(s.end),часов:+(s.got||0).toFixed(2),
+      как:s.failed?'не уснёте':(s.alarm?'по будильнику':'сам')})),
+    риски:LAST.ev.map(e=>({что:e.kind,когда:e.when,запас:Math.round(e.at),
+      минимум:e.min===null?null:Math.round(e.min),часов_без_сна:+e.aw.toFixed(1)})),
+    оговорка:'Расчёт по двухпроцессной модели сна. Не медицинский документ.'
+  };
+  deliver('peresmenka-plan.json',JSON.stringify(out,null,2),'application/json');
+});
+$('btnPrint').addEventListener('click',()=>window.print());
+$('btnSaveLs').addEventListener('click',()=>{
+  const ok=lsSet('peresmenka',JSON.stringify(snapshot()));
+  $('ioMsg').textContent=ok?'Настройки сохранены в этом браузере.':'Браузер запретил сохранение. Пользуйтесь экспортом JSON.';
+});
+$('btnLoadLs').addEventListener('click',()=>{
+  const raw=lsGet('peresmenka');
+  if(!raw){ $('ioMsg').textContent='В браузере ничего не сохранено.'; return; }
+  try{ restore(JSON.parse(raw)); $('ioMsg').textContent='Настройки загружены.'; }
+  catch(e){ $('ioMsg').textContent='Сохранённые данные повреждены.'; }
+});
+$('fileJson').addEventListener('change',e=>{
+  const f=e.target.files&&e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ const o=JSON.parse(r.result); restore(o.настройки||o);
+      $('ioMsg').textContent='Файл загружен: '+f.name; }
+    catch(err){ $('ioMsg').textContent='Не удалось прочитать файл: '+err.message; } };
+  r.onerror=()=>{ $('ioMsg').textContent='Не удалось прочитать файл.'; };
+  r.readAsText(f); e.target.value='';
+});
+$('btnPaste').addEventListener('click',()=>{
+  try{ const o=JSON.parse($('jsonPaste').value); restore(o.настройки||o);
+    $('ioMsg').textContent='Настройки загружены из текста.'; }
+  catch(e){ $('ioMsg').textContent='В поле не JSON: '+e.message; }
+});
+$('btnTheme').addEventListener('click',()=>{
+  const cur=document.documentElement.getAttribute('data-theme');
+  const next=cur==='dark'?'light':(cur==='light'?'dark':
+    (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'light':'dark'));
+  document.documentElement.setAttribute('data-theme',next);
+  lsSet('peresmenka-theme',next);
+});
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){ e.preventDefault(); calc(); }
+});
+
+/* ---------- старт ---------- */
+(function init(){
+  const th=lsGet('peresmenka-theme');
+  if(th) document.documentElement.setAttribute('data-theme',th);
+  const saved=lsGet('peresmenka');
+  if(saved){ try{ restore(JSON.parse(saved)); }catch(e){ pushTop();renderShiftRows();renderBlockRows(); } }
+  else { pushTop(); renderShiftRows(); renderBlockRows(); }
+})();
+</script>
+</body>
+</html>
