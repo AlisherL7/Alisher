@@ -833,7 +833,8 @@ function planAsPlainText(res,cfg,sched,mp,mb){
 function toCsv(res,cfg,sched,ev){
   const rows=[['тип','начало','конец','запас_внимания','минимум','часов_без_сна','примечание']];
   res.sleeps.forEach(s=>rows.push(['сон',stamp(s.lieDown!==undefined?s.lieDown:s.start),stamp(s.end),'','',
-    '', s.failed?'окно не сработает':(s.alarm?'подъём по будильнику, '+dur(s.got):'самопробуждение, '+dur(s.got))]));
+    '', s.failed?'окно не сработает':(s.end>=cfg.t1-1e-6?'спать сколько спится, расчёт закончился':
+        (s.alarm?'подъём по будильнику, '+dur(s.got):'самопробуждение, '+dur(s.got)))]));
   ev.forEach(e=>rows.push([e.kind,stamp(e.iv.start),stamp(e.iv.end),Math.round(e.at),
     e.min===null?'':Math.round(e.min),e.aw.toFixed(1),band(e.drive?e.at:Math.min(e.at,e.min||100)).t]));
   return rows.map(r=>r.map(v=>{
@@ -1023,8 +1024,8 @@ function showPayload(name,text,downloaded){
   }
   $('plName').textContent=name;
   $('plMsg').textContent=downloaded
-    ? 'Скачивание запущено. Если браузер его заблокировал — скопируйте текст ниже и сохраните сами.'
-    : 'Браузер не дал скачать файл. Скопируйте текст ниже и сохраните в файл вручную.';
+    ? 'Файл отправлен на скачивание. В некоторых окнах просмотра скачивание запрещено — тогда просто скопируйте текст ниже и сохраните его сами.'
+    : 'Скачивание в этом окне запрещено. Скопируйте текст ниже и сохраните в файл вручную.';
   $('plText').value=text;
   box.scrollIntoView({behavior:'smooth',block:'center'});
 }
@@ -1106,7 +1107,7 @@ $('btnJson').addEventListener('click',()=>{
              минут_за_рулём_в_красной_зоне:Math.round(LAST.mb.redDrive*60)}},
     сон:LAST.resPlan.sleeps.map(s=>({лечь:stamp(s.lieDown!==undefined?s.lieDown:s.start),
       подъём:stamp(s.end),часов:+(s.got||0).toFixed(2),
-      как:s.failed?'не уснёте':(s.alarm?'по будильнику':'сам')})),
+      как:s.failed?'не уснёте':(s.end>=LAST.cfg.t1-1e-6?'до утра, расчёт закончился':(s.alarm?'по будильнику':'сам'))})),
     риски:LAST.ev.map(e=>({что:e.kind,когда:e.when,запас:Math.round(e.at),
       минимум:e.min===null?null:Math.round(e.min),часов_без_сна:+e.aw.toFixed(1)})),
     оговорка:'Расчёт по двухпроцессной модели сна. Не медицинский документ.'
