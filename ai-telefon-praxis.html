@@ -1,0 +1,1796 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI-телефонный ассистент для практик Германии — протокол безопасного внедрения</title>
+<meta name="description" content="Образовательный протокол для внедрения AI-телефонии в немецких медицинских практиках: карта данных, DSGVO, § 201 и § 203 StGB, AI Act, проверка поставщика, пошаговый запуск и готовые немецкие фразы. Не юридическая консультация." />
+<meta name="author" content="Сигналы и протоколы" />
+<meta name="robots" content="index, follow" />
+
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="ru_RU" />
+<meta property="og:title" content="AI-телефонный ассистент для практик Германии" />
+<meta property="og:description" content="Сначала карта данных. Потом красивый голос. Практический протокол внедрения AI-телефонии в немецкой практике: данные, право, риски, пошаговый запуск." />
+<meta property="og:image" content="assets/img/ai-telefon/hero.svg" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="icon" type="image/svg+xml" href="assets/img/ai-telefon/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/ai-telefon.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "AI-телефонный ассистент для практик Германии",
+  "description": "Образовательный протокол внедрения AI-телефонии в немецких медицинских практиках: карта данных, DSGVO, § 201 и § 203 StGB, AI Act, проверка поставщика и пошаговый запуск.",
+  "inLanguage": "ru",
+  "datePublished": "2026-08-31",
+  "dateModified": "2026-08-31",
+  "isAccessibleForFree": true,
+  "learningResourceType": "Практическое руководство",
+  "about": [
+    { "@type": "Thing", "name": "AI-телефония для медицинских практик" },
+    { "@type": "Thing", "name": "Защита персональных данных (DSGVO/GDPR)" },
+    { "@type": "Thing", "name": "Профессиональная тайна в Германии" }
+  ],
+  "disclaimer": "Учебный материал. Не является юридической консультацией."
+}
+</script>
+
+</head>
+<body>
+
+<a class="skip-link" href="#main">Перейти к основному содержанию</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="#start">
+      <img src="assets/img/ai-telefon/brand-mark.svg" alt="" width="32" height="32" aria-hidden="true" />
+      <span>
+        <span class="brand-name">Сигналы и протоколы</span>
+        <span class="brand-sub">AI-Telefonassistent · Praxis DE</span>
+      </span>
+    </a>
+    <div class="header-actions">
+      <button class="btn btn--ghost btn--sm no-print" type="button" data-print>Печать / PDF</button>
+      <button class="nav-toggle" type="button" id="nav-toggle" aria-expanded="false" aria-controls="index-col">
+        <span aria-hidden="true">☰</span><span class="nav-toggle-label">Разделы</span>
+      </button>
+    </div>
+    <div class="progress-track" role="progressbar" aria-label="Прогресс чтения" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============================== HERO ============================== -->
+<section class="hero" id="start" aria-labelledby="hero-title">
+  <img class="hero-art" src="assets/img/ai-telefon/hero.svg"
+       alt="Абстрактная схема: сигнал входящего звонка расходится кольцами и проходит через контрольные точки протокола." />
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <span class="eyebrow" style="color:#8FE3E5">Рабочая концепция · точный · спокойный · ответственный</span>
+      <h1 id="hero-title">AI-телефонный ассистент для практик Германии</h1>
+      <p class="hero-sub">Как принимать звонки, записывать пациентов и подключать AI без потери контроля над данными.</p>
+
+      <p class="hero-claim">
+        Сначала карта данных. Потом красивый голос.
+        <span>Если AI не уверен — в разговор входит человек.</span>
+      </p>
+
+      <ul class="signals">
+        <li class="signal">INBOUND ONLY</li>
+        <li class="signal">HUMAN FALLBACK</li>
+        <li class="signal">DATA MINIMIZATION</li>
+      </ul>
+
+      <div class="hero-cta no-print">
+        <a class="btn btn--onDark" href="#datamap">Начать с карты данных</a>
+        <a class="btn btn--onDarkGhost" href="#vendor">Открыть контрольный список</a>
+      </div>
+
+      <p class="trust-note">
+        Это не замена медицинскому персоналу и не юридическое заключение. Сайт объясняет, как построить
+        ограниченный административный сценарий и что нужно проверить до коммерческого запуска.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="disclaimer">
+  <div class="disclaimer-inner">
+    <span class="badge">RECHTSHINWEIS</span>
+    <p>
+      <strong>Это учебный материал и рабочий анализ, а не юридическая консультация (keine Rechtsberatung).</strong>
+      Перед коммерческим запуском конкретную конфигурацию должен проверить немецкий <strong>Rechtsanwalt</strong>,
+      <strong>Datenschutzberater</strong> или квалифицированный <strong>Datenschutzbeauftragter (DSB)</strong>.
+      Публикация или использование этого материала не делает вас автоматически законным Anbieter медицинского сервиса:
+      законность зависит от конкретной практики, процесса, договора, поставщика, настроек и фактической обработки данных.
+      Правовые ссылки проверены <time datetime="2026-08-31">31 августа 2026</time>; нормы и документы поставщиков меняются — проверяйте актуальную редакцию.
+    </p>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- ============================== INDEX COLUMN ============================== -->
+  <nav class="index-col" id="index-col" aria-label="Содержание документа">
+    <p class="index-title">Содержание</p>
+    <ul class="toc">
+      <li><a href="#start"><span class="n">01</span><span>Старт</span></a></li>
+      <li><a href="#model"><span class="n">02</span><span>Сначала понять модель</span></a></li>
+      <li><a href="#capabilities"><span class="n">03</span><span>Что ассистент может делать</span></a></li>
+      <li><a href="#datamap"><span class="n">04</span><span>Карта данных</span></a></li>
+      <li><a href="#risks"><span class="n">05</span><span>Основные риски</span></a></li>
+      <li><a href="#protocol"><span class="n">06</span><span>Пошаговый запуск</span></a></li>
+      <li><a href="#vendor"><span class="n">07</span><span>Vendor Due Diligence</span></a></li>
+      <li><a href="#providers"><span class="n">08</span><span>ElevenLabs и США</span></a></li>
+      <li><a href="#phrases"><span class="n">09</span><span>Фразы на немецком</span></a></li>
+      <li><a href="#business"><span class="n">10</span><span>Договор и модель</span></a></li>
+      <li><a href="#training"><span class="n">11</span><span>Обучение других</span></a></li>
+      <li><a href="#glossary"><span class="n">12</span><span>Глоссарий</span></a></li>
+      <li><a href="#sources"><span class="n">13</span><span>Источники</span></a></li>
+      <li><a href="#gonogo"><span class="n">14</span><span>Go / No-Go</span></a></li>
+    </ul>
+    <div class="index-foot no-print">
+      <p class="small muted" style="margin:0">
+        Отметки в чек-листах хранятся только в вашем браузере (<span class="mono">localStorage</span>).
+        Никакие данные никуда не отправляются.
+      </p>
+    </div>
+  </nav>
+
+  <main class="doc" id="main">
+
+<!-- ============================== 02 MODEL ============================== -->
+<section class="section" id="model" aria-labelledby="model-h">
+  <div class="section-head">
+    <span class="section-num">02</span>
+    <h2 id="model-h">Сначала понять модель</h2>
+    <p class="lede">
+      «AI-ассистент» — это не одна программа. Это цепочка из нескольких сервисов, и на каждом звене
+      появляются данные, отдельный поставщик и отдельная юридическая ответственность.
+      Пока вы не нарисовали эту цепочку, вы не можете обещать практике ничего конкретного.
+    </p>
+  </div>
+
+  <div class="split">
+    <div>
+      <p class="eyebrow">Поток звонка</p>
+      <p class="mono small" style="color:var(--ink-muted)">
+        Звонящий → телефон/SIP → STT → LLM/AI-логика → TTS → календарь или сотрудник
+      </p>
+
+      <div class="flow" role="group" aria-label="Интерактивная схема потока звонка: нажмите на узел, чтобы увидеть детали">
+        <button type="button" class="flow-node" aria-expanded="false" aria-controls="flow-detail"
+          data-key="NODE 01 · CALLER"
+          data-title="Звонящий (пациент)"
+          data-what="Человек набирает номер практики. Он не выбирал говорить с AI и может не знать, что отвечает машина."
+          data-data="Номер телефона (уже персональные данные), голос, всё, что человек скажет добровольно."
+          data-risk="Если приветствие не раскрывает AI, нарушается требование прозрачности (AI Act, Art. 50) и подрывается доверие практики.">
+          <span class="k">01 · CALLER</span><span class="t">Звонящий</span><span class="d">Голос, номер, намерение</span>
+        </button>
+        <span class="flow-arrow" aria-hidden="true">→</span>
+
+        <button type="button" class="flow-node" aria-expanded="false" aria-controls="flow-detail"
+          data-key="NODE 02 · SIP / TELEFONIE"
+          data-title="Телефония / SIP-провайдер"
+          data-what="Технический оператор, который принимает вызов и передаёт аудиопоток в ваш сервис. Часто это отдельная компания (не та, что делает голос AI)."
+          data-data="Метаданные соединения: номер, время, длительность, маршрут; сам аудиопоток."
+          data-risk="Это отдельный обработчик со своим договором (AV-Vertrag) и своим местом обработки. Его часто забывают в карте данных — и договор с практикой оказывается неполным.">
+          <span class="k">02 · SIP</span><span class="t">Телефония</span><span class="d">Аудиопоток и метаданные</span>
+        </button>
+        <span class="flow-arrow" aria-hidden="true">→</span>
+
+        <button type="button" class="flow-node" aria-expanded="false" aria-controls="flow-detail"
+          data-key="NODE 03 · STT"
+          data-title="STT — распознавание речи (Speech-to-Text)"
+          data-what="Превращает произнесённые слова в текст. Именно здесь голос становится текстом, который легко хранить, копировать и пересылать."
+          data-data="Транскрипт разговора. Может содержать всё, что человек рассказал, включая симптомы."
+          data-risk="Ключевой вопрос: сохраняется ли транскрипт, где и на сколько. Ответ «по умолчанию — не сохраняем» должен быть подтверждён документом поставщика, а не словами продавца.">
+          <span class="k">03 · STT</span><span class="t">Распознавание речи</span><span class="d">Голос → текст</span>
+        </button>
+        <span class="flow-arrow" aria-hidden="true">→</span>
+
+        <button type="button" class="flow-node flow-node--check" aria-expanded="false" aria-controls="flow-detail"
+          data-key="NODE 04 · LLM / LOGIK"
+          data-title="LLM и логика диалога + контрольная точка"
+          data-what="Языковая модель решает, что ответить, и вызывает разрешённые инструменты (например, календарь). Здесь же живут ваши ограничения: что запрещено обсуждать и когда передавать человеку."
+          data-data="Текст запроса и ответа, история диалога, системный prompt, база знаний практики."
+          data-risk="Главная контрольная точка: без жёстких границ модель начнёт «помогать» медицинским советом. Ограничения задаются prompt-ом И техническим списком доступных инструментов, а не только просьбой в тексте.">
+          <span class="k">04 · LLM ⚑ CHECKPOINT</span><span class="t">AI-логика</span><span class="d">Решение + вызов инструментов</span>
+        </button>
+        <span class="flow-arrow" aria-hidden="true">→</span>
+
+        <button type="button" class="flow-node" aria-expanded="false" aria-controls="flow-detail"
+          data-key="NODE 05 · TTS"
+          data-title="TTS — синтез речи (Text-to-Speech)"
+          data-what="Превращает текст ответа обратно в голос. Это тот самый «красивый голос», ради которого часто и покупают решение."
+          data-data="Текст ответа и синтезированное аудио."
+          data-risk="Качество голоса не влияет на законность. Проверять надо не звучание, а retention, регион обработки и договор поставщика TTS.">
+          <span class="k">05 · TTS</span><span class="t">Синтез речи</span><span class="d">Текст → голос</span>
+        </button>
+        <span class="flow-arrow" aria-hidden="true">→</span>
+
+        <button type="button" class="flow-node" aria-expanded="false" aria-controls="flow-detail"
+          data-key="NODE 06 · OUTCOME"
+          data-title="Календарь, PVS/CRM или сотрудник"
+          data-what="Итог разговора: запись в календарь практики, задача для команды или живой перевод звонка на сотрудника."
+          data-data="Имя, номер, время визита, тип административной услуги; при переводе — весь дальнейший разговор идёт мимо AI."
+          data-risk="Интеграция с календарём или практикой (PVS) — отдельная система с собственным доступом к данным пациентов. Fallback на человека должен работать и тогда, когда AI-сервис недоступен.">
+          <span class="k">06 · OUTCOME</span><span class="t">Календарь / сотрудник</span><span class="d">Термин или живой человек</span>
+        </button>
+      </div>
+
+      <div class="flow-detail" id="flow-detail" hidden>
+        <span class="tag mono"></span>
+        <h3></h3>
+        <p><strong>Что происходит:</strong> <span data-slot="what"></span></p>
+        <p><strong>Какие данные появляются:</strong> <span data-slot="data"></span></p>
+        <p style="margin-bottom:0"><strong>На что смотреть:</strong> <span data-slot="risk"></span></p>
+      </div>
+
+      <figure>
+        <img src="assets/img/ai-telefon/dataflow.svg" loading="lazy" width="1200" height="340"
+             alt="Схема: узел телефона слева соединён стрелкой с узлом AI; далее жёлтая контрольная точка в виде щита с галочкой; после неё маршрут расходится к узлу команды практики и к узлу календаря; пунктирная стрелка возвращается назад как путь передачи человеку." />
+        <figcaption>
+          <b>Рис. 1 — маршрут данных</b>
+          Пунктирная рамка — зона внешнего поставщика: всё, что попадает внутрь неё, обрабатывается не практикой,
+          а её обработчиком. Жёлтый узел — контрольная точка, где решается, продолжает AI или входит человек.
+        </figcaption>
+      </figure>
+    </div>
+
+    <aside>
+      <div class="rail">
+        <h3>Термин → объяснение</h3>
+        <p><strong>STT</strong> (Speech-to-Text) — распознавание речи. <em>Пример:</em> человек сказал «Ich möchte einen Termin», сервис записал это как текст.</p>
+      </div>
+      <div class="rail">
+        <h3>LLM</h3>
+        <p>Языковая модель, которая формулирует ответ по вашему сценарию. <em>Пример:</em> поняла, что нужен термин, и запросила свободные слоты.</p>
+      </div>
+      <div class="rail">
+        <h3>TTS</h3>
+        <p>Синтез речи: текст превращается в голос. <em>Пример:</em> ассистент вслух называет три свободных времени.</p>
+      </div>
+      <div class="rail">
+        <h3>Tool / Function calling</h3>
+        <p>Вызов разрешённой функции. <em>Пример:</em> «создать термин» разрешено, «прочитать всю карту пациента» — нет, потому что такой функции просто не существует в конфигурации.</p>
+      </div>
+      <div class="rail">
+        <h3>SIP</h3>
+        <p>Протокол интернет-телефонии, по которому звонок доходит до вашего сервиса. <em>Пример:</em> номер практики переадресован на SIP-транк провайдера.</p>
+      </div>
+      <div class="rail">
+        <h3>Webhook</h3>
+        <p>Автоматическое сообщение из одной системы в другую по событию. <em>Пример:</em> после звонка в календарь уходит новая запись.</p>
+      </div>
+      <div class="rail">
+        <h3>CRM / PVS</h3>
+        <p>Система учёта клиентов; в практике — Praxisverwaltungssystem. <em>Пример:</em> там уже лежат данные пациентов, поэтому доступ туда — отдельное решение и отдельный риск.</p>
+      </div>
+      <div class="rail">
+        <h3>Fallback</h3>
+        <p>Запасной путь. <em>Пример:</em> AI не понял вопрос дважды — звонок переводится на сотрудника; сервис недоступен — звонок идёт на обычный номер практики.</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============================== 03 CAPABILITIES ============================== -->
+<section class="section" id="capabilities" aria-labelledby="cap-h">
+  <div class="section-head">
+    <span class="section-num">03</span>
+    <h2 id="cap-h">Что ассистент может делать</h2>
+    <p class="lede">
+      Разделите функции на три статуса и не смешивайте их в продаже.
+      <span class="status status--go">GO</span> — можно в первой версии.
+      <span class="status status--check">CHECK</span> — нужна проверка и отдельное решение.
+      <span class="status status--stop">STOP</span> — не разрешать AI.
+    </p>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <caption>Матрица функций первой версии. Статус обозначен словом и знаком, а не только цветом.</caption>
+      <thead>
+        <tr><th scope="col">Функция</th><th scope="col">Статус</th><th scope="col">Ограничение</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="cell-name">Приветствие и раскрытие AI</td>
+          <td><span class="status status--go">GO</span></td>
+          <td>Нельзя выдавать себя за человека. Раскрытие звучит в начале разговора, до сбора любых данных.</td>
+        </tr>
+        <tr>
+          <td class="cell-name">Часы работы, адрес, парковка</td>
+          <td><span class="status status--go">GO</span></td>
+          <td>Только утверждённая практикой база знаний. Никаких «догадок» модели о ценах, услугах и врачах.</td>
+        </tr>
+        <tr>
+          <td class="cell-name">Запись / перенос / отмена Termine</td>
+          <td><span class="status status--check">CHECK</span></td>
+          <td>Нужна безопасная интеграция календаря: отдельный доступ, минимум полей, договор с поставщиком календаря.</td>
+        </tr>
+        <tr>
+          <td class="cell-name">Перевод на сотрудника</td>
+          <td><span class="status status--go">GO</span></td>
+          <td>Должен быть fallback при сбое: если сервис недоступен, звонок уходит на обычный номер практики.</td>
+        </tr>
+        <tr>
+          <td class="cell-name">Сбор симптомов / триаж</td>
+          <td><span class="status status--check">CHECK</span></td>
+          <td>Это данные о здоровье (Art. 9 DSGVO). Только если отдельно обосновано, задокументировано и проверено юристом. В первой версии — не нужно.</td>
+        </tr>
+        <tr>
+          <td class="cell-name">Диагноз, лекарства, оценка срочности</td>
+          <td><span class="status status--stop">STOP</span></td>
+          <td>Не разрешать AI. Никакой клинической оценки, дозировок и решения «это срочно или нет».</td>
+        </tr>
+        <tr>
+          <td class="cell-name">Запись разговоров (аудио)</td>
+          <td><span class="status status--stop">STOP</span> <span class="status status--check">CHECK</span></td>
+          <td>По умолчанию выключено. Включение — только после отдельной юридической и технической проверки: § 201 StGB плюс DSGVO.</td>
+        </tr>
+        <tr>
+          <td class="cell-name">Хранение транскриптов</td>
+          <td><span class="status status--check">CHECK</span></td>
+          <td>По умолчанию выключено. Если нужно — минимальный срок, обоснованная цель и запись в Verarbeitungsverzeichnis.</td>
+        </tr>
+        <tr>
+          <td class="cell-name">Исходящие звонки (напоминания, продажи)</td>
+          <td><span class="status status--stop">STOP</span></td>
+          <td>Первая версия — только входящие. Исходящая коммуникация тянет за собой отдельные правила рекламы и согласий.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="scroll-hint" aria-hidden="true">↔ таблица прокручивается вбок на узком экране</p>
+
+  <div class="panel panel--ice">
+    <h3>Главный безопасный сценарий первой версии</h3>
+    <div class="grid-2">
+      <ul>
+        <li>только <strong>входящие</strong> звонки;</li>
+        <li>явное приветствие: отвечает AI;</li>
+        <li>без записи аудио по умолчанию;</li>
+        <li>без хранения транскриптов по умолчанию;</li>
+        <li>только административные вопросы;</li>
+      </ul>
+      <ul>
+        <li>Termine — только через разрешённый календарь;</li>
+        <li>медицинский вопрос → перевод на сотрудника;</li>
+        <li>заранее утверждённый emergency-текст;</li>
+        <li>минимизация данных и короткий срок хранения;</li>
+        <li>проверяемый журнал изменений конфигурации.</li>
+      </ul>
+    </div>
+    <p style="margin-bottom:0">
+      <strong>Важно:</strong> даже звонок «я хочу записаться» может превратиться в обработку данных о здоровье,
+      если человек сам расскажет о симптомах, диагнозе, лечении, беременности, психотерапии или лекарствах.
+      Поэтому ассистент должен вежливо останавливать лишний сбор информации, а не поощрять рассказ.
+    </p>
+  </div>
+</section>
+
+<!-- ============================== 04 DATA MAP ============================== -->
+<section class="section" id="datamap" aria-labelledby="dm-h">
+  <div class="section-head">
+    <span class="section-num">04</span>
+    <h2 id="dm-h">Карта данных</h2>
+    <p class="lede">
+      Карта данных — это список: какие сведения появляются в разговоре, кто их видит, где они лежат и сколько живут.
+      Без неё нельзя ни составить договор, ни честно ответить практике на вопрос «а что с моими пациентами».
+      Три уровня: <strong>A</strong> — публичное, <strong>B</strong> — организационное, <strong>C</strong> — данные о здоровье.
+    </p>
+  </div>
+
+  <div class="filters no-print" id="datamap-filters" data-target="#datamap-list">
+    <span class="filter-label" id="dm-filter-label">Фильтр</span>
+    <button type="button" class="chip" data-value="all" aria-pressed="true">Все</button>
+    <button type="button" class="chip" data-value="start" aria-pressed="false">Можно на старте</button>
+    <button type="button" class="chip" data-value="check" aria-pressed="false">Нужна проверка</button>
+    <button type="button" class="chip" data-value="stop" aria-pressed="false">Запрещено на старте</button>
+    <span class="filter-count mono" data-count aria-live="polite"></span>
+  </div>
+
+  <div id="datamap-list">
+    <div class="datarow" data-level="A" data-filter="start">
+      <div class="lvl">УРОВЕНЬ<b>A</b></div>
+      <div>
+        <h3>Публичная информация о практике</h3>
+        <p>Адрес, часы приёма, парковка, как добраться, языки в практике, порядок записи.</p>
+        <p class="ex">Пример: «Wir haben montags von 8 bis 12 Uhr geöffnet.» — эти данные и так есть на сайте практики.</p>
+      </div>
+      <span class="status status--go">GO</span>
+    </div>
+
+    <div class="datarow" data-level="B" data-filter="start">
+      <div class="lvl">УРОВЕНЬ<b>B</b></div>
+      <div>
+        <h3>Организационные данные звонящего</h3>
+        <p>Имя, номер телефона, желаемое время визита, тип административной услуги, статус страховки (gesetzlich/privat), если это нужно для записи.</p>
+        <p class="ex">Пример: «Frau Müller, 0170…, Kontrolltermin, Donnerstag Nachmittag.» Это уже персональные данные: нужен AV-Vertrag с каждым обработчиком.</p>
+      </div>
+      <span class="status status--go">GO</span>
+    </div>
+
+    <div class="datarow" data-level="B" data-filter="check">
+      <div class="lvl">УРОВЕНЬ<b>B</b></div>
+      <div>
+        <h3>Метаданные звонка и логи</h3>
+        <p>Номер, время, длительность, технические логи сервисов, статус перевода на сотрудника.</p>
+        <p class="ex">Пример: логи нужны для отладки, но именно они чаще всего хранятся дольше всего и в самых неожиданных местах. Проверьте retention у каждого поставщика.</p>
+      </div>
+      <span class="status status--check">CHECK</span>
+    </div>
+
+    <div class="datarow" data-level="B" data-filter="check">
+      <div class="lvl">УРОВЕНЬ<b>B</b></div>
+      <div>
+        <h3>Транскрипт разговора</h3>
+        <p>Текстовая расшифровка того, что сказали обе стороны.</p>
+        <p class="ex">Даже «административный» транскрипт может случайно содержать фразу «мне нужно к врачу из-за болей в груди» — и стать данными о здоровье. По умолчанию не хранить.</p>
+      </div>
+      <span class="status status--check">CHECK</span>
+    </div>
+
+    <div class="datarow" data-level="C" data-filter="check">
+      <div class="lvl">УРОВЕНЬ<b>C</b></div>
+      <div>
+        <h3>Сам факт обращения в специализированную практику</h3>
+        <p>Обращение в психотерапевтическую, онкологическую, наркологическую или репродуктивную практику само по себе говорит о здоровье человека.</p>
+        <p class="ex">Пример: список «кто звонил в Psychotherapie-Praxis» — это уже особая категория данных, даже без единого симптома.</p>
+      </div>
+      <span class="status status--check">CHECK</span>
+    </div>
+
+    <div class="datarow" data-level="C" data-filter="stop">
+      <div class="lvl">УРОВЕНЬ<b>C</b></div>
+      <div>
+        <h3>Симптомы, диагноз, терапия, лекарства</h3>
+        <p>Всё, что человек рассказывает о своём состоянии: боли, диагноз, беременность, психотерапия, препараты, результаты анализов.</p>
+        <p class="ex">Пример: «Ich habe seit drei Tagen Fieber und nehme Antibiotika.» Ассистент не должен это выспрашивать, записывать и пересказывать модели дальше, чем нужно.</p>
+      </div>
+      <span class="status status--stop">STOP</span>
+    </div>
+
+    <div class="datarow" data-level="C" data-filter="stop">
+      <div class="lvl">УРОВЕНЬ<b>C</b></div>
+      <div>
+        <h3>Аудиозапись разговора</h3>
+        <p>Сохранённое звучание голоса обеих сторон.</p>
+        <p class="ex">Голос — биометрически чувствительный материал, а запись без правомерного основания затрагивает § 201 StGB. В первой версии — выключено.</p>
+      </div>
+      <span class="status status--stop">STOP</span>
+    </div>
+
+    <div class="datarow" data-level="C" data-filter="stop">
+      <div class="lvl">УРОВЕНЬ<b>C</b></div>
+      <div>
+        <h3>Доступ к карте пациента / PVS</h3>
+        <p>Чтение истории болезни, прошлых визитов, назначений, документов.</p>
+        <p class="ex">Для записи на приём это не нужно. Функции чтения карты в конфигурации ассистента просто не должно существовать.</p>
+      </div>
+      <span class="status status--stop">STOP</span>
+    </div>
+  </div>
+
+  <div class="split" style="margin-top:var(--sp-6)">
+    <div class="panel">
+      <h3>Как пользоваться картой</h3>
+      <ol>
+        <li>Выпишите строки, которые реально возникают в вашем сценарии — не абстрактно, а по записи тестовых звонков.</li>
+        <li>Для каждой строки укажите: кто обработчик, где хранится, сколько хранится, кто может удалить.</li>
+        <li>Всё, что не нужно для записи на приём, — вычеркните. Это и есть <strong>Datenminimierung</strong> (Art. 5 Abs. 1 lit. c DSGVO).</li>
+        <li>Оставшееся внесите в <strong>Verzeichnis von Verarbeitungstätigkeiten</strong> практики (Art. 30 DSGVO).</li>
+      </ol>
+      <p style="margin-bottom:0" class="small muted">
+        Практика — <strong>Verantwortlicher</strong> (контролёр). Вы и ваши поставщики — <strong>Auftragsverarbeiter</strong> (обработчики)
+        и их <strong>Subprocessor</strong>. Роли фиксируются письменно (Art. 28 DSGVO).
+      </p>
+    </div>
+    <aside>
+      <div class="rail">
+        <h3>Zweckbindung</h3>
+        <p>Данные собраны для записи на приём — значит, их нельзя использовать для маркетинга, обучения моделей или аналитики «просто так» (Art. 5 Abs. 1 lit. b DSGVO).</p>
+      </div>
+      <div class="rail">
+        <h3>Löschung / Retention</h3>
+        <p>У каждой строки карты должен быть срок. «Храним, пока не понадобится» — не срок.</p>
+      </div>
+      <div class="rail">
+        <h3>Art. 9 DSGVO</h3>
+        <p>Данные о здоровье — особая категория. Их обработка запрещена, если не действует одно из исключений (например, Abs. 2 lit. h — лечение, с учётом Abs. 3 о профессиональной тайне).</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============================== 05 RISKS ============================== -->
+<section class="section" id="risks" aria-labelledby="risk-h">
+  <div class="section-head">
+    <span class="section-num">05</span>
+    <h2 id="risk-h">Основные риски</h2>
+    <p class="lede">
+      Шесть мест, где проекты ломаются. Без сенсаций: у каждого риска есть простое объяснение,
+      пример звонка, возможное последствие и безопасное действие. Нажмите на заголовок, чтобы раскрыть блок.
+    </p>
+  </div>
+
+  <div class="filters no-print" id="risk-filters" data-target="#risk-list">
+    <span class="filter-label">Фильтр</span>
+    <button type="button" class="chip" data-value="all" aria-pressed="true">Все</button>
+    <button type="button" class="chip" data-value="law" aria-pressed="false">Право</button>
+    <button type="button" class="chip" data-value="tech" aria-pressed="false">Техника</button>
+    <button type="button" class="chip" data-value="business" aria-pressed="false">Бизнес</button>
+    <span class="filter-count mono" data-count aria-live="polite"></span>
+  </div>
+
+  <div id="risk-list">
+
+    <article class="risk" data-filter="law tech">
+      <h3 style="margin:0">
+        <button type="button" class="risk-head" data-toggle aria-expanded="false" aria-controls="risk-1-body">
+          <span class="risk-num">RISK 01</span>
+          <span class="risk-title">Gesundheitsdaten появляются сами собой</span>
+          <span class="status status--stop">STOP</span>
+          <span class="risk-chevron mono" aria-hidden="true">›</span>
+        </button>
+      </h3>
+      <div class="risk-body" id="risk-1-body" hidden>
+        <p><strong>Простое объяснение.</strong> Данные о здоровье — особая категория (Art. 9 DSGVO). Их обработка запрещена по умолчанию и допустима только при специальном основании. Проблема в том, что в телефонном разговоре они возникают не потому, что вы их спросили, а потому, что человек сам их рассказал.</p>
+        <div class="risk-grid">
+          <div class="risk-cell risk-cell--call"><h4>Пример звонка</h4><p>«Guten Tag, ich brauche einen Termin, weil meine Chemotherapie nächste Woche beginnt.»</p></div>
+          <div class="risk-cell risk-cell--conseq"><h4>Последствие</h4><p>Транскрипт с особой категорией данных уходит к нескольким обработчикам, а в договоре и в Verzeichnis практики он не описан. Нарушение обнаруживается при первом же запросе пациента или проверке.</p></div>
+          <div class="risk-cell risk-cell--safe"><h4>Безопасное действие</h4><p>Ассистент вежливо прерывает: «Für die Terminbuchung brauche ich diese Details nicht.» Транскрипты не хранятся по умолчанию; при медицинской теме — перевод на сотрудника.</p></div>
+        </div>
+        <div class="risk-tags"><span class="tag">Art. 5 DSGVO</span><span class="tag">Art. 9 DSGVO</span><span class="tag">Art. 30 DSGVO</span><span class="tag">Datenminimierung</span></div>
+      </div>
+    </article>
+
+    <article class="risk" data-filter="law">
+      <h3 style="margin:0">
+        <button type="button" class="risk-head" data-toggle aria-expanded="false" aria-controls="risk-2-body">
+          <span class="risk-num">RISK 02</span>
+          <span class="risk-title">Berufsgeheimnis: § 203 StGB и «mitwirkende Personen»</span>
+          <span class="status status--legal">LEGAL</span>
+          <span class="risk-chevron mono" aria-hidden="true">›</span>
+        </button>
+      </h3>
+      <div class="risk-body" id="risk-2-body" hidden>
+        <p><strong>Простое объяснение.</strong> Врач, стоматолог, психолог и психотерапевт связаны профессиональной тайной. § 203 StGB защищает чужую тайну, доверенную такому лицу. С реформы 2017 года закон прямо описывает <strong>mitwirkende Personen</strong> — привлечённых лиц, включая тех, кто обслуживает IT-системы: их привлечение допустимо, но практика обязана обязать их к сохранению тайны и принять меры против несанкционированного доступа; сами привлечённые лица тоже отвечают по § 203 Abs. 4 StGB. То есть вы как поставщик услуги попадаете внутрь режима тайны, а не рядом с ним.</p>
+        <div class="risk-grid">
+          <div class="risk-cell risk-cell--call"><h4>Пример звонка</h4><p>Обычная запись к психотерапевту: уже сам факт обращения — тайна практики.</p></div>
+          <div class="risk-cell risk-cell--conseq"><h4>Последствие</h4><p>Привлечение внешнего сервиса без письменного обязательства о тайне и без технических мер защиты создаёт риск не только по DSGVO, но и в уголовно-правовой плоскости. Конкретная оценка всегда зависит от фактов и делается юристом.</p></div>
+          <div class="risk-cell risk-cell--safe"><h4>Безопасное действие</h4><p>Письменное <strong>Verpflichtung zur Verschwiegenheit</strong> для вас и ваших субподрядчиков, ограничение доступа, документированные технические меры — и всё это до первого реального звонка.</p></div>
+        </div>
+        <div class="risk-tags"><span class="tag">§ 203 StGB</span><span class="tag">Abs. 3 и Abs. 4</span><span class="tag">Art. 9 Abs. 3 DSGVO</span></div>
+      </div>
+    </article>
+
+    <article class="risk" data-filter="law tech">
+      <h3 style="margin:0">
+        <button type="button" class="risk-head" data-toggle aria-expanded="false" aria-controls="risk-3-body">
+          <span class="risk-num">RISK 03</span>
+          <span class="risk-title">Запись разговора и § 201 StGB</span>
+          <span class="status status--stop">STOP</span>
+          <span class="risk-chevron mono" aria-hidden="true">›</span>
+        </button>
+      </h3>
+      <div class="risk-body" id="risk-3-body" hidden>
+        <p><strong>Простое объяснение.</strong> § 201 StGB защищает конфиденциальность непублично сказанного слова: неправомерная запись чужого непублично сказанного слова на носитель наказуема (по абз. 1 предусмотрено лишение свободы до трёх лет или денежный штраф). Телефонный разговор — непублично сказанное слово. То, что записывает машина, а не человек, ничего не меняет. И наоборот: даже если запись уголовно допустима, она всё равно должна быть правомерной по DSGVO — это две разные проверки.</p>
+        <div class="risk-grid">
+          <div class="risk-cell risk-cell--call"><h4>Пример звонка</h4><p>Провайдер по умолчанию сохраняет аудио «для качества», а практика об этом не знает и звонящего не предупреждает.</p></div>
+          <div class="risk-cell risk-cell--conseq"><h4>Последствие</h4><p>Скрытая запись — это не «настройка по умолчанию», а самостоятельный правовой риск, включая уголовно-правовой. Последствия зависят от конкретных фактов, и оценивать их должен юрист, а не поставщик.</p></div>
+          <div class="risk-cell risk-cell--safe"><h4>Безопасное действие</h4><p>В первой версии запись выключена, и это подтверждено настройками у <em>каждого</em> звена цепочки. Если запись когда-либо понадобится — сначала правовая проверка, понятное объявление в начале разговора и документированное согласие, а не молчаливое «продолжение разговора».</p></div>
+        </div>
+        <div class="risk-tags"><span class="tag">§ 201 StGB</span><span class="tag">Art. 6 DSGVO</span><span class="tag">Retention</span></div>
+      </div>
+    </article>
+
+    <article class="risk" data-filter="law tech">
+      <h3 style="margin:0">
+        <button type="button" class="risk-head" data-toggle aria-expanded="false" aria-controls="risk-4-body">
+          <span class="risk-num">RISK 04</span>
+          <span class="risk-title">Передача данных в США и другие третьи страны</span>
+          <span class="status status--check">CHECK</span>
+          <span class="risk-chevron mono" aria-hidden="true">›</span>
+        </button>
+      </h3>
+      <div class="risk-body" id="risk-4-body" hidden>
+        <p><strong>Простое объяснение.</strong> Американский поставщик не является автоматически незаконным. Глава V DSGVO (Art. 44–49) требует правового механизма передачи: решение об адекватности, стандартные договорные условия (SCC) или иное основание. Для США с июля 2023 года действует решение Еврокомиссии об адекватности в рамках <strong>EU–US Data Privacy Framework</strong> — но оно работает только для компаний, реально сертифицированных в DPF и для тех категорий данных, которые покрыты сертификацией. Если поставщик не в DPF, остаются SCC плюс оценка обстоятельств передачи (TIA). Решение об адекватности оспаривалось: Общий суд ЕС отклонил иск в деле T-553/23 (сентябрь 2025), апелляция в Суде ЕС на дату проверки не разрешена — поэтому архитектуру стоит проектировать так, чтобы её можно было переключить.</p>
+        <div class="risk-grid">
+          <div class="risk-cell risk-cell--call"><h4>Пример звонка</h4><p>Обычная запись на приём: голос уходит в STT в одном регионе, текст — в LLM в другом, а поддержка поставщика смотрит логи из третьего.</p></div>
+          <div class="risk-cell risk-cell--conseq"><h4>Последствие</h4><p>Практика не может ответить пациенту, куда ушли его данные. Договор с ней оказывается неполным, а Verzeichnis — недостоверным.</p></div>
+          <div class="risk-cell risk-cell--safe"><h4>Безопасное действие</h4><p>Для каждого звена отдельно выясните: регион <em>хранения</em>, регион <em>обработки</em>, статус DPF или SCC, список субобработчиков. Ответы — из DPA и документации, а не из рекламной страницы.</p></div>
+        </div>
+        <div class="risk-tags"><span class="tag">Art. 44–49 DSGVO</span><span class="tag">EU–US DPF</span><span class="tag">SCC</span><span class="tag">TIA</span></div>
+      </div>
+    </article>
+
+    <article class="risk" data-filter="tech business">
+      <h3 style="margin:0">
+        <button type="button" class="risk-head" data-toggle aria-expanded="false" aria-controls="risk-5-body">
+          <span class="risk-num">RISK 05</span>
+          <span class="risk-title">Ошибка AI и отсутствие human fallback</span>
+          <span class="status status--stop">STOP</span>
+          <span class="risk-chevron mono" aria-hidden="true">›</span>
+        </button>
+      </h3>
+      <div class="risk-body" id="risk-5-body" hidden>
+        <p><strong>Простое объяснение.</strong> Языковая модель отвечает уверенно даже тогда, когда не знает ответа. В медицинском контексте уверенная выдумка опаснее молчания. Отдельный риск — недоступность сервиса: если звонок просто обрывается, практика теряет пациентов и доверие.</p>
+        <div class="risk-grid">
+          <div class="risk-cell risk-cell--call"><h4>Пример звонка</h4><p>«Meine Tochter hat hohes Fieber, kann ich ihr Ibuprofen geben?» — модель, не имея ограничений, отвечает по существу.</p></div>
+          <div class="risk-cell risk-cell--conseq"><h4>Последствие</h4><p>Ответ AI воспринимается как ответ практики. Это репутационный, договорный и потенциально медико-правовой риск — независимо от того, кто писал prompt.</p></div>
+          <div class="risk-cell risk-cell--safe"><h4>Безопасное действие</h4><p>Жёсткий запрет медицинских тем на уровне сценария <em>и</em> ограниченный набор инструментов; фраза-отказ с переводом на человека; утверждённый emergency-текст со ссылкой на 112; технический fallback на обычный номер при сбое.</p></div>
+        </div>
+        <div class="risk-tags"><span class="tag">Human-in-the-loop</span><span class="tag">Fallback</span><span class="tag">SLA</span></div>
+      </div>
+    </article>
+
+    <article class="risk" data-filter="business law">
+      <h3 style="margin:0">
+        <button type="button" class="risk-head" data-toggle aria-expanded="false" aria-controls="risk-6-body">
+          <span class="risk-num">RISK 06</span>
+          <span class="risk-title">Ложные обещания в продаже и неправильный договор</span>
+          <span class="status status--check">CHECK</span>
+          <span class="risk-chevron mono" aria-hidden="true">›</span>
+        </button>
+      </h3>
+      <div class="risk-body" id="risk-6-body" hidden>
+        <p><strong>Простое объяснение.</strong> Фразы «100 % DSGVO-konform», «полностью безопасно», «заменяет сотрудника» невозможно подтвердить: соответствие зависит от конфигурации у конкретной практики, а не от продукта как такового. Такие обещания создают договорную ответственность и делают вас лёгкой мишенью для конкурентов и для недовольного клиента.</p>
+        <div class="risk-grid">
+          <div class="risk-cell risk-cell--call"><h4>Пример из продажи</h4><p>«Наш ассистент полностью соответствует DSGVO и заменит вам ресепшен» — в презентации, без AV-Vertrag и без карты данных.</p></div>
+          <div class="risk-cell risk-cell--conseq"><h4>Последствие</h4><p>Вы обещали результат, который не контролируете. При инциденте практика будет ссылаться именно на вашу презентацию.</p></div>
+          <div class="risk-cell risk-cell--safe"><h4>Безопасное действие</h4><p>Точные формулировки: «помогает автоматизировать административные звонки», «при корректной конфигурации», «требует проверки договора и маршрутов данных». В договоре — scope, роли, границы и явные исключения.</p></div>
+        </div>
+        <div class="risk-tags"><span class="tag">AV-Vertrag</span><span class="tag">Scope</span><span class="tag">Haftung</span></div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================== 06 PROTOCOL ============================== -->
+<section class="section" id="protocol" aria-labelledby="pr-h">
+  <div class="section-head">
+    <span class="section-num">06</span>
+    <h2 id="pr-h">Пошаговый запуск</h2>
+    <p class="lede">
+      Восемь этапов. Порядок важен: каждый следующий опирается на документ, созданный на предыдущем.
+      Отметки сохраняются только в вашем браузере и никуда не отправляются.
+    </p>
+  </div>
+
+  <figure>
+    <img src="assets/img/ai-telefon/practice.svg" loading="lazy" width="1000" height="640"
+         alt="Иллюстрация стойки регистрации медицинской практики: стационарный телефон, закрытый ноутбук, окно с мягким дневным светом, полка и растение. Людей и документов с данными пациентов на иллюстрации нет." />
+    <figcaption>
+      <b>Рис. 2 — место, куда вы приходите</b>
+      Ассистент встраивается в существующий процесс практики, а не заменяет его. Всё, что вы автоматизируете,
+      кто-то сегодня делает руками — начните с наблюдения за этой работой.
+    </figcaption>
+  </figure>
+
+  <div class="progress-summary no-print">
+    <div>
+      <p class="eyebrow" style="margin-bottom:4px">Прогресс протокола</p>
+      <p class="mono small" style="margin:0" id="protocol-progress-label" aria-live="polite">0 из 8 этапов отмечено</p>
+    </div>
+    <div class="meter" id="protocol-meter" aria-hidden="true"><i></i></div>
+    <button class="btn btn--ghost btn--sm" type="button" id="protocol-reset">Сбросить отметки</button>
+  </div>
+
+  <ol class="protocol">
+    <li class="step" data-step="s1">
+      <div class="step-marker" aria-hidden="true">01</div>
+      <div class="step-panel">
+        <h3>Собрать данные о практике</h3>
+        <p class="step-goal">Цель: понять, что вообще происходит на телефоне сегодня, до любых разговоров про AI.</p>
+        <ul class="check-list">
+          <li>Тип практики (Hausarzt, Zahnarzt, Physio, Psychotherapie, Ästhetik) и специфика звонков.</li>
+          <li>Сколько звонков в день, в какие часы пик, сколько теряется.</li>
+          <li>Кто отвечает сейчас и по какому сценарию; есть ли уже Anrufbeantworter.</li>
+          <li>Какой календарь и какое PVS используются; кто ими администрирует.</li>
+          <li>Есть ли Datenschutzbeauftragter и кто принимает решения по данным.</li>
+        </ul>
+        <div class="step-foot">
+          <button class="btn btn--ghost btn--sm no-print" type="button" data-step-toggle aria-pressed="false">Отметить выполненным</button>
+          <span class="step-state mono" data-step-state aria-live="polite">СТАТУС: НЕ ОТМЕЧЕНО</span>
+        </div>
+      </div>
+    </li>
+
+    <li class="step" data-step="s2">
+      <div class="step-marker" aria-hidden="true">02</div>
+      <div class="step-panel">
+        <h3>Определить роли и цели обработки</h3>
+        <p class="step-goal">Цель: письменно зафиксировать, кто Verantwortlicher, кто Auftragsverarbeiter и зачем вообще обрабатываются данные.</p>
+        <ul class="check-list">
+          <li>Практика — Verantwortlicher; вы и поставщики — Auftragsverarbeiter (Art. 4, 28 DSGVO).</li>
+          <li>Перечислить всех субобработчиков: телефония, STT, LLM, TTS, хостинг, календарь.</li>
+          <li>Сформулировать цель узко: «приём входящих административных звонков и управление Terminen».</li>
+          <li>Определить правовое основание для организационных данных и отдельно — правило для данных о здоровье.</li>
+          <li>Проверить, требуется ли DSFA (Art. 35 DSGVO) — с учётом списков надзорных органов.</li>
+        </ul>
+        <div class="step-foot">
+          <button class="btn btn--ghost btn--sm no-print" type="button" data-step-toggle aria-pressed="false">Отметить выполненным</button>
+          <span class="step-state mono" data-step-state aria-live="polite">СТАТУС: НЕ ОТМЕЧЕНО</span>
+        </div>
+      </div>
+    </li>
+
+    <li class="step" data-step="s3">
+      <div class="step-marker" aria-hidden="true">03</div>
+      <div class="step-panel">
+        <h3>Составить карту данных</h3>
+        <p class="step-goal">Цель: таблица «данные → узел → место хранения → срок → кто удаляет».</p>
+        <ul class="check-list">
+          <li>Пройти уровни A, B и C из раздела 04 и вычеркнуть всё лишнее.</li>
+          <li>Для каждого поля указать retention и способ удаления.</li>
+          <li>Отметить места, где данные пересекают границу ЕС.</li>
+          <li>Проверить, что доступа к карте пациента и к PVS в сценарии нет.</li>
+          <li>Передать карту практике для внесения в Verzeichnis (Art. 30 DSGVO).</li>
+        </ul>
+        <div class="step-foot">
+          <button class="btn btn--ghost btn--sm no-print" type="button" data-step-toggle aria-pressed="false">Отметить выполненным</button>
+          <span class="step-state mono" data-step-state aria-live="polite">СТАТУС: НЕ ОТМЕЧЕНО</span>
+        </div>
+      </div>
+    </li>
+
+    <li class="step" data-step="s4">
+      <div class="step-marker" aria-hidden="true">04</div>
+      <div class="step-panel">
+        <h3>Провести Vendor Due Diligence</h3>
+        <p class="step-goal">Цель: по каждому поставщику собрать документы, а не заверения. Подробный список — в разделе 07.</p>
+        <ul class="check-list">
+          <li>Получить и прочитать DPA/AV-Vertrag каждого звена цепочки.</li>
+          <li>Сохранить копии: список субобработчиков, retention, регион обработки, страница безопасности.</li>
+          <li>Выяснить, отключается ли обучение моделей на ваших данных и как это подтверждается.</li>
+          <li>Проверить процедуру уведомления об инцидентах и сроки.</li>
+          <li>Всё неподтверждённое пометить как «проверить вручную» — и не продавать до подтверждения.</li>
+        </ul>
+        <div class="step-foot">
+          <button class="btn btn--ghost btn--sm no-print" type="button" data-step-toggle aria-pressed="false">Отметить выполненным</button>
+          <span class="step-state mono" data-step-state aria-live="polite">СТАТУС: НЕ ОТМЕЧЕНО</span>
+        </div>
+      </div>
+    </li>
+
+    <li class="step" data-step="s5">
+      <div class="step-marker" aria-hidden="true">05</div>
+      <div class="step-panel">
+        <h3>Настроить AI-disclosure и безопасный prompt</h3>
+        <p class="step-goal">Цель: первое, что слышит человек, — что говорит с AI; и модель физически не может уйти в медицинскую тему.</p>
+        <ul class="check-list">
+          <li>Раскрытие AI звучит в приветствии, до сбора данных (см. раздел 09).</li>
+          <li>В системном prompt — явные запреты: диагноз, лекарства, оценка срочности, обещания от имени врача.</li>
+          <li>Правило остановки сбора лишних данных сформулировано отдельной фразой.</li>
+          <li>Emergency-текст согласован с практикой дословно.</li>
+          <li>Правило «не уверен → передаю человеку» описано и протестировано.</li>
+        </ul>
+        <div class="step-foot">
+          <button class="btn btn--ghost btn--sm no-print" type="button" data-step-toggle aria-pressed="false">Отметить выполненным</button>
+          <span class="step-state mono" data-step-state aria-live="polite">СТАТУС: НЕ ОТМЕЧЕНО</span>
+        </div>
+      </div>
+    </li>
+
+    <li class="step" data-step="s6">
+      <div class="step-marker" aria-hidden="true">06</div>
+      <div class="step-panel">
+        <h3>Ограничить инструменты и базу знаний</h3>
+        <p class="step-goal">Цель: то, чего нет в конфигурации, не может пойти не так. Запрет в тексте слабее, чем отсутствие функции.</p>
+        <ul class="check-list">
+          <li>Список tools минимален: свободные слоты, создать/перенести/отменить термин, перевод на сотрудника.</li>
+          <li>Никакого доступа к истории пациента, документам и внешнему поиску.</li>
+          <li>База знаний — только утверждённые практикой тексты, с датой и автором.</li>
+          <li>Права доступа к календарю ограничены нужным ресурсом и минимумом полей.</li>
+          <li>Изменения конфигурации фиксируются в журнале: кто, что, когда, зачем.</li>
+        </ul>
+        <div class="step-foot">
+          <button class="btn btn--ghost btn--sm no-print" type="button" data-step-toggle aria-pressed="false">Отметить выполненным</button>
+          <span class="step-state mono" data-step-state aria-live="polite">СТАТУС: НЕ ОТМЕЧЕНО</span>
+        </div>
+      </div>
+    </li>
+
+    <li class="step" data-step="s7">
+      <div class="step-marker" aria-hidden="true">07</div>
+      <div class="step-panel">
+        <h3>Тестовые звонки: нормальные, ошибочные, опасные</h3>
+        <p class="step-goal">Цель: увидеть поведение системы там, где сценарий ломается. Тесты проводятся без реальных данных пациентов.</p>
+        <ul class="check-list">
+          <li><strong>Нормальные:</strong> запись, перенос, отмена, вопрос про часы работы и парковку.</li>
+          <li><strong>Ошибочные:</strong> шум, диалект, перебивание, неполное имя, ребёнок на линии, звонок не по адресу.</li>
+          <li><strong>Опасные (red-team):</strong> просьба о диагнозе, «просто скажите, это опасно?», попытка выдать AI за человека, описание острого состояния.</li>
+          <li>Проверить fallback при недоступности сервиса и при отказе календаря.</li>
+          <li>Записать результаты в протокол тестирования и приложить его к договору.</li>
+        </ul>
+        <div class="step-foot">
+          <button class="btn btn--ghost btn--sm no-print" type="button" data-step-toggle aria-pressed="false">Отметить выполненным</button>
+          <span class="step-state mono" data-step-state aria-live="polite">СТАТУС: НЕ ОТМЕЧЕНО</span>
+        </div>
+      </div>
+    </li>
+
+    <li class="step" data-step="s8">
+      <div class="step-marker" aria-hidden="true">08</div>
+      <div class="step-panel">
+        <h3>Ограниченный Pilot и документирование изменений</h3>
+        <p class="step-goal">Цель: запустить узко, наблюдать, документировать — и только потом расширять.</p>
+        <ul class="check-list">
+          <li>Пилот на ограниченное время и ограниченный поток звонков (например, только вне часов приёма).</li>
+          <li>Информирование пациентов практикой: Datenschutzhinweise обновлены (Art. 13 DSGVO).</li>
+          <li>Еженедельный разбор: что не понял ассистент, где потребовался человек.</li>
+          <li>Журнал изменений конфигурации ведётся с первого дня.</li>
+          <li>Решение о расширении принимается письменно, вместе с практикой и её консультантом.</li>
+        </ul>
+        <div class="step-foot">
+          <button class="btn btn--ghost btn--sm no-print" type="button" data-step-toggle aria-pressed="false">Отметить выполненным</button>
+          <span class="step-state mono" data-step-state aria-live="polite">СТАТУС: НЕ ОТМЕЧЕНО</span>
+        </div>
+      </div>
+    </li>
+  </ol>
+</section>
+
+<!-- ============================== 07 VENDOR ============================== -->
+<section class="section" id="vendor" aria-labelledby="vd-h">
+  <div class="section-head">
+    <span class="section-num">07</span>
+    <h2 id="vd-h">Vendor Due Diligence</h2>
+    <p class="lede">
+      Список для проверки любого поставщика: платформы голосового AI, отдельного STT/TTS, телефонии, календаря.
+      Правило одно: <strong>отмечайте пункт только тогда, когда у вас на руках документ</strong>, а не обещание продавца.
+      Пока сервис не проверен, он не «соответствует GDPR» — он «непроверенный».
+    </p>
+  </div>
+
+  <div class="panel panel--amber">
+    <h3 style="margin-bottom:var(--sp-2)">EU data residency ≠ обработка в ЕС</h3>
+    <p style="margin-bottom:0">
+      «Европейская резидентность данных» может означать, что данные <em>хранятся</em> в ЕС, но не гарантирует,
+      что вся <em>обработка</em> происходит в ЕС: поддержка, модерация контента и аффилированные компании поставщика
+      могут находиться в других странах. Читайте DPA и техническую документацию, а не маркетинговую страницу.
+    </p>
+  </div>
+
+  <div class="progress-summary no-print" style="margin:var(--sp-5) 0">
+    <div>
+      <p class="eyebrow" style="margin-bottom:4px">Готовность досье поставщика</p>
+      <p class="mono small" style="margin:0" id="vendor-progress-label" aria-live="polite">0 пунктов подтверждено</p>
+    </div>
+    <div class="meter" id="vendor-meter" aria-hidden="true"><i></i></div>
+    <button class="btn btn--ghost btn--sm" type="button" id="vendor-reset">Сбросить</button>
+  </div>
+
+  <div id="vendor-list">
+    <div class="vendor-item">
+      <input type="checkbox" id="v-dpa" />
+      <label for="v-dpa"><span class="q">DPA / AV-Vertrag доступен и подписан</span>
+        <span class="why">Без договора об обработке по Art. 28 DSGVO поставщика нельзя использовать для данных пациентов.</span>
+        <span class="ev">ДОКАЗАТЕЛЬСТВО: PDF или подписанная онлайн-версия с датой</span></label>
+    </div>
+    <div class="vendor-item">
+      <input type="checkbox" id="v-role" />
+      <label for="v-role"><span class="q">Роль поставщика определена (Processor, не Controller)</span>
+        <span class="why">Если поставщик обрабатывает данные и для своих целей, он становится самостоятельным контролёром — это меняет всю конструкцию.</span>
+        <span class="ev">ДОКАЗАТЕЛЬСТВО: раздел о ролях в DPA</span></label>
+    </div>
+    <div class="vendor-item">
+      <input type="checkbox" id="v-sub" />
+      <label for="v-sub"><span class="q">Актуальный список Subprocessor опубликован</span>
+        <span class="why">Вам нужно перечислить всю цепочку практике. Незакрытый список — незакрытая карта данных.</span>
+        <span class="ev">ДОКАЗАТЕЛЬСТВО: страница со списком и датой обновления</span></label>
+    </div>
+    <div class="vendor-item">
+      <input type="checkbox" id="v-eustore" />
+      <label for="v-eustore"><span class="q">Хранение данных в ЕС подтверждено</span>
+        <span class="why">Первый из двух разных вопросов о географии данных.</span>
+        <span class="ev">ДОКАЗАТЕЛЬСТВО: документация по data residency</span></label>
+    </div>
+    <div class="vendor-item">
+      <input type="checkbox" id="v-euproc" />
+      <label for="v-euproc"><span class="q">Обработка (не только хранение) в ЕС подтверждена</span>
+        <span class="why">Второй вопрос, который чаще всего остаётся без ответа: где выполняется вычисление, поддержка и модерация.</span>
+        <span class="ev">ДОКАЗАТЕЛЬСТВО: явная формулировка в DPA или docs</span></label>
+    </div>
+    <div class="vendor-item">
+      <input type="checkbox" id="v-regions" />
+      <label for="v-regions"><span class="q">Регионы указаны отдельно для STT, TTS, LLM и телефонии</span>
+        <span class="why">Один продукт может состоять из четырёх сервисов в четырёх регионах.</span>
+        <span class="ev">ДОКАЗАТЕЛЬСТВО: техническая документация по каждому компоненту</span></label>
+    </div>
+    <div class="vendor-item">
+      <input type="checkbox" id="v-retention" />
+      <label for="v-retention"><span class="q">Retention для аудио, транскриптов и логов указан в числах</span>
+        <span class="why">«Хранится столько, сколько необходимо» — не срок и не годится для карты данных.</span>
+        <span class="ev">ДОКАЗАТЕЛЬСТВО: конкретные сроки в документе</span></label>
+    </div>
+    <div class="vendor-item">
+      <input type="checkbox" id="v-training" />
+      <label for="v-training"><span class="q">Обучение моделей на ваших данных отключается</span>
+        <span class="why">Иначе содержимое разговоров может использоваться за пределами вашей цели (Zweckbindung).</span>
+        <span class="ev">ДОКАЗАТЕЛЬСТВО: настройка в аккаунте + пункт договора</span></label>
+    </div>
+    <div class="vendor-item">
+      <input type="checkbox" id="v-deletion" />
+      <label for="v-deletion"><span class="q">Удаление и экспорт данных реализованы и проверены</span>
+        <span class="why">Право на удаление должно работать практически, в том числе по запросу пациента.</span>
+        <span class="ev">ДОКАЗАТЕЛЬСТВО: инструкция + ваш собственный тест</span></label>
+    </div>
+    <div class="vendor-item">
+      <input type="checkbox" id="v-breach" />
+      <label for="v-breach"><span class="q">Порядок и срок уведомления об инциденте зафиксированы</span>
+        <span class="why">Практике нужно успеть уведомить надзорный орган; сроки поставщика должны это позволять (Art. 33 DSGVO).</span>
+        <span class="ev">ДОКАЗАТЕЛЬСТВО: раздел о Breach Notification в DPA</span></label>
+    </div>
+    <div class="vendor-item">
+      <input type="checkbox" id="v-disclosure" />
+      <label for="v-disclosure"><span class="q">Раскрытие AI технически возможно и не отключается случайно</span>
+        <span class="why">Требование прозрачности AI Act относится к вашему сценарию, а не только к поставщику.</span>
+        <span class="ev">ДОКАЗАТЕЛЬСТВО: конфигурация приветствия + тестовый звонок</span></label>
+    </div>
+    <div class="vendor-item">
+      <input type="checkbox" id="v-transfer" />
+      <label for="v-transfer"><span class="q">Перевод на человека работает надёжно</span>
+        <span class="why">Ключевой предохранитель всей конструкции.</span>
+        <span class="ev">ДОКАЗАТЕЛЬСТВО: протокол тестовых звонков</span></label>
+    </div>
+    <div class="vendor-item">
+      <input type="checkbox" id="v-sla" />
+      <label for="v-sla"><span class="q">SLA, поддержка и поведение при сбое описаны</span>
+        <span class="why">Практике важно знать, что происходит со звонками, когда сервис недоступен.</span>
+        <span class="ev">ДОКАЗАТЕЛЬСТВО: SLA-документ или раздел Terms</span></label>
+    </div>
+    <div class="vendor-item">
+      <input type="checkbox" id="v-newsub" />
+      <label for="v-newsub"><span class="q">Есть право возразить против нового Subprocessor</span>
+        <span class="why">Иначе цепочка данных может измениться без вашего ведома уже после запуска.</span>
+        <span class="ev">ДОКАЗАТЕЛЬСТВО: пункт DPA об уведомлении и возражении</span></label>
+    </div>
+    <div class="vendor-item">
+      <input type="checkbox" id="v-proof" />
+      <label for="v-proof"><span class="q">Есть практическое доказательство, а не рекламное заявление</span>
+        <span class="why">Логотип «GDPR compliant» на сайте не является документом.</span>
+        <span class="ev">ДОКАЗАТЕЛЬСТВО: договор, документация, отчёт аудита, ваш тест</span></label>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:var(--sp-5)">
+    <h4>Что делать с непроверенным поставщиком</h4>
+    <p style="margin-bottom:0">
+      Оставьте карточку в статусе <span class="status status--check">CHECK · проверить вручную</span> и не включайте его
+      в предложение практике. Отсутствие информации — это не «наверное, всё хорошо», а незакрытый пункт досье.
+    </p>
+  </div>
+</section>
+
+<!-- ============================== 08 PROVIDERS ============================== -->
+<section class="section" id="providers" aria-labelledby="pv-h">
+  <div class="section-head">
+    <span class="section-num">08</span>
+    <h2 id="pv-h">ElevenLabs и американские провайдеры</h2>
+    <p class="lede">
+      Спокойно и без крайностей: американский поставщик — это не автоматическая незаконность и не автоматическая уголовная
+      ответственность. Но обработка данных в США требует проверить правовой механизм передачи и реальный маршрут данных.
+      Страна регистрации компании сама по себе ничего не решает.
+    </p>
+  </div>
+
+  <div class="split">
+    <div>
+      <div class="panel panel--navy">
+        <h3>Шесть тезисов, которые стоит держать в голове</h3>
+        <ol style="margin-bottom:0">
+          <li>Передача в США возможна при действующем правовом механизме: решение об адекватности в рамках <strong>EU–US Data Privacy Framework</strong> (для сертифицированных компаний) либо <strong>SCC</strong> с оценкой обстоятельств передачи.</li>
+          <li>Обычный тариф и Enterprise-тариф у одного и того же поставщика могут иметь <strong>разные</strong> возможности: резидентность данных, нулевое хранение и отдельные условия часто доступны только на Enterprise.</li>
+          <li>Телефония, LLM, STT, TTS, календарь и CRM — это, как правило, <strong>разные обработчики</strong> с разными регионами и разными договорами.</li>
+          <li><strong>HIPAA и BAA не заменяют DSGVO.</strong> Это американский режим для американских covered entities; он не создаёт основания для передачи данных из ЕС и не отменяет § 203 StGB.</li>
+          <li>Сертификаты и «Trust Center» — полезный источник, но проверяется <em>договор</em>: DPA, список субобработчиков, retention, регионы.</li>
+          <li>Финальное решение принимает практика вместе со своим Rechtsberater / Datenschutzbeauftragter. Ваша задача — принести проверяемые документы, а не заключение.</li>
+        </ol>
+      </div>
+
+      <h3 style="margin-top:var(--sp-6)">Карточка поставщика: ElevenLabs</h3>
+      <p class="small muted">
+        Ниже — только то, что опубликовано самим поставщиком, со ссылками на его официальные документы.
+        Проверка выполнена <time datetime="2026-08-31">31.08.2026</time>; условия поставщиков меняются — открывайте актуальную редакцию перед продажей.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <caption>Что подтверждается официальными документами поставщика, а что нужно проверить вручную под вашу конфигурацию.</caption>
+          <thead>
+            <tr><th scope="col">Пункт</th><th scope="col">Статус</th><th scope="col">Что известно и где смотреть</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="cell-name">DPA / AV-Vertrag</td>
+              <td><span class="status status--go">ЕСТЬ</span></td>
+              <td>Поставщик публикует Data Processing Addendum:
+                <a href="https://elevenlabs.io/dpa" target="_blank" rel="noreferrer noopener">elevenlabs.io/dpa</a>.
+                Прочитайте роли, SCC и условия для вашего тарифа.</td>
+            </tr>
+            <tr>
+              <td class="cell-name">Список Subprocessor</td>
+              <td><span class="status status--check">ПРОВЕРИТЬ</span></td>
+              <td>Публикуется на портале соответствия:
+                <a href="https://compliance.elevenlabs.io" target="_blank" rel="noreferrer noopener">compliance.elevenlabs.io</a>.
+                Список обновляется — фиксируйте дату выгрузки в досье.</td>
+            </tr>
+            <tr>
+              <td class="cell-name">Data residency (ЕС)</td>
+              <td><span class="status status--check">ПРОВЕРИТЬ</span></td>
+              <td>Документация:
+                <a href="https://elevenlabs.io/docs/overview/administration/data-residency" target="_blank" rel="noreferrer noopener">docs · data residency</a>.
+                Важно: хранение в выбранном регионе не означает, что вся обработка (поддержка, модерация, аффилированные компании) происходит там же. Доступность зависит от плана.</td>
+            </tr>
+            <tr>
+              <td class="cell-name">Zero Retention Mode</td>
+              <td><span class="status status--check">ПРОВЕРИТЬ</span></td>
+              <td>Документация:
+                <a href="https://elevenlabs.io/docs/eleven-api/resources/zero-retention-mode" target="_blank" rel="noreferrer noopener">docs · zero retention mode</a>.
+                Режим перечислительный: он покрывает определённые API, а не «всё автоматически». Уточните, попадает ли ваш сценарий целиком.</td>
+            </tr>
+            <tr>
+              <td class="cell-name">Отключение обучения моделей</td>
+              <td><span class="status status--check">ПРОВЕРИТЬ</span></td>
+              <td>Смотрите условия для вашего плана в DPA и Terms; сохраните скриншот настройки аккаунта в досье.</td>
+            </tr>
+            <tr>
+              <td class="cell-name">Телефония / SIP-звено</td>
+              <td><span class="status status--check">PROVIDER URL REQUIRED</span></td>
+              <td>Часто это отдельная компания. Внесите сюда её DPA, регион и retention — карточка модульная и рассчитана на дополнение.</td>
+            </tr>
+            <tr>
+              <td class="cell-name">Цены и коммерческие условия</td>
+              <td><span class="status status--check">НЕ ПРОВЕРЕНО</span></td>
+              <td>Здесь сознательно не указаны: тарифы меняются, а непроверенная цена в предложении практике — это ваш риск. Возьмите их с официальной страницы тарифов на дату сделки.</td>
+            </tr>
+            <tr>
+              <td class="cell-name">Пригодность для данных о здоровье</td>
+              <td><span class="status status--legal">LEGAL REVIEW</span></td>
+              <td>Ни один поставщик не может подтвердить это за практику: пригодность зависит от вашей конфигурации, договора и фактического маршрута данных. Оценивает юрист / DSB практики.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="scroll-hint" aria-hidden="true">↔ таблица прокручивается вбок на узком экране</p>
+
+      <div class="panel panel--ice">
+        <h4>Шаблон карточки для любого другого поставщика</h4>
+        <p>Скопируйте структуру: <span class="mono small">Название → роль → DPA (URL) → Subprocessors (URL) → регион хранения → регион обработки → retention (audio / transcript / logs) → training opt-out → breach SLA → дата проверки</span>.
+        Пустое поле остаётся пустым и помечается <span class="status status--check">PROVIDER URL REQUIRED</span> — его нельзя заполнять предположением.</p>
+        <p style="margin-bottom:0" class="small muted">Так карточка остаётся модульной: когда ссылка появится, вы просто добавите её, не переписывая весь анализ.</p>
+      </div>
+    </div>
+
+    <aside>
+      <div class="rail">
+        <h3>Почему «мы в ЕС» — не ответ</h3>
+        <p>Европейский поставщик тоже может использовать американский субобработчик. Проверяется цепочка, а не флаг на сайте.</p>
+      </div>
+      <div class="rail">
+        <h3>Почему «мы в США» — тоже не ответ</h3>
+        <p>Передача может быть законной при действующем механизме. Но она должна быть описана, документирована и объяснима пациенту.</p>
+      </div>
+      <div class="rail">
+        <h3>DPF: статус</h3>
+        <p>Решение об адекватности для США действует с июля 2023 года. Иск об аннулировании отклонён Общим судом ЕС (дело T-553/23, сентябрь 2025); апелляция в Суде ЕС на дату проверки не разрешена. Планируйте архитектуру так, чтобы поставщика можно было заменить.</p>
+      </div>
+      <div class="rail">
+        <h3>Что писать в предложении</h3>
+        <p>Не «DSGVO-konform», а: «поставщик X, роль — Auftragsverarbeiter, DPA от [дата], хранение — [регион], retention — [срок], субобработчики — [ссылка]».</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============================== 09 PHRASES ============================== -->
+<section class="section" id="phrases" aria-labelledby="ph-h">
+  <div class="section-head">
+    <span class="section-num">09</span>
+    <h2 id="ph-h">Готовые фразы на немецком</h2>
+    <p class="lede">
+      Рабочие заготовки для сценария. Немецкий текст — то, что звучит в трубке; русский — объяснение смысла, а не дословный перевод.
+      <strong>Каждую фразу до запуска утверждает практика-клиент и проверяет юрист или Datenschutzberater</strong>:
+      формулировки должны совпадать с реальным процессом конкретной практики.
+    </p>
+  </div>
+
+  <div class="phrase">
+    <div class="phrase-head">
+      <h3>1 · AI-disclosure (приветствие)</h3>
+      <button class="btn btn--ghost btn--sm copy-btn no-print" type="button" data-copy="ph-1">Копировать</button>
+      <span class="copy-state mono" role="status" aria-live="polite"></span>
+    </div>
+    <p class="phrase-de" id="ph-1">Guten Tag. Sie sprechen mit dem digitalen Telefonassistenten der Praxis. Ich bin eine KI und kein medizinischer Mitarbeiter. Ich helfe bei organisatorischen Fragen und bei Terminen. Medizinische Anliegen leite ich an das Praxisteam weiter.</p>
+    <p class="phrase-ru"><strong>Смысл:</strong> человек с первой секунды знает, что говорит с AI, и понимает границы: организация и термины — да, медицина — нет. Это выполняет требование прозрачности AI Act и одновременно защищает практику от впечатления, что «врач так сказал».</p>
+    <p class="phrase-note">Проверяет: практика (формулировка названия и роли) + юрист / Datenschutzberater.</p>
+  </div>
+
+  <div class="phrase">
+    <div class="phrase-head">
+      <h3>2 · Запись на приём с ограничением сбора данных</h3>
+      <button class="btn btn--ghost btn--sm copy-btn no-print" type="button" data-copy="ph-2">Копировать</button>
+      <span class="copy-state mono" role="status" aria-live="polite"></span>
+    </div>
+    <p class="phrase-de" id="ph-2">Für welche organisatorische Leistung möchten Sie einen Termin vereinbaren? Bitte nennen Sie nur die Informationen, die für die Terminbuchung erforderlich sind.</p>
+    <p class="phrase-ru"><strong>Смысл:</strong> вопрос сформулирован так, чтобы не провоцировать рассказ о симптомах. Это практическая реализация принципа минимизации данных: лишнее лучше не собирать, чем потом удалять.</p>
+    <p class="phrase-note">Проверяет: практика (список административных услуг) + юрист / Datenschutzberater.</p>
+  </div>
+
+  <div class="phrase">
+    <div class="phrase-head">
+      <h3>3 · Медицинский вопрос → человек</h3>
+      <button class="btn btn--ghost btn--sm copy-btn no-print" type="button" data-copy="ph-3">Копировать</button>
+      <span class="copy-state mono" role="status" aria-live="polite"></span>
+    </div>
+    <p class="phrase-de" id="ph-3">Dazu kann ich keine medizinische Einschätzung geben. Ich verbinde Sie mit dem Praxisteam.</p>
+    <p class="phrase-ru"><strong>Смысл:</strong> ассистент не оценивает состояние и не смягчает отказ советом «на всякий случай». Он просто передаёт разговор человеку. Фраза короткая специально: длинные объяснения провоцируют продолжение медицинской темы.</p>
+    <p class="phrase-note">Проверяет: практика (куда именно идёт перевод в рабочее и нерабочее время).</p>
+  </div>
+
+  <div class="phrase">
+    <div class="phrase-head">
+      <h3>4 · Неизвестный вопрос</h3>
+      <button class="btn btn--ghost btn--sm copy-btn no-print" type="button" data-copy="ph-4">Копировать</button>
+      <span class="copy-state mono" role="status" aria-live="polite"></span>
+    </div>
+    <p class="phrase-de" id="ph-4">Ich möchte Ihnen keine falsche Auskunft geben. Deshalb leite ich Sie an das Praxisteam weiter.</p>
+    <p class="phrase-ru"><strong>Смысл:</strong> «не знаю» — это правильный ответ системы. Так вы закрываете самый частый источник вреда: уверенную выдумку модели по вопросам, которых нет в утверждённой базе знаний.</p>
+    <p class="phrase-note">Проверяет: практика (что считается «известным» — то есть содержимое базы знаний).</p>
+  </div>
+
+  <div class="phrase">
+    <div class="phrase-head">
+      <h3>5 · Emergency-текст</h3>
+      <button class="btn btn--ghost btn--sm copy-btn no-print" type="button" data-copy="ph-5">Копировать</button>
+      <span class="copy-state mono" role="status" aria-live="polite"></span>
+    </div>
+    <p class="phrase-de" id="ph-5">Bei akuten oder lebensbedrohlichen Beschwerden wenden Sie sich bitte an den Notruf 112. Ich kann keine medizinische Dringlichkeit beurteilen.</p>
+    <p class="phrase-ru"><strong>Смысл:</strong> ассистент прямо говорит, что не оценивает срочность, и называет единый номер экстренных служб. Текст должен быть согласован с практикой дословно и не должен звучать как совет «подождите до завтра».</p>
+    <p class="phrase-note">Проверяет: практика (обязательно) + юрист. Формулировку нельзя менять «на лету» в проде.</p>
+  </div>
+
+  <div class="panel panel--amber">
+    <p style="margin-bottom:0">
+      <strong>Чего в сценарии быть не должно:</strong> фраз, где ассистент представляется человеком или сотрудником;
+      обещаний «врач вам перезвонит через час», если это не гарантировано процессом; попыток успокоить
+      («das klingt harmlos») — это уже медицинская оценка; и любых уточняющих вопросов про симптомы.
+    </p>
+  </div>
+</section>
+
+<!-- ============================== 10 BUSINESS ============================== -->
+<section class="section" id="business" aria-labelledby="bs-h">
+  <div class="section-head">
+    <span class="section-num">10</span>
+    <h2 id="bs-h">Договор и бизнес-модель</h2>
+    <p class="lede">
+      Ниже — <strong>структура для обсуждения с юристом</strong>, а не готовый договор и не образец,
+      который можно подписать. Немецкий договор с медицинской практикой затрагивает и обработку данных,
+      и профессиональную тайну, поэтому финальный текст готовит Rechtsanwalt.
+    </p>
+  </div>
+
+  <div class="split">
+    <div>
+      <div class="table-wrap">
+        <table>
+          <caption>Темы, которые должны быть закрыты в пакете документов с практикой.</caption>
+          <thead>
+            <tr><th scope="col">Блок</th><th scope="col">Что фиксируется</th><th scope="col">Зачем</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="cell-name">Scope услуги</td><td>Что именно делает ассистент и чего он не делает; список административных сценариев.</td><td>Защищает вас от ожидания «он будет решать всё».</td></tr>
+            <tr><td class="cell-name">Роли</td><td>Практика — Verantwortlicher, вы — Auftragsverarbeiter; перечень субобработчиков.</td><td>Art. 28 DSGVO; без этого нельзя обрабатывать данные пациентов.</td></tr>
+            <tr><td class="cell-name">Категории данных и цели</td><td>Что обрабатывается (уровни A/B/C) и ради какой цели.</td><td>Основа Zweckbindung и Verzeichnis практики.</td></tr>
+            <tr><td class="cell-name">Subprocessors</td><td>Список, уведомление об изменениях, право возразить.</td><td>Цепочка не должна меняться молча.</td></tr>
+            <tr><td class="cell-name">Retention и удаление</td><td>Сроки по каждому типу данных, порядок удаления и подтверждение.</td><td>Права субъектов данных и минимизация.</td></tr>
+            <tr><td class="cell-name">Security measures</td><td>TOM: доступы, шифрование, журналирование, разграничение ролей.</td><td>Art. 32 DSGVO и меры по § 203 StGB.</td></tr>
+            <tr><td class="cell-name">Schweigepflicht</td><td>Письменное обязательство о тайне для вас и субподрядчиков.</td><td>Режим mitwirkende Personen (§ 203 Abs. 3, 4 StGB).</td></tr>
+            <tr><td class="cell-name">Breach process</td><td>Кто кого уведомляет, в какой срок, по какому каналу.</td><td>Практике нужно успеть выполнить свои сроки.</td></tr>
+            <tr><td class="cell-name">Human fallback</td><td>Как и куда переводится звонок; что происходит при сбое.</td><td>Ключевой предохранитель системы.</td></tr>
+            <tr><td class="cell-name">SLA и поддержка</td><td>Доступность, время реакции, окна обслуживания, контакты.</td><td>Практика работает по расписанию приёма.</td></tr>
+            <tr><td class="cell-name">Смена поставщика</td><td>Право заменить звено цепочки и порядок уведомления.</td><td>Правовая среда и продукты меняются.</td></tr>
+            <tr><td class="cell-name">Ответственность и лимиты</td><td>Границы ответственности, исключения, страхование.</td><td>Без этого вы отвечаете за чужую конфигурацию.</td></tr>
+            <tr><td class="cell-name">Цены</td><td>Онбординг, абонплата, минуты, расходы на API, лимиты потребления.</td><td>Стоимость минут — переменная, её нельзя «включить в пакет» вслепую.</td></tr>
+            <tr><td class="cell-name">Pilot и Übergabe</td><td>Срок пилота, критерии успеха, порядок передачи и обучения команды.</td><td>Пилот — это условие безопасного старта, а не скидка.</td></tr>
+            <tr><td class="cell-name">Kündigung</td><td>Сроки расторжения, экспорт и удаление данных при выходе.</td><td>Выход должен быть таким же продуманным, как вход.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="scroll-hint" aria-hidden="true">↔ таблица прокручивается вбок на узком экране</p>
+
+      <div class="panel">
+        <h3>Как это продавать</h3>
+        <p>Продавайте не «AI, который заменит ресепшен», а <strong>настраиваемый административный телефонный ассистент
+        с контролируемыми границами</strong>. Разница не косметическая: второе можно выполнить, задокументировать и защитить.</p>
+        <div class="grid-2">
+          <div>
+            <h4 style="color:var(--red-text)">Не говорите</h4>
+            <ul class="small">
+              <li>«100 % DSGVO-konform»</li>
+              <li>«полностью безопасно, никаких рисков»</li>
+              <li>«заменяет сотрудников»</li>
+              <li>«AI сам решит, срочно это или нет»</li>
+            </ul>
+          </div>
+          <div>
+            <h4 style="color:var(--green-text)">Говорите</h4>
+            <ul class="small">
+              <li>«помогает автоматизировать административные звонки»</li>
+              <li>«при корректной конфигурации»</li>
+              <li>«требует проверки договора и маршрутов данных»</li>
+              <li>«медицинские вопросы всегда идут к человеку»</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside>
+      <div class="rail">
+        <h3>Почему структура, а не шаблон</h3>
+        <p>Готовый «универсальный» договор в этой области опаснее его отсутствия: он создаёт ложную уверенность и почти всегда не соответствует реальной цепочке поставщиков.</p>
+      </div>
+      <div class="rail">
+        <h3>Что приносить юристу</h3>
+        <p>Карту данных, список поставщиков с DPA, описание сценария, протокол тестовых звонков. С этим комплектом консультация занимает часы, а не недели.</p>
+      </div>
+      <div class="rail">
+        <h3>Пилот как инструмент продажи</h3>
+        <p>Ограниченный пилот снимает главный страх практики: «а если оно скажет что-то не то». Вы показываете границы, а не обещаете совершенство.</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============================== 11 TRAINING ============================== -->
+<section class="section" id="training" aria-labelledby="tr-h">
+  <div class="section-head">
+    <span class="section-num">11</span>
+    <h2 id="tr-h">Обучение других</h2>
+    <p class="lede">
+      Шесть занятий для команды или для тех, кого вы обучаете этой профессии.
+      В конце каждого — короткий тест с объяснением ответа: важно не «угадать», а понять причину.
+    </p>
+  </div>
+
+  <article class="lesson">
+    <div class="lesson-head"><span class="n mono">МОДУЛЬ 01</span><h3>Как работает voice AI</h3></div>
+    <div class="lesson-body">
+      <p>Разберите цепочку из раздела 02 на конкретном звонке: телефония принимает вызов, STT превращает речь в текст,
+      LLM решает, что ответить, и вызывает разрешённые инструменты, TTS озвучивает ответ. Ключевая мысль занятия:
+      «ассистент» — это сборка из нескольких сервисов, и у каждого своя ответственность и свой договор.</p>
+      <div class="quiz">
+        <p class="quiz-q">Где в цепочке голос впервые превращается в текст, который легко хранить и пересылать?</p>
+        <div class="quiz-opts">
+          <button type="button" class="quiz-opt" aria-pressed="false" data-correct="false"><span class="mark mono">□</span>В телефонии / SIP</button>
+          <button type="button" class="quiz-opt" aria-pressed="false" data-correct="true"><span class="mark mono">□</span>В STT (распознавание речи)</button>
+          <button type="button" class="quiz-opt" aria-pressed="false" data-correct="false"><span class="mark mono">□</span>В TTS (синтез речи)</button>
+        </div>
+        <div class="quiz-explain" hidden>
+          <strong>Объяснение.</strong> STT — это момент, когда разговор становится текстом. С этого момента появляется транскрипт:
+          его можно скопировать, переслать и случайно сохранить. Поэтому вопрос «хранится ли транскрипт и где» задают именно
+          к STT-звену, а не к телефонии и не к TTS.
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article class="lesson">
+    <div class="lesson-head"><span class="n mono">МОДУЛЬ 02</span><h3>Какие данные обрабатываются</h3></div>
+    <div class="lesson-body">
+      <p>Пройдите уровни A, B и C и потренируйтесь на реальных фразах: какие из них административные,
+      а какие уже касаются здоровья. Отдельно обсудите неочевидный случай — когда сам факт обращения
+      в специализированную практику говорит о человеке больше, чем он собирался рассказать.</p>
+      <div class="quiz">
+        <p class="quiz-q">Пациент звонит в психотерапевтическую практику и говорит только: «Ich möchte einen Termin.» Какие данные обрабатываются?</p>
+        <div class="quiz-opts">
+          <button type="button" class="quiz-opt" aria-pressed="false" data-correct="false"><span class="mark mono">□</span>Только организационные: имя и номер</button>
+          <button type="button" class="quiz-opt" aria-pressed="false" data-correct="true"><span class="mark mono">□</span>Организационные плюс сведения, указывающие на здоровье — из-за специализации практики</button>
+          <button type="button" class="quiz-opt" aria-pressed="false" data-correct="false"><span class="mark mono">□</span>Никакие: он же не назвал диагноз</button>
+        </div>
+        <div class="quiz-explain" hidden>
+          <strong>Объяснение.</strong> Контекст сам по себе несёт информацию. Список людей, обратившихся в психотерапевтическую
+          практику, говорит об их здоровье, даже если ни один симптом не назван. Поэтому у таких практик требования к retention
+          и к маршруту данных строже, а не мягче.
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article class="lesson">
+    <div class="lesson-head"><span class="n mono">МОДУЛЬ 03</span><h3>DSGVO и профессиональная тайна</h3></div>
+    <div class="lesson-body">
+      <p>Два разных режима, которые действуют одновременно: защита данных (DSGVO, роли, договоры, сроки)
+      и профессиональная тайна (§ 203 StGB, режим mitwirkende Personen). Плюс отдельная тема — запись разговора
+      и § 201 StGB. Задача занятия — научиться не смешивать эти проверки.</p>
+      <div class="quiz">
+        <p class="quiz-q">Поставщик прислал подписанный AV-Vertrag. Что это закрывает?</p>
+        <div class="quiz-opts">
+          <button type="button" class="quiz-opt" aria-pressed="false" data-correct="false"><span class="mark mono">□</span>Всё: и защиту данных, и профессиональную тайну, и запись разговоров</button>
+          <button type="button" class="quiz-opt" aria-pressed="false" data-correct="true"><span class="mark mono">□</span>Требование Art. 28 DSGVO — но вопросы тайны, записи и маршрута данных проверяются отдельно</button>
+          <button type="button" class="quiz-opt" aria-pressed="false" data-correct="false"><span class="mark mono">□</span>Ничего: договор — формальность</button>
+        </div>
+        <div class="quiz-explain" hidden>
+          <strong>Объяснение.</strong> AV-Vertrag — обязательное условие, но не универсальное. Отдельно решаются:
+          обязательство о тайне для привлечённых лиц, правомерность записи (§ 201 StGB), передача в третьи страны
+          и фактические технические меры. Три «да» не складываются в одно, если четвёртое «нет».
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article class="lesson">
+    <div class="lesson-head"><span class="n mono">МОДУЛЬ 04</span><h3>Настройка сценариев и ограничений</h3></div>
+    <div class="lesson-body">
+      <p>Практическая часть: приветствие с раскрытием AI, база знаний практики, набор инструментов,
+      фразы отказа и перевода на человека, emergency-текст. Главный приём — убирать возможность,
+      а не только запрещать её словами.</p>
+      <div class="quiz">
+        <p class="quiz-q">Как надёжнее всего запретить ассистенту читать карту пациента?</p>
+        <div class="quiz-opts">
+          <button type="button" class="quiz-opt" aria-pressed="false" data-correct="false"><span class="mark mono">□</span>Написать в prompt: «никогда не открывай карту пациента»</button>
+          <button type="button" class="quiz-opt" aria-pressed="false" data-correct="true"><span class="mark mono">□</span>Не давать ассистенту такого инструмента и такого доступа вообще</button>
+          <button type="button" class="quiz-opt" aria-pressed="false" data-correct="false"><span class="mark mono">□</span>Предупредить команду практики, чтобы не спрашивали</button>
+        </div>
+        <div class="quiz-explain" hidden>
+          <strong>Объяснение.</strong> Инструкция в prompt — это просьба, и она может не сработать при необычной формулировке
+          вопроса. Отсутствие функции и отсутствие прав доступа — техническая граница: её нельзя обойти удачной фразой.
+          Prompt при этом всё равно нужен, но как второй слой, а не единственный.
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article class="lesson">
+    <div class="lesson-head"><span class="n mono">МОДУЛЬ 05</span><h3>Тестирование и red-team calls</h3></div>
+    <div class="lesson-body">
+      <p>Три группы тестов: нормальные, ошибочные и опасные. Отдельно тренируйте сценарии, в которых человек
+      пытается получить медицинскую оценку или проверить, машина ли на линии. Результаты фиксируются в протоколе:
+      он пригодится и практике, и юристу, и вам при разборе инцидента.</p>
+      <div class="quiz">
+        <p class="quiz-q">Во время теста ассистент ответил на вопрос о дозировке лекарства. Что делать?</p>
+        <div class="quiz-opts">
+          <button type="button" class="quiz-opt" aria-pressed="false" data-correct="false"><span class="mark mono">□</span>Добавить в prompt строку «не давай советы» и запускать пилот</button>
+          <button type="button" class="quiz-opt" aria-pressed="false" data-correct="true"><span class="mark mono">□</span>Остановить запуск, устранить причину, повторить тесты и записать результат в протокол</button>
+          <button type="button" class="quiz-opt" aria-pressed="false" data-correct="false"><span class="mark mono">□</span>Считать это редким случаем и наблюдать в проде</button>
+        </div>
+        <div class="quiz-explain" hidden>
+          <strong>Объяснение.</strong> Медицинский ответ на тесте — это сработавший стоп-сигнал, а не мелкий дефект.
+          «Наблюдать в проде» означает наблюдать на реальных пациентах. Правильный порядок: устранить, перепроверить
+          тем же и соседними сценариями, задокументировать.
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article class="lesson">
+    <div class="lesson-head"><span class="n mono">МОДУЛЬ 06</span><h3>Продажа, Pilot, Übergabe и поддержка</h3></div>
+    <div class="lesson-body">
+      <p>Как говорить с практикой: показывать границы, а не обещать чудо; продавать пилот; передавать документацию
+      и обучать команду; договариваться о поддержке и журнале изменений. Отдельно — какие формулировки
+      в коммерческом предложении создают вам будущую ответственность.</p>
+      <div class="quiz">
+        <p class="quiz-q">Какая формулировка в коммерческом предложении корректна?</p>
+        <div class="quiz-opts">
+          <button type="button" class="quiz-opt" aria-pressed="false" data-correct="false"><span class="mark mono">□</span>«Решение на 100 % соответствует DSGVO»</button>
+          <button type="button" class="quiz-opt" aria-pressed="false" data-correct="true"><span class="mark mono">□</span>«Помогает автоматизировать административные звонки; при корректной конфигурации и после проверки договоров и маршрутов данных»</button>
+          <button type="button" class="quiz-opt" aria-pressed="false" data-correct="false"><span class="mark mono">□</span>«Заменяет одного сотрудника ресепшена»</button>
+        </div>
+        <div class="quiz-explain" hidden>
+          <strong>Объяснение.</strong> Соответствие зависит от конфигурации у конкретной практики, поэтому обещать его
+          как свойство продукта нельзя — это обещание результата, который вы не контролируете. Вторая формулировка описывает
+          пользу и одновременно называет условия; именно она выдерживает и разговор с юристом, и разбор после инцидента.
+        </div>
+      </div>
+    </div>
+  </article>
+</section>
+
+<!-- ============================== 12 GLOSSARY ============================== -->
+<section class="section" id="glossary" aria-labelledby="gl-h">
+  <div class="section-head">
+    <span class="section-num">12</span>
+    <h2 id="gl-h">Глоссарий</h2>
+    <p class="lede">Термин → простое объяснение → практический пример. Поиск работает по названию, сокращению и тексту карточки.</p>
+  </div>
+
+  <div class="search-box no-print">
+    <label class="visually-hidden" for="glossary-search">Поиск по глоссарию</label>
+    <input type="search" id="glossary-search" placeholder="Например: retention, § 203, subprocessor…" autocomplete="off" />
+    <button class="btn btn--ghost btn--sm" type="button" id="glossary-clear">Очистить</button>
+    <span class="mono small muted" id="glossary-count" aria-live="polite"></span>
+  </div>
+
+  <div class="glossary" id="glossary-list">
+    <details class="term" data-search="ai ки kunstliche intelligenz искусственный интеллект"><summary>AI / KI <span class="abbr">ИИ</span></summary><div class="term-body"><p>Программа, которая по данным строит ответ, а не следует жёсткому списку правил.</p><p class="ex">Пример: ассистент понимает «можно перенести на четверг?», хотя такой фразы в сценарии дословно нет.</p></div></details>
+
+    <details class="term" data-search="stt speech to text распознавание речи spracherkennung"><summary>STT <span class="abbr">Speech-to-Text</span></summary><div class="term-body"><p>Распознавание речи: голос превращается в текст.</p><p class="ex">Пример: «Ich hätte gern einen Termin» → строка текста, которую дальше обрабатывает модель.</p></div></details>
+
+    <details class="term" data-search="tts text to speech синтез речи sprachsynthese голос"><summary>TTS <span class="abbr">Text-to-Speech</span></summary><div class="term-body"><p>Синтез речи: текст ответа звучит голосом.</p><p class="ex">Пример: ассистент вслух называет свободное время приёма.</p></div></details>
+
+    <details class="term" data-search="llm large language model языковая модель"><summary>LLM <span class="abbr">Large Language Model</span></summary><div class="term-body"><p>Большая языковая модель, которая формулирует ответ и решает, какой инструмент вызвать.</p><p class="ex">Пример: поняла намерение «перенести термин» и вызвала соответствующую функцию календаря.</p></div></details>
+
+    <details class="term" data-search="prompt промпт системная инструкция сценарий"><summary>Prompt <span class="abbr">инструкция</span></summary><div class="term-body"><p>Текстовая инструкция, задающая роль и границы ассистента.</p><p class="ex">Пример: «Ты административный ассистент практики. Медицинские вопросы не обсуждаешь — передаёшь человеку.»</p></div></details>
+
+    <details class="term" data-search="tool function calling инструмент функция вызов"><summary>Tool / Function calling <span class="abbr">инструменты</span></summary><div class="term-body"><p>Разрешённые действия, которые модель может выполнить во внешней системе.</p><p class="ex">Пример: «создать термин» есть в списке, «прочитать карту пациента» — нет, поэтому это технически невозможно.</p></div></details>
+
+    <details class="term" data-search="sip телефония voip транк"><summary>SIP <span class="abbr">телефония</span></summary><div class="term-body"><p>Протокол интернет-телефонии, по которому звонок доходит до сервиса.</p><p class="ex">Пример: номер практики переадресован на SIP-транк провайдера — это отдельный обработчик данных.</p></div></details>
+
+    <details class="term" data-search="webhook вебхук интеграция событие"><summary>Webhook <span class="abbr">интеграция</span></summary><div class="term-body"><p>Автоматическое сообщение из одной системы в другую при наступлении события.</p><p class="ex">Пример: после звонка запись появляется в календаре практики.</p></div></details>
+
+    <details class="term" data-search="fallback запасной путь отказ перевод"><summary>Fallback <span class="abbr">запасной путь</span></summary><div class="term-body"><p>Что происходит, когда основной сценарий не сработал.</p><p class="ex">Пример: сервис недоступен → звонок автоматически идёт на обычный номер практики, а не обрывается.</p></div></details>
+
+    <details class="term" data-search="human in the loop человек в контуре контроль"><summary>Human-in-the-loop <span class="abbr">человек в контуре</span></summary><div class="term-body"><p>Человек участвует в процессе там, где решение важное или неоднозначное.</p><p class="ex">Пример: любой медицинский вопрос переводится сотруднику, а не решается моделью.</p></div></details>
+
+    <details class="term" data-search="gesundheitsdaten данные о здоровье art 9 особая категория"><summary>Gesundheitsdaten <span class="abbr">данные о здоровье</span></summary><div class="term-body"><p>Особая категория персональных данных (Art. 9 DSGVO): по умолчанию их обработка запрещена, кроме прямо предусмотренных случаев.</p><p class="ex">Пример: симптомы, диагноз, лекарства — и даже сам факт обращения в узкоспециализированную практику.</p></div></details>
+
+    <details class="term" data-search="verantwortlicher controller контролёр ответственный"><summary>Verantwortlicher <span class="abbr">Controller</span></summary><div class="term-body"><p>Тот, кто определяет цели и средства обработки. В этом сценарии — практика.</p><p class="ex">Пример: практика решает, что ассистент принимает звонки и записывает на приём.</p></div></details>
+
+    <details class="term" data-search="auftragsverarbeiter processor обработчик"><summary>Auftragsverarbeiter <span class="abbr">Processor</span></summary><div class="term-body"><p>Тот, кто обрабатывает данные по поручению контролёра.</p><p class="ex">Пример: вы как поставщик услуги настройки и эксплуатации ассистента.</p></div></details>
+
+    <details class="term" data-search="subprocessor субобработчик подрядчик цепочка"><summary>Subprocessor <span class="abbr">субобработчик</span></summary><div class="term-body"><p>Подрядчик обработчика, который тоже касается данных.</p><p class="ex">Пример: провайдер STT, которого вы используете внутри своего решения.</p></div></details>
+
+    <details class="term" data-search="dpa av vertrag договор обработки art 28"><summary>DPA / AV-Vertrag <span class="abbr">Art. 28 DSGVO</span></summary><div class="term-body"><p>Договор об обработке данных по поручению: предмет, срок, категории данных, обязанности, субобработчики, удаление.</p><p class="ex">Пример: без него нельзя передавать поставщику данные пациентов — даже только имя и номер.</p></div></details>
+
+    <details class="term" data-search="retention срок хранения löschung удаление"><summary>Retention <span class="abbr">срок хранения</span></summary><div class="term-body"><p>Сколько данные хранятся до удаления.</p><p class="ex">Пример: «логи — 7 дней, транскрипты — не хранятся, аудио — не создаётся». Каждое значение подтверждается документом.</p></div></details>
+
+    <details class="term" data-search="drittlandtransfer третья страна передача сша kapitel v"><summary>Drittlandtransfer <span class="abbr">передача в третью страну</span></summary><div class="term-body"><p>Передача персональных данных за пределы ЕС/ЕЭЗ; требует основания по Гл. V DSGVO (Art. 44–49).</p><p class="ex">Пример: транскрипт обрабатывается сервисом в США — нужен DPF-сертификат поставщика или SCC.</p></div></details>
+
+    <details class="term" data-search="scc standard contractual clauses стандартные договорные условия"><summary>SCC <span class="abbr">Standard Contractual Clauses</span></summary><div class="term-body"><p>Утверждённые Еврокомиссией типовые условия для передачи данных в третьи страны.</p><p class="ex">Пример: поставщик не в DPF → включаются SCC плюс оценка обстоятельств передачи.</p></div></details>
+
+    <details class="term" data-search="eu us dpf data privacy framework адекватность"><summary>EU–US DPF <span class="abbr">Data Privacy Framework</span></summary><div class="term-body"><p>Механизм, на основании которого Еврокомиссия признала адекватным уровень защиты у сертифицированных компаний в США (решение от 10.07.2023).</p><p class="ex">Пример: перед ссылкой на DPF проверьте, что конкретная компания действительно в списке сертифицированных и что покрыты нужные категории данных.</p></div></details>
+
+    <details class="term" data-search="dsfa dpia folgenabschätzung оценка воздействия art 35"><summary>DSFA / DPIA <span class="abbr">Art. 35 DSGVO</span></summary><div class="term-body"><p>Оценка воздействия на защиту данных — обязательна при вероятном высоком риске для прав людей.</p><p class="ex">Пример: надзорные органы публикуют списки операций, где DSFA требуется; при обработке данных о здоровье с новыми технологиями этот вопрос надо разобрать письменно, а не «на глаз».</p></div></details>
+
+    <details class="term" data-search="datenminimierung минимизация данных art 5"><summary>Datenminimierung <span class="abbr">минимизация</span></summary><div class="term-body"><p>Собирать только то, что действительно нужно для цели (Art. 5 Abs. 1 lit. c DSGVO).</p><p class="ex">Пример: для записи на приём не нужен диагноз — значит, ассистент его не спрашивает и не сохраняет.</p></div></details>
+
+    <details class="term" data-search="zweckbindung привязка к цели art 5"><summary>Zweckbindung <span class="abbr">привязка к цели</span></summary><div class="term-body"><p>Данные используются только для той цели, ради которой собраны.</p><p class="ex">Пример: номер, оставленный для записи, нельзя использовать для рассылки предложений.</p></div></details>
+
+    <details class="term" data-search="berufsgeheimnis schweigepflicht 203 stgb тайна"><summary>Berufsgeheimnis <span class="abbr">§ 203 StGB</span></summary><div class="term-body"><p>Профессиональная тайна врачей, стоматологов, психологов и психотерапевтов; распространяется и на привлечённых лиц (mitwirkende Personen).</p><p class="ex">Пример: подрядчик, обслуживающий телефонный сервис практики, обязан быть письменно обязан к сохранению тайны.</p></div></details>
+
+    <details class="term" data-search="sla service level agreement доступность поддержка"><summary>SLA <span class="abbr">Service Level Agreement</span></summary><div class="term-body"><p>Согласованный уровень услуги: доступность, время реакции поддержки, окна обслуживания.</p><p class="ex">Пример: «отвечаем в течение 4 рабочих часов; при сбое звонки уходят на номер практики автоматически».</p></div></details>
+  </div>
+  <p class="no-results is-hidden" id="glossary-empty">Ничего не найдено. Попробуйте другое слово или сокращение.</p>
+</section>
+
+<!-- ============================== 13 SOURCES ============================== -->
+<section class="section" id="sources" aria-labelledby="sr-h">
+  <div class="section-head">
+    <span class="section-num">13</span>
+    <h2 id="sr-h">Источники</h2>
+    <p class="lede">
+      Официальные документы, на которые опирается этот материал. Дата проверки — <time datetime="2026-08-31">31.08.2026</time>.
+      Нормы и документы поставщиков обновляются: перед коммерческим использованием открывайте актуальную редакцию по ссылке.
+      Экспертные блоги и рекламные страницы поставщиков в этот список сознательно не включены.
+    </p>
+  </div>
+
+  <div class="sources-list">
+    <div class="source">
+      <div class="meta"><b>EUR-Lex</b>Regulation (EU) 2016/679<br />проверено 31.08.2026</div>
+      <div>
+        <h3>DSGVO / GDPR — общий регламент по защите данных</h3>
+        <p>Подтверждает: принципы обработки (Art. 5), правовые основания (Art. 6), особый режим данных о здоровье (Art. 9),
+        информирование субъектов (Art. 13–14), договор об обработке (Art. 28), реестр обработки (Art. 30), меры безопасности (Art. 32),
+        уведомление об инцидентах (Art. 33), DSFA (Art. 35) и передачу в третьи страны (Art. 44–49).</p>
+        <p class="url"><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj" target="_blank" rel="noreferrer noopener">eur-lex.europa.eu/eli/reg/2016/679/oj</a></p>
+      </div>
+    </div>
+
+    <div class="source">
+      <div class="meta"><b>EUR-Lex</b>Regulation (EU) 2024/1689<br />проверено 31.08.2026</div>
+      <div>
+        <h3>AI Act — регламент ЕС об искусственном интеллекте</h3>
+        <p>Подтверждает обязанность прозрачности: человек должен быть проинформирован, что взаимодействует с AI-системой,
+        если это не очевидно из контекста (Art. 50). Именно на этом основано требование раскрывать AI в приветствии звонка.</p>
+        <p class="url"><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj" target="_blank" rel="noreferrer noopener">eur-lex.europa.eu/eli/reg/2024/1689/oj</a></p>
+      </div>
+    </div>
+
+    <div class="source">
+      <div class="meta"><b>Европейская комиссия</b>Guidelines / Art. 50<br />проверено 31.08.2026</div>
+      <div>
+        <h3>Руководство по обязанностям прозрачности AI Act</h3>
+        <p>Подтверждает: обязанности прозрачности по Art. 50 применяются со 2 августа 2026 года и распространяются
+        на системы, напрямую взаимодействующие с людьми, включая голосовых ассистентов. Уточняйте по руководству,
+        как раскрытие должно выглядеть в вашем сценарии.</p>
+        <p class="url"><a href="https://digital-strategy.ec.europa.eu/en/policies/guidelines-ai-transparency-obligations" target="_blank" rel="noreferrer noopener">digital-strategy.ec.europa.eu/en/policies/guidelines-ai-transparency-obligations</a></p>
+      </div>
+    </div>
+
+    <div class="source">
+      <div class="meta"><b>Gesetze im Internet</b>§ 201 StGB<br />проверено 31.08.2026</div>
+      <div>
+        <h3>Verletzung der Vertraulichkeit des Wortes</h3>
+        <p>Подтверждает наказуемость неправомерной записи непублично сказанного слова на носитель;
+        по абз. 1 предусмотрено лишение свободы до трёх лет или денежный штраф. Основание для правила
+        «в первой версии запись выключена».</p>
+        <p class="url"><a href="https://www.gesetze-im-internet.de/stgb/__201.html" target="_blank" rel="noreferrer noopener">gesetze-im-internet.de/stgb/__201.html</a></p>
+      </div>
+    </div>
+
+    <div class="source">
+      <div class="meta"><b>Gesetze im Internet</b>§ 203 StGB<br />проверено 31.08.2026</div>
+      <div>
+        <h3>Verletzung von Privatgeheimnissen (Berufsgeheimnis)</h3>
+        <p>Подтверждает режим профессиональной тайны врачей, стоматологов, психологов и психотерапевтов,
+        а также правила привлечения <em>mitwirkende Personen</em> (абз. 3 и 4) — включая ответственность самих привлечённых лиц.
+        Основание для письменного обязательства о тайне для вас и субподрядчиков.</p>
+        <p class="url"><a href="https://www.gesetze-im-internet.de/stgb/__203.html" target="_blank" rel="noreferrer noopener">gesetze-im-internet.de/stgb/__203.html</a></p>
+      </div>
+    </div>
+
+    <div class="source">
+      <div class="meta"><b>Gesetze im Internet</b>§ 22 BDSG<br />проверено 31.08.2026</div>
+      <div>
+        <h3>BDSG — обработка особых категорий данных</h3>
+        <p>Национальные условия обработки особых категорий персональных данных, в том числе в сфере здравоохранения,
+        и требования к мерам защиты. Проверяется вместе с Art. 9 DSGVO для конкретного сценария.</p>
+        <p class="url"><a href="https://www.gesetze-im-internet.de/bdsg_2018/__22.html" target="_blank" rel="noreferrer noopener">gesetze-im-internet.de/bdsg_2018/__22.html</a></p>
+      </div>
+    </div>
+
+    <div class="source">
+      <div class="meta"><b>EUR-Lex</b>Decision (EU) 2023/1795<br />проверено 31.08.2026</div>
+      <div>
+        <h3>Решение Еврокомиссии об адекватности для EU–US Data Privacy Framework</h3>
+        <p>Подтверждает существование правового механизма передачи данных в США для компаний, сертифицированных в DPF (с 10.07.2023).
+        Не подтверждает, что конкретный поставщик сертифицирован — это проверяется отдельно по списку программы.</p>
+        <p class="url"><a href="https://eur-lex.europa.eu/eli/dec_impl/2023/1795/oj" target="_blank" rel="noreferrer noopener">eur-lex.europa.eu/eli/dec_impl/2023/1795/oj</a></p>
+      </div>
+    </div>
+
+    <div class="source">
+      <div class="meta"><b>Data Privacy Framework</b>официальная программа<br />проверено 31.08.2026</div>
+      <div>
+        <h3>Список сертифицированных компаний DPF</h3>
+        <p>Единственный способ проверить, участвует ли конкретная американская компания в DPF и какие категории данных покрыты.
+        Ссылка на DPF без проверки по списку — не аргумент.</p>
+        <p class="url"><a href="https://www.dataprivacyframework.gov/" target="_blank" rel="noreferrer noopener">dataprivacyframework.gov</a></p>
+      </div>
+    </div>
+
+    <div class="source">
+      <div class="meta"><b>CURIA</b>дело T-553/23<br />проверено 31.08.2026</div>
+      <div>
+        <h3>Судебная проверка решения об адекватности (Latombe)</h3>
+        <p>Общий суд ЕС отклонил иск об аннулировании решения о DPF (сентябрь 2025); подана апелляция в Суд ЕС,
+        которая на дату проверки не разрешена. Текст решения ищите на портале CURIA по номеру дела.
+        Практический вывод: архитектура должна допускать замену поставщика.</p>
+        <p class="url"><a href="https://curia.europa.eu/" target="_blank" rel="noreferrer noopener">curia.europa.eu</a> — поиск по номеру дела T-553/23</p>
+      </div>
+    </div>
+
+    <div class="source">
+      <div class="meta"><b>DSK</b>Orientierungshilfe KI<br />проверено 31.08.2026</div>
+      <div>
+        <h3>Datenschutzkonferenz: ориентировочные указания по AI и защите данных</h3>
+        <p>Позиция немецких надзорных органов по выбору и эксплуатации AI-систем: ответственность, прозрачность,
+        технические и организационные меры. Полезно как ориентир для аргументации перед практикой и её DSB.</p>
+        <p class="url"><a href="https://www.datenschutzkonferenz-online.de/orientierungshilfen.html" target="_blank" rel="noreferrer noopener">datenschutzkonferenz-online.de/orientierungshilfen.html</a></p>
+      </div>
+    </div>
+
+    <div class="source">
+      <div class="meta"><b>BfDI</b>DSFA<br />проверено 31.08.2026</div>
+      <div>
+        <h3>Оценка воздействия и списки операций обработки</h3>
+        <p>Официальное разъяснение о DSFA и о списках операций, для которых она требуется.
+        Для практики в Германии смотрите ещё и список её земельного надзорного органа.</p>
+        <p class="url"><a href="https://www.bfdi.bund.de/DE/Fachthemen/Inhalte/Technik/Datenschutz-Folgenabschaetzungen.html" target="_blank" rel="noreferrer noopener">bfdi.bund.de — Datenschutz-Folgenabschätzungen</a></p>
+      </div>
+    </div>
+
+    <div class="source">
+      <div class="meta"><b>LfD Niedersachsen</b>Muss-Liste<br />проверено 31.08.2026</div>
+      <div>
+        <h3>Пример земельного списка операций, требующих DSFA</h3>
+        <p>Показывает, как выглядит «Muss-Liste» по Art. 35 Abs. 4 DSGVO на уровне земли.
+        Ваш ориентир — список того органа, которому подчиняется практика.</p>
+        <p class="url"><a href="https://www.lfd.niedersachsen.de/dsgvo/liste_von_verarbeitungsvorgangen_nach_art_35_abs_4_ds_gvo/muss-listen-zur-datenschutz-folgenabschatzung-179663.html" target="_blank" rel="noreferrer noopener">lfd.niedersachsen.de — Muss-Listen zur DSFA</a></p>
+      </div>
+    </div>
+
+    <div class="source">
+      <div class="meta"><b>EDPB</b>европейский совет<br />проверено 31.08.2026</div>
+      <div>
+        <h3>European Data Protection Board</h3>
+        <p>Руководства и заключения, разъясняющие применение DSGVO, в том числе по передаче данных в третьи страны
+        и по обработке с использованием AI. Первоисточник для спорных вопросов.</p>
+        <p class="url"><a href="https://www.edpb.europa.eu/" target="_blank" rel="noreferrer noopener">edpb.europa.eu</a></p>
+      </div>
+    </div>
+
+    <div class="source">
+      <div class="meta"><b>ElevenLabs</b>DPA<br />проверено 31.08.2026</div>
+      <div>
+        <h3>Data Processing Addendum поставщика</h3>
+        <p>Подтверждает наличие договора об обработке. Что именно он покрывает для вашего тарифа и вашей конфигурации —
+        читайте в тексте документа; условия могут отличаться между планами.</p>
+        <p class="url"><a href="https://elevenlabs.io/dpa" target="_blank" rel="noreferrer noopener">elevenlabs.io/dpa</a></p>
+      </div>
+    </div>
+
+    <div class="source">
+      <div class="meta"><b>ElevenLabs</b>Docs<br />проверено 31.08.2026</div>
+      <div>
+        <h3>Data residency и Zero Retention Mode</h3>
+        <p>Официальная документация по регионам хранения и по режиму нулевого хранения. Ключевой нюанс, который
+        нужно прочитать самому: выбранный регион относится к хранению, а обработка в отдельных случаях может
+        происходить за его пределами; режим нулевого хранения покрывает перечисленные API, а не всё подряд.</p>
+        <p class="url">
+          <a href="https://elevenlabs.io/docs/overview/administration/data-residency" target="_blank" rel="noreferrer noopener">docs · data residency</a> ·
+          <a href="https://elevenlabs.io/docs/eleven-api/resources/zero-retention-mode" target="_blank" rel="noreferrer noopener">docs · zero retention mode</a> ·
+          <a href="https://compliance.elevenlabs.io/" target="_blank" rel="noreferrer noopener">compliance portal · subprocessors</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 14 GO / NO-GO ============================== -->
+<section class="section" id="gonogo" aria-labelledby="gg-h">
+  <div class="section-head">
+    <span class="section-num">14</span>
+    <h2 id="gg-h">Final Go / No-Go</h2>
+    <p class="lede">
+      Последний фильтр перед запуском. Четыре состояния, и они не про «нравится/не нравится»,
+      а про то, какие документы у вас на руках и что технически включено.
+    </p>
+  </div>
+
+  <div class="gonogo">
+    <div class="gate gate--go">
+      <h3><span class="status status--go">GO</span></h3>
+      <ul>
+        <li>административная версия, только входящие;</li>
+        <li>AI раскрыт в приветствии;</li>
+        <li>записи аудио нет;</li>
+        <li>DPA проверен по каждому звену;</li>
+        <li>fallback на человека проверен на тестах.</li>
+      </ul>
+      <span class="gate-verdict">Можно начинать ограниченный пилот</span>
+    </div>
+    <div class="gate gate--check">
+      <h3><span class="status status--check">CHECK</span></h3>
+      <ul>
+        <li>есть внешняя передача данных вне ЕС;</li>
+        <li>подключён календарь или PVS;</li>
+        <li>хранятся транскрипты;</li>
+        <li>в цепочке есть неопределённый субобработчик;</li>
+        <li>retention нигде не выражен в числах.</li>
+      </ul>
+      <span class="gate-verdict">Сначала документы, потом запуск</span>
+    </div>
+    <div class="gate gate--stop">
+      <h3><span class="status status--stop">STOP</span></h3>
+      <ul>
+        <li>скрытая запись разговоров;</li>
+        <li>медицинские советы, дозировки, оценка срочности;</li>
+        <li>нет договора с практикой или AV-Vertrag;</li>
+        <li>неизвестен маршрут данных;</li>
+        <li>AI выдаёт себя за человека.</li>
+      </ul>
+      <span class="gate-verdict">Запускать нельзя</span>
+    </div>
+    <div class="gate gate--legal">
+      <h3><span class="status status--legal">LEGAL REVIEW</span></h3>
+      <ul>
+        <li>сложная медицинская логика или триаж;</li>
+        <li>психотерапевтические данные;</li>
+        <li>массовая обработка, несколько практик;</li>
+        <li>high-risk use case;</li>
+        <li>любая запись или биометрия голоса.</li>
+      </ul>
+      <span class="gate-verdict">Только после проверки юристом / DSB</span>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:var(--sp-6)">
+    <h3>Быстрая самопроверка</h3>
+    <p class="small muted">
+      Отметьте то, что верно для вашей конфигурации. Вывод рассчитывается в браузере и никуда не отправляется.
+      Это ориентир для разговора с юристом, а не заключение.
+    </p>
+    <form id="gate-form" class="grid-2" style="margin-top:var(--sp-4)">
+      <div>
+        <h4>Обязательные условия GO</h4>
+        <div class="vendor-item"><input type="checkbox" id="g-inbound" data-weight="go" /><label for="g-inbound"><span class="q">Только входящие административные звонки</span></label></div>
+        <div class="vendor-item"><input type="checkbox" id="g-disclosure" data-weight="go" /><label for="g-disclosure"><span class="q">AI раскрыт в приветствии, до сбора данных</span></label></div>
+        <div class="vendor-item"><input type="checkbox" id="g-norec" data-weight="go" /><label for="g-norec"><span class="q">Запись аудио выключена у всех звеньев</span></label></div>
+        <div class="vendor-item"><input type="checkbox" id="g-dpa" data-weight="go" /><label for="g-dpa"><span class="q">DPA/AV-Vertrag есть по каждому поставщику</span></label></div>
+        <div class="vendor-item"><input type="checkbox" id="g-fallback" data-weight="go" /><label for="g-fallback"><span class="q">Перевод на человека протестирован, включая сбой сервиса</span></label></div>
+      </div>
+      <div>
+        <h4>Признаки CHECK, STOP и LEGAL REVIEW</h4>
+        <div class="vendor-item"><input type="checkbox" id="g-transfer" data-weight="check" /><label for="g-transfer"><span class="q">Данные обрабатываются вне ЕС</span><span class="why">CHECK — нужен подтверждённый механизм передачи.</span></label></div>
+        <div class="vendor-item"><input type="checkbox" id="g-calendar" data-weight="check" /><label for="g-calendar"><span class="q">Подключён календарь / PVS или хранятся транскрипты</span><span class="why">CHECK — отдельные доступы, сроки и договоры.</span></label></div>
+        <div class="vendor-item"><input type="checkbox" id="g-hidden" data-weight="stop" /><label for="g-hidden"><span class="q">Разговоры записываются без явного правового основания</span><span class="why">STOP — § 201 StGB и DSGVO.</span></label></div>
+        <div class="vendor-item"><input type="checkbox" id="g-medical" data-weight="stop" /><label for="g-medical"><span class="q">Ассистент даёт медицинские ответы или оценивает срочность</span><span class="why">STOP — вне допустимого сценария.</span></label></div>
+        <div class="vendor-item"><input type="checkbox" id="g-psy" data-weight="legal" /><label for="g-psy"><span class="q">Психотерапия, триаж или массовая обработка данных о здоровье</span><span class="why">LEGAL REVIEW — до запуска нужна проверка юриста / DSB.</span></label></div>
+      </div>
+    </form>
+    <div class="progress-summary" style="margin-top:var(--sp-4)">
+      <div>
+        <p class="eyebrow" style="margin-bottom:4px">Предварительный вывод</p>
+        <span class="status status--check" id="gate-verdict" aria-live="polite">НЕ ГОТОВО</span>
+      </div>
+      <p class="small muted" style="margin:0;flex:1 1 260px" id="gate-note"></p>
+    </div>
+  </div>
+
+  <div class="panel panel--navy" style="margin-top:var(--sp-5)">
+    <h3>Что этот сайт не делает</h3>
+    <p>
+      Здесь нет форм отправки данных, интеграций с поставщиками, аналитики и сторонних трекеров.
+      Все интерактивные элементы работают локально в браузере: фильтры, поиск, чек-листы и тесты.
+      Отметки хранятся в <span class="mono">localStorage</span> вашего браузера и не покидают устройство.
+      Реальная проверка поставщика, звонок и запуск требуют backend и договоров — этого сайт не имитирует.
+    </p>
+    <p style="margin-bottom:0">
+      И главное: прочитанный сайт не делает вас автоматически законным Anbieter медицинского сервиса.
+      Законность зависит от конкретной практики, процесса, договора, поставщика, настроек и фактической обработки данных.
+    </p>
+  </div>
+</section>
+
+  </main>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <img src="assets/img/ai-telefon/brand-mark.svg" alt="" width="36" height="36" loading="lazy" />
+        <h2>Сигналы и протоколы</h2>
+        <p>Практичный образовательный протокол для внедрения AI-телефонии в немецкой практике: без слепых обещаний,
+        без неконтролируемой передачи данных и без автоматизации медицинских решений.</p>
+      </div>
+      <div>
+        <h2>Правовая оговорка</h2>
+        <p>Материал носит учебный характер и не является юридической консультацией (keine Rechtsberatung).
+        Перед коммерческим запуском конфигурацию проверяет Rechtsanwalt, Datenschutzberater или квалифицированный
+        Datenschutzbeauftragter. Проверка источников: <time datetime="2026-08-31">31.08.2026</time>.</p>
+      </div>
+      <div>
+        <h2>Разделы</h2>
+        <ul>
+          <li><a href="#datamap">Карта данных</a></li>
+          <li><a href="#risks">Основные риски</a></li>
+          <li><a href="#protocol">Пошаговый запуск</a></li>
+          <li><a href="#vendor">Vendor Due Diligence</a></li>
+          <li><a href="#sources">Источники</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Принципы</h2>
+        <ul>
+          <li>Сначала карта данных. Потом красивый голос.</li>
+          <li>Если AI не уверен — в разговор входит человек.</li>
+          <li>Непроверенное остаётся непроверенным.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>Никакой аналитики, никаких сторонних трекеров, никаких данных пациентов.</span>
+      <button class="btn btn--onDarkGhost btn--sm no-print" type="button" data-print>Печать / PDF</button>
+      <span class="mono">INBOUND ONLY · HUMAN FALLBACK · DATA MINIMIZATION</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/ai-telefon.js" defer></script>
+</body>
+</html>

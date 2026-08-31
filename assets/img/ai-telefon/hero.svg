@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="1200" height="760" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="heroArtTitle">
+  <title id="heroArtTitle">Абстрактная графика: сигнал звонка проходит через контрольные точки протокола</title>
+  <defs>
+    <radialGradient id="hgGlow" cx=".72" cy=".46" r=".55">
+      <stop offset="0" stop-color="#8FE3E5" stop-opacity=".30"/>
+      <stop offset="1" stop-color="#8FE3E5" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hgArc" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8FE3E5" stop-opacity="0"/>
+      <stop offset=".35" stop-color="#8FE3E5" stop-opacity=".95"/>
+      <stop offset="1" stop-color="#8FE3E5" stop-opacity=".15"/>
+    </linearGradient>
+    <pattern id="hgGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0 H0 V40" fill="none" stroke="#8FE3E5" stroke-width=".5" stroke-opacity=".12"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="760" fill="#0D1730"/>
+  <rect width="1200" height="760" fill="url(#hgGrid)"/>
+  <rect width="1200" height="760" fill="url(#hgGlow)"/>
+
+  <!-- concentric signal rings around the call source -->
+  <g transform="translate(845 372)" fill="none" stroke="#8FE3E5">
+    <circle r="52"  stroke-opacity=".85" stroke-width="1.6"/>
+    <circle r="104" stroke-opacity=".45" stroke-width="1.2" stroke-dasharray="3 7"/>
+    <circle r="164" stroke-opacity=".28" stroke-width="1"/>
+    <circle r="232" stroke-opacity=".16" stroke-width="1" stroke-dasharray="2 10"/>
+    <circle r="306" stroke-opacity=".10" stroke-width="1"/>
+  </g>
+
+  <!-- waveform: vertical bars forming a call signal, wrapped on the ring -->
+  <g transform="translate(845 372)" stroke="#8FE3E5" stroke-linecap="round">
+    <g stroke-width="3">
+      <line x1="-30" y1="-14" x2="-30" y2="14" stroke-opacity=".9"/>
+      <line x1="-20" y1="-27" x2="-20" y2="27" stroke-opacity=".9"/>
+      <line x1="-10" y1="-9"  x2="-10" y2="9"  stroke-opacity=".7"/>
+      <line x1="0"   y1="-34" x2="0"   y2="34" stroke-opacity="1"/>
+      <line x1="10"  y1="-18" x2="10"  y2="18" stroke-opacity=".8"/>
+      <line x1="20"  y1="-25" x2="20"  y2="25" stroke-opacity=".7"/>
+      <line x1="30"  y1="-11" x2="30"  y2="11" stroke-opacity=".55"/>
+    </g>
+  </g>
+
+  <!-- restrained data-flow arcs leaving the source -->
+  <g fill="none" stroke="url(#hgArc)" stroke-width="1.6">
+    <path d="M600 372 C700 300 780 316 793 372"/>
+    <path d="M560 268 C700 214 860 236 962 300" stroke-opacity=".8"/>
+    <path d="M560 486 C700 556 880 534 984 452" stroke-opacity=".8"/>
+    <path d="M640 180 C820 120 1040 168 1128 268" stroke-opacity=".5"/>
+    <path d="M640 566 C820 646 1060 604 1136 500" stroke-opacity=".5"/>
+  </g>
+
+  <!-- protocol lane: dotted route with checkpoints -->
+  <g>
+    <path d="M96 660 H1104" fill="none" stroke="#8FE3E5" stroke-opacity=".22" stroke-width="1.4" stroke-dasharray="1 9" stroke-linecap="round"/>
+    <g fill="none" stroke="#8FE3E5" stroke-width="1.4" stroke-opacity=".55">
+      <rect x="288" y="646" width="28" height="28" rx="3"/>
+      <rect x="592" y="646" width="28" height="28" rx="3"/>
+      <rect x="896" y="646" width="28" height="28" rx="3"/>
+    </g>
+    <rect x="595" y="649" width="22" height="22" rx="2" fill="#D8932E" fill-opacity=".9"/>
+    <rect x="291" y="649" width="22" height="22" rx="2" fill="#8FE3E5" fill-opacity=".55"/>
+    <rect x="899" y="649" width="22" height="22" rx="2" fill="#8FE3E5" fill-opacity=".22"/>
+  </g>
+
+  <!-- amber checkpoint nodes on the flow -->
+  <g>
+    <circle cx="962" cy="300" r="7" fill="#D8932E"/>
+    <circle cx="962" cy="300" r="15" fill="none" stroke="#D8932E" stroke-opacity=".45" stroke-width="1.4"/>
+    <circle cx="984" cy="452" r="5" fill="#D8932E" fill-opacity=".75"/>
+    <circle cx="793" cy="372" r="4" fill="#DFF5F5"/>
+  </g>
+
+  <!-- ticks along the right edge: technical register -->
+  <g stroke="#8FE3E5" stroke-opacity=".3" stroke-width="1.2">
+    <line x1="1152" y1="140" x2="1176" y2="140"/>
+    <line x1="1152" y1="176" x2="1168" y2="176"/>
+    <line x1="1152" y1="212" x2="1168" y2="212"/>
+    <line x1="1152" y1="248" x2="1176" y2="248"/>
+  </g>
+</svg>

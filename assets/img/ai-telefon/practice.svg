@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 640" width="1000" height="640" role="img" aria-labelledby="prTitle prDesc">
+  <title id="prTitle">Иллюстрация: стойка регистрации медицинской практики</title>
+  <desc id="prDesc">Спокойная сцена ресепшена: стойка, стационарный телефон, ноутбук с закрытым экраном, растение и полка. Людей, лиц и документов с данными пациентов нет.</desc>
+  <defs>
+    <linearGradient id="prWall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F2F7FB"/>
+      <stop offset="1" stop-color="#E4EDF5"/>
+    </linearGradient>
+    <linearGradient id="prLight" x1="0" y1="0" x2=".7" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity=".85"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="prDesk" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1B2A4A"/>
+      <stop offset="1" stop-color="#101A35"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1000" height="640" fill="url(#prWall)"/>
+
+  <!-- window with soft daylight -->
+  <g>
+    <rect x="60" y="70" width="250" height="230" rx="4" fill="#FFFFFF" stroke="#C3D3E0" stroke-width="2"/>
+    <line x1="185" y1="70" x2="185" y2="300" stroke="#C3D3E0" stroke-width="2"/>
+    <line x1="60" y1="185" x2="310" y2="185" stroke="#C3D3E0" stroke-width="2"/>
+    <rect x="60" y="70" width="250" height="230" fill="#8FE3E5" fill-opacity=".10"/>
+  </g>
+  <polygon points="70,300 330,300 470,560 150,560" fill="url(#prLight)" opacity=".7"/>
+
+  <!-- wall shelf -->
+  <g>
+    <rect x="620" y="150" width="290" height="9" rx="2" fill="#CBD8E4"/>
+    <rect x="648" y="106" width="16" height="44" rx="2" fill="#101A35" opacity=".78"/>
+    <rect x="670" y="116" width="12" height="34" rx="2" fill="#8FE3E5" opacity=".85"/>
+    <rect x="688" y="98" width="18" height="52" rx="2" fill="#101A35" opacity=".5"/>
+    <rect x="712" y="122" width="14" height="28" rx="2" fill="#D8932E" opacity=".8"/>
+    <!-- small plant on shelf -->
+    <path d="M860 150 v-22" stroke="#3C6A5B" stroke-width="3" stroke-linecap="round"/>
+    <path d="M860 132 c-16 -4 -22 -16 -20 -26 12 0 20 10 20 26z" fill="#4E8A75"/>
+    <path d="M860 136 c16 -4 22 -16 20 -26 -12 0 -20 10 -20 26z" fill="#3C6A5B"/>
+    <rect x="848" y="150" width="24" height="0" fill="none"/>
+  </g>
+
+  <!-- practice cross sign (abstract, no text) -->
+  <g transform="translate(566 96)">
+    <rect width="30" height="86" rx="4" fill="#101A35" opacity=".12"/>
+  </g>
+
+  <!-- reception desk -->
+  <g>
+    <rect x="180" y="380" width="700" height="30" rx="4" fill="#F7F9FC" stroke="#C3D3E0" stroke-width="2"/>
+    <rect x="200" y="410" width="660" height="170" fill="url(#prDesk)"/>
+    <line x1="200" y1="452" x2="860" y2="452" stroke="#8FE3E5" stroke-opacity=".18" stroke-width="2"/>
+  </g>
+
+  <!-- laptop, closed-ish, screen turned away: no data visible -->
+  <g transform="translate(560 268)">
+    <path d="M20 112 L44 20 h176 l24 92z" fill="#E9EFF6" stroke="#101A35" stroke-width="2.4" stroke-linejoin="round"/>
+    <path d="M52 30 h160 l17 72 H35z" fill="#FFFFFF" stroke="#C3D3E0" stroke-width="1.6"/>
+    <rect x="14" y="112" width="252" height="10" rx="5" fill="#101A35"/>
+  </g>
+
+  <!-- desk telephone -->
+  <g transform="translate(258 300)">
+    <path d="M12 80 h176 l-16 -34 H28z" fill="#101A35"/>
+    <rect x="0" y="80" width="200" height="20" rx="6" fill="#1B2A4A"/>
+    <!-- handset -->
+    <g transform="translate(18 30)">
+      <path d="M6 26 c0 -14 11 -25 25 -25 h100 c14 0 25 11 25 25 v6 h-24 v-4 c0 -3 -2 -5 -5 -5 H35 c-3 0 -5 2 -5 5 v4 H6z"
+            fill="#8FE3E5"/>
+      <rect x="0" y="26" width="30" height="22" rx="7" fill="#8FE3E5"/>
+      <rect x="126" y="26" width="30" height="22" rx="7" fill="#8FE3E5"/>
+    </g>
+    <!-- keypad hint -->
+    <g fill="#8FE3E5" opacity=".55">
+      <rect x="52" y="58" width="12" height="7" rx="2"/>
+      <rect x="72" y="58" width="12" height="7" rx="2"/>
+      <rect x="92" y="58" width="12" height="7" rx="2"/>
+      <rect x="112" y="58" width="12" height="7" rx="2"/>
+    </g>
+    <!-- coiled cord -->
+    <path d="M196 96 c18 0 18 14 0 14 -18 0 -18 14 0 14 -18 0 -18 14 0 14 h40" fill="none" stroke="#1B2A4A" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <!-- floor plant -->
+  <g transform="translate(884 350)">
+    <path d="M32 232 v-96" stroke="#3C6A5B" stroke-width="5" stroke-linecap="round"/>
+    <path d="M32 156 c-40 -10 -54 -44 -50 -70 30 2 48 30 50 70z" fill="#4E8A75"/>
+    <path d="M32 168 c40 -12 52 -46 48 -72 -30 4 -46 32 -48 72z" fill="#3C6A5B"/>
+    <path d="M32 132 c-26 -22 -24 -52 -12 -68 18 14 18 44 12 68z" fill="#5FA089"/>
+    <path d="M6 232 h52 l-8 46 H14z" fill="#101A35"/>
+  </g>
+
+  <!-- floor line -->
+  <line x1="0" y1="580" x2="1000" y2="580" stroke="#C3D3E0" stroke-width="2"/>
+  <rect y="580" width="1000" height="60" fill="#EAF1F7"/>
+</svg>

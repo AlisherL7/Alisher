@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" width="1200" height="340" role="img" aria-labelledby="dfTitle dfDesc">
+  <title id="dfTitle">Схема маршрута данных звонка</title>
+  <desc id="dfDesc">Слева узел телефона, в центре узел голосового AI, между ними жёлтая контрольная точка, справа узлы «команда практики» и «календарь». Текстовые подписи находятся под схемой в HTML.</desc>
+  <defs>
+    <marker id="dfArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#2A4A66"/>
+    </marker>
+    <marker id="dfArrowAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#A66E17"/>
+    </marker>
+    <pattern id="dfGrid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M30 0 H0 V30" fill="none" stroke="#101A35" stroke-width=".5" stroke-opacity=".07"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="340" fill="#DFF5F5"/>
+  <rect width="1200" height="340" fill="url(#dfGrid)"/>
+
+  <!-- caller node -->
+  <g transform="translate(70 118)">
+    <rect width="132" height="104" rx="6" fill="#FFFFFF" stroke="#101A35" stroke-width="2"/>
+    <rect x="46" y="20" width="40" height="64" rx="6" fill="none" stroke="#101A35" stroke-width="2.4"/>
+    <line x1="58" y1="72" x2="74" y2="72" stroke="#101A35" stroke-width="2.4" stroke-linecap="round"/>
+    <g stroke="#2A4A66" stroke-width="2" fill="none" stroke-linecap="round">
+      <path d="M92 34 a16 16 0 0 1 0 22"/>
+      <path d="M100 26 a26 26 0 0 1 0 38" stroke-opacity=".55"/>
+    </g>
+  </g>
+
+  <!-- line caller -> AI -->
+  <line x1="212" y1="170" x2="360" y2="170" stroke="#2A4A66" stroke-width="2" marker-end="url(#dfArrow)"/>
+
+  <!-- AI node -->
+  <g transform="translate(374 96)">
+    <rect width="180" height="148" rx="6" fill="#101A35"/>
+    <g stroke="#8FE3E5" stroke-width="3.4" stroke-linecap="round">
+      <line x1="44" y1="60" x2="44" y2="88"/>
+      <line x1="62" y1="44" x2="62" y2="104"/>
+      <line x1="80" y1="66" x2="80" y2="82"/>
+      <line x1="98" y1="36" x2="98" y2="112"/>
+      <line x1="116" y1="56" x2="116" y2="92"/>
+      <line x1="134" y1="68" x2="134" y2="80"/>
+    </g>
+    <rect x="24" y="20" width="132" height="108" rx="4" fill="none" stroke="#8FE3E5" stroke-width="1.2" stroke-opacity=".35"/>
+  </g>
+
+  <!-- checkpoint gate (amber) -->
+  <line x1="554" y1="170" x2="612" y2="170" stroke="#A66E17" stroke-width="2" marker-end="url(#dfArrowAmber)"/>
+  <g transform="translate(624 128)">
+    <rect width="84" height="84" rx="6" fill="#FFFFFF" stroke="#A66E17" stroke-width="2.6"/>
+    <path d="M42 18 L64 26 v18 c0 12-8.6 20-22 24 -13.4-4-22-12-22-24V26z" fill="none" stroke="#A66E17" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M32 43 l7 8 14-16" fill="none" stroke="#A66E17" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- split to team / calendar -->
+  <path d="M708 170 H770 C790 170 790 170 800 152 L836 92" fill="none" stroke="#2A4A66" stroke-width="2" marker-end="url(#dfArrow)"/>
+  <path d="M708 170 H770 C790 170 790 170 800 188 L836 248" fill="none" stroke="#2A4A66" stroke-width="2" marker-end="url(#dfArrow)"/>
+
+  <!-- team node -->
+  <g transform="translate(852 34)">
+    <rect width="150" height="104" rx="6" fill="#FFFFFF" stroke="#101A35" stroke-width="2"/>
+    <g fill="none" stroke="#101A35" stroke-width="2.4" stroke-linecap="round">
+      <circle cx="56" cy="42" r="12"/>
+      <path d="M36 78 c0-11 9-20 20-20 s20 9 20 20"/>
+      <circle cx="96" cy="48" r="9" stroke-opacity=".45"/>
+      <path d="M80 78 c0-9 7-16 16-16 s16 7 16 16" stroke-opacity=".45"/>
+    </g>
+  </g>
+
+  <!-- calendar node -->
+  <g transform="translate(852 196)">
+    <rect width="150" height="104" rx="6" fill="#FFFFFF" stroke="#101A35" stroke-width="2"/>
+    <rect x="34" y="24" width="82" height="60" rx="4" fill="none" stroke="#101A35" stroke-width="2.4"/>
+    <line x1="34" y1="42" x2="116" y2="42" stroke="#101A35" stroke-width="2.4"/>
+    <line x1="52" y1="16" x2="52" y2="30" stroke="#101A35" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="98" y1="16" x2="98" y2="30" stroke="#101A35" stroke-width="2.4" stroke-linecap="round"/>
+    <rect x="46" y="52" width="14" height="12" rx="2" fill="#8FE3E5"/>
+    <rect x="68" y="52" width="14" height="12" rx="2" fill="#8FE3E5" fill-opacity=".5"/>
+    <rect x="90" y="52" width="14" height="12" rx="2" fill="#8FE3E5" fill-opacity=".28"/>
+  </g>
+
+  <!-- return path (fallback) -->
+  <path d="M1002 86 C1080 86 1108 170 1050 170 H716" fill="none" stroke="#2A4A66" stroke-width="1.6" stroke-dasharray="6 6" stroke-opacity=".6" marker-end="url(#dfArrow)"/>
+
+  <!-- boundary marker: third-party zone -->
+  <rect x="360" y="60" width="360" height="220" rx="8" fill="none" stroke="#101A35" stroke-width="1.2" stroke-dasharray="4 8" stroke-opacity=".35"/>
+</svg>
