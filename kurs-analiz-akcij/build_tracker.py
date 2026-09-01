@@ -577,7 +577,8 @@ lvl_names = ["Подготовка и базовая финансовая гра
              "Чтение отчётности и первичных документов", "Риски и медвежий сценарий",
              "Портфель, риск и поведение инвестора", "Технический анализ",
              "Продвинутый практический анализ"]
-hdr = ["Уровень", "Название уровня", "Этапов", "Завершено", "Прогресс", "Средний балл"]
+hdr = ["Уровень", "Название уровня", "Этапов", "Завершено", "Прогресс", "Средний балл", "Часов"]
+db.column_dimensions["G"].width = 10
 for i, h in enumerate(hdr, start=1):
     c = db.cell(row=30, column=i, value=h)
     c.font = HEAD; c.fill = HEADFILL; c.border = BOX
@@ -591,9 +592,11 @@ for lvl in range(13):
     c = db.cell(row=r, column=5, value=f'=IFERROR($D{r}/$C{r},0)'); c.font = FORMULA; c.number_format = "0.0%"
     c = db.cell(row=r, column=6, value=f'=IFERROR(AVERAGEIF(Roadmap!$B$3:$B$200,$A{r},Roadmap!$P$3:$P$200),0)')
     c.font = FORMULA; c.number_format = "0.0"
-    for col in range(1, 7):
+    c = db.cell(row=r, column=7, value=f'=SUMIF(Roadmap!$B$3:$B$200,$A{r},Roadmap!$Q$3:$Q$200)')
+    c.font = FORMULA; c.number_format = "0.0"
+    for col in range(1, 8):
         cc = db.cell(row=r, column=col); cc.border = BOX
-        if col in (1, 3, 4, 5, 6):
+        if col in (1, 3, 4, 5, 6, 7):
             cc.alignment = Alignment(horizontal="center")
 db.conditional_formatting.add("E31:E43", DataBarRule(start_type="num", start_value=0,
                                                      end_type="num", end_value=1, color="4472C4"))
@@ -627,6 +630,43 @@ for i, t in enumerate(rules):
     c = db.cell(row=46 + i, column=1, value=t)
     c.font = BODY
     db.merge_cells(start_row=46 + i, start_column=1, end_row=46 + i, end_column=3)
+
+
+# ── графики на панели
+from openpyxl.chart import BarChart, PieChart, Reference
+from openpyxl.chart.label import DataLabelList
+
+cats = Reference(db, min_col=1, min_row=31, max_row=43)
+
+ch1 = BarChart()
+ch1.type = "bar"; ch1.style = 10
+ch1.title = "Прогресс по уровням, %"
+ch1.y_axis.title = "Уровень"; ch1.x_axis.title = "Выполнено"
+ch1.add_data(Reference(db, min_col=5, min_row=30, max_row=43), titles_from_data=True)
+ch1.set_categories(cats)
+ch1.dLbls = DataLabelList(); ch1.dLbls.showVal = True
+ch1.legend = None
+ch1.height = 12; ch1.width = 18
+db.add_chart(ch1, "K4")
+
+ch2 = BarChart()
+ch2.type = "col"; ch2.style = 12
+ch2.title = "Часы обучения по уровням"
+ch2.y_axis.title = "Часы"; ch2.x_axis.title = "Уровень"
+ch2.add_data(Reference(db, min_col=7, min_row=30, max_row=43), titles_from_data=True)
+ch2.set_categories(cats)
+ch2.dLbls = DataLabelList(); ch2.dLbls.showVal = True
+ch2.legend = None
+ch2.height = 8; ch2.width = 18
+db.add_chart(ch2, "K29")
+
+ch3 = PieChart()
+ch3.title = "Статусы этапов программы"
+ch3.add_data(Reference(db, min_col=2, min_row=8, max_row=11), titles_from_data=False)
+ch3.set_categories(Reference(db, min_col=1, min_row=8, max_row=11))
+ch3.dLbls = DataLabelList(); ch3.dLbls.showVal = True; ch3.dLbls.showPercent = True
+ch3.height = 9; ch3.width = 12
+db.add_chart(ch3, "K46")
 
 db.freeze_panes = "A4"
 db.sheet_view.showGridLines = False
