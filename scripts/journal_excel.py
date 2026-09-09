@@ -44,11 +44,11 @@ DATE = 'DD.MM.YYYY'
 PCT = '0.0%'
 
 POTOK  = ["Расход", "Доход"]
-RAZDEL = ["Займы", "Семья", "Постоянные", "Повседневные", "Транспорт", "Покупки", "Вопросы", "Доходы"]
+RAZDEL = ["Займы", "Мои долги", "Семья", "Постоянные", "Повседневные", "Транспорт", "Покупки", "Вопросы", "Доходы"]
 KATEG  = ["Займы друзьям", "Семья", "Переводы за границу", "Онлайн-покупки", "Связь и подписки",
           "Наличные", "Продукты", "Еда вне дома", "Самокаты", "Киоск", "Транспорт и топливо",
           "Страховки", "Банковские сборы", "Прочее / не опознано", "Доход"]
-NUZHN  = ["Обязательное", "Необязательное", "Возвратное", "Неизвестно", "Доход"]
+NUZHN  = ["Обязательное", "Необязательное", "Возвратное", "Возврат долга", "Неизвестно", "Доход"]
 STATUS = ["Оплачен", "Открыт", "Возврат ожидается", "Возвращено"]
 SPOSOB = ["Карта", "Наличные", "Перевод", "Списание"]
 
@@ -117,7 +117,7 @@ def build(ops, out):
         jr.cell(row=r, column=12,
                 value=f'=IF($A{r}="","",YEAR($A{r})&"-"&IF(MONTH($A{r})<10,"0","")&MONTH($A{r}))')
         jr.cell(row=r, column=13,
-                value=f'=IF($C{r}="","",IF(OR($D{r}="Доход",$G{r}="Возвратное"),0,$C{r}))')
+                value=f'=IF($C{r}="","",IF(OR($D{r}="Доход",$G{r}="Возвратное",$G{r}="Возврат долга"),0,$C{r}))')
         jr.cell(row=r, column=13).number_format = EUR
         for c in range(1, len(COLS) + 1):
             cell = jr.cell(row=r, column=c)
@@ -161,9 +161,10 @@ def build(ops, out):
         ("Пришло", f'=SUMIFS({C},{D},"Доход")', EUR, "все поступления"),
         ("Ушло", f'=SUMIFS({C},{D},"Расход")', EUR, "все списания"),
         ("Разница", f"=C{r}-0+C{r+1}", EUR, "приход минус расход"),
-        ("Реальные траты (без займов)", f"=SUM({M})", EUR, "то, что действительно потрачено"),
-        ("Выдано в долг", f'=SUMIFS({C},{G},"Возвратное")', EUR, "деньги у друзей"),
-        ("Ждёт возврата", f'=SUMIFS({C},{H},"Возврат ожидается")', EUR, "ещё не вернули"),
+        ("Реальные траты (без долгов)", f"=SUM({M})", EUR, "то, что действительно потрачено на жизнь"),
+        ("Я дал в долг — МНЕ ДОЛЖНЫ", f'=SUMIFS({C},{G},"Возвратное")', EUR, "дебиторка: деньги у друзей, но всё ещё мои"),
+        ("Из них ещё не вернули", f'=SUMIFS({C},{H},"Возврат ожидается")', EUR, ""),
+        ("Я вернул СВОИХ долгов", f'=SUMIFS({C},{G},"Возврат долга")', EUR, "погашение моих обязательств — не заём и не потребление"),
         ("Операций всего", f'=COUNTIF({A},">0")', '0', ""),
     ]
     first = r
@@ -171,6 +172,8 @@ def build(ops, out):
         rr = first + i
         if label == "Разница":
             formula = f"=C{first}+C{first+1}"
+        if label == "Операций всего":
+            formula = f'=COUNTIF({A},">0")'
         ov.cell(row=rr, column=2, value=label).font = F_B
         c = ov.cell(row=rr, column=3, value=formula)
         c.number_format = fmt; c.border = BOX; c.fill = FILL_RES if i < 4 else FILL_CALC
@@ -244,11 +247,14 @@ def build(ops, out):
     zm.sheet_view.showGridLines = False
     for col, w in zip("ABCDE", [2, 30, 16, 14, 40]):
         zm.column_dimensions[col].width = w
-    title_row(zm, 1, "КТО МНЕ ДОЛЖЕН", 5)
-    zm["B2"] = "Считается по колонке «Кому / от кого» в журнале. Вернули — поставь в журнале статус «Возвращено»."
+    title_row(zm, 1, "ДОЛГИ — В ОБЕ СТОРОНЫ", 5)
+    zm["B2"] = ("Сверху — кто должен мне (я давал в долг). Ниже — сколько я вернул своих долгов. "
+                "Это разные вещи: первое ко мне вернётся, второе ушло навсегда.")
     zm["B2"].font = F_S
     people = sorted({o.get("Кому / от кого", "") for o in ops
                      if o.get("Нужность") == "Возвратное" and o.get("Кому / от кого")})
+    debts = sorted({o.get("Кому / от кого", "") for o in ops
+                    if o.get("Нужность") == "Возврат долга" and o.get("Кому / от кого")})
     for i, h in enumerate(["Человек", "Ждёт возврата", "Операций", "Уже вернул"], start=2):
         c = zm.cell(row=4, column=i, value=h); c.font = F_H1; c.fill = FILL_HEAD; c.border = BOX
         c.alignment = Alignment(horizontal="center")
@@ -271,6 +277,31 @@ def build(ops, out):
         zm.cell(row=r, column=c).font = F_RES
     zm.cell(row=r + 2, column=2,
             value="Это не расход, а дебиторка: пока не вернули, деньги твои только на бумаге.").font = F_S
+
+    r += 4
+    section(zm, r, "СКОЛЬКО Я ВЕРНУЛ СВОИХ ДОЛГОВ", 5, col=2)
+    r += 1
+    for i, h in enumerate(["Кому", "Возвращено", "Платежей"], start=2):
+        c = zm.cell(row=r, column=i, value=h); c.font = F_H1; c.fill = FILL_HEAD; c.border = BOX
+        c.alignment = Alignment(horizontal="center")
+    r += 1
+    d_first = r
+    for p in debts:
+        zm.cell(row=r, column=2, value=p).font = F_B
+        zm.cell(row=r, column=3, value=f'=SUMIFS({C},{JK},$B{r},{G},"Возврат долга")').number_format = EUR
+        zm.cell(row=r, column=4, value=f'=COUNTIFS({JK},$B{r},{G},"Возврат долга")').number_format = '0'
+        for c in range(2, 5):
+            zm.cell(row=r, column=c).border = BOX; zm.cell(row=r, column=c).fill = FILL_CALC
+            zm.cell(row=r, column=c).font = F_N
+            zm.cell(row=r, column=c).alignment = Alignment(horizontal="center" if c > 2 else "left")
+        r += 1
+    zm.cell(row=r, column=2, value="ИТОГО").font = F_RED
+    zm.cell(row=r, column=3, value=f"=SUM(C{d_first}:C{r-1})").number_format = EUR
+    for c in range(2, 5):
+        zm.cell(row=r, column=c).border = BOX; zm.cell(row=r, column=c).fill = FILL_WARN
+        zm.cell(row=r, column=c).font = F_RED
+    zm.cell(row=r + 2, column=2,
+            value="Эти деньги ушли навсегда — это погашение того, что ты был должен, а не заём.").font = F_S
 
     # ---------------- ПОСТОЯННЫЕ ----------------
     ps = wb.create_sheet("Постоянные")
