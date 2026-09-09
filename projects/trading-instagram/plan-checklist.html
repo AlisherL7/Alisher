@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Две недели до набора</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+  :root{
+    --bg:#EFF1F3; --surface:#FBFCFD; --ink:#12171C; --ink-2:#3D4750; --muted:#69737D;
+    --line:#D5DAE0; --line-strong:#B9C1C9; --accent:#2C4A69; --signal:#A9631A; --down:#A8453C;
+    --rail-warm:#9AA6B2; --rail-sell:#C08A3E; --done:#E8EBEE;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1216; --surface:#161B21; --ink:#E6EAEE; --ink-2:#C0C8D0; --muted:#8B96A1;
+      --line:#252D35; --line-strong:#38424C; --accent:#8FB4D9; --signal:#E0A35C; --down:#D5766C;
+      --rail-warm:#4A5560; --rail-sell:#8A6634; --done:#1A2027;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1216; --surface:#161B21; --ink:#E6EAEE; --ink-2:#C0C8D0; --muted:#8B96A1;
+    --line:#252D35; --line-strong:#38424C; --accent:#8FB4D9; --signal:#E0A35C; --down:#D5766C;
+    --rail-warm:#4A5560; --rail-sell:#8A6634; --done:#1A2027;
+  }
+
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:"Source Serif 4",Georgia,serif;font-size:16.5px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:0 22px 80px}
+  h1,h2,.ui{font-family:Archivo,"Helvetica Neue",Arial,sans-serif}
+  h1{font-size:clamp(28px,5vw,42px);line-height:1.05;font-weight:700;letter-spacing:-.02em;margin:0;text-wrap:balance}
+  h2{font-size:15px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0}
+  p{margin:0}
+  input,button{font:inherit}
+
+  header{padding:52px 0 20px;border-bottom:1px solid var(--line-strong);display:flex;flex-direction:column;gap:14px}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .lede{font-size:18px;color:var(--ink-2);max-width:54ch}
+  .lede b{color:var(--signal);font-weight:600}
+
+  /* progress */
+  .prog{display:flex;flex-direction:column;gap:7px;padding-top:4px}
+  .prog .row{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  .prog .count{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .prog .count b{color:var(--ink);font-weight:500}
+  .track{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+  .fill{height:100%;width:0;background:var(--accent);border-radius:3px;transition:width .25s ease}
+  .tools{display:flex;gap:8px}
+  .tools button{
+    font-family:Archivo,sans-serif;font-size:12.5px;padding:5px 11px;border:1px solid var(--line-strong);
+    background:var(--surface);color:var(--ink-2);border-radius:3px;cursor:pointer
+  }
+  .tools button:hover{border-color:var(--accent);color:var(--accent)}
+  .tools button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .note{font-size:12.5px;color:var(--muted)}
+
+  section{padding-top:36px;display:flex;flex-direction:column;gap:13px}
+
+  .rules{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;font-size:17px;max-width:56ch;counter-reset:r}
+  .rules li{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:baseline}
+  .rules li::before{content:counter(r);counter-increment:r;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted)}
+
+  /* checkbox */
+  .chk{display:grid;grid-template-columns:17px 1fr;gap:10px;align-items:start;cursor:pointer}
+  .chk input{
+    appearance:none;-webkit-appearance:none;width:15px;height:15px;margin:4px 0 0;border:1.5px solid var(--line-strong);
+    border-radius:3px;background:var(--surface);cursor:pointer;display:grid;place-content:center;flex:none
+  }
+  .chk input::after{content:"";width:8px;height:5px;border-left:2px solid var(--surface);border-bottom:2px solid var(--surface);transform:rotate(-45deg) scale(0);transition:transform .12s ease}
+  .chk input:checked{background:var(--accent);border-color:var(--accent)}
+  .chk input:checked::after{transform:rotate(-45deg) scale(1)}
+  .chk input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .chk input:checked + span{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line-strong)}
+  .chk span{font-size:15px;color:var(--ink-2)}
+
+  /* days */
+  .days{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:var(--surface)}
+  .day{display:grid;grid-template-columns:4px 70px minmax(0,1fr) auto;align-items:center;gap:0 14px;border-bottom:1px solid var(--line)}
+  .day:last-child{border-bottom:0}
+  .day.complete{background:var(--done)}
+  .rail{align-self:stretch;background:var(--rail-warm)}
+  .day[data-p="sell"] .rail{background:var(--rail-sell)}
+  .day[data-p="key"] .rail{background:var(--signal)}
+  .dnum{padding:11px 0 11px 14px;font-family:"IBM Plex Mono",monospace;font-size:13.5px;color:var(--muted)}
+  .what{padding:11px 0;font-size:15.5px;line-height:1.35}
+  .what b{font-weight:600}
+  .day[data-p="key"] .what{color:var(--signal);font-weight:600}
+  .day.complete .what{color:var(--muted)}
+  .marks{display:flex;gap:14px;padding:11px 14px 11px 0}
+  .mark{display:flex;align-items:center;gap:6px;cursor:pointer}
+  .mark input{
+    appearance:none;-webkit-appearance:none;width:15px;height:15px;border:1.5px solid var(--line-strong);border-radius:3px;
+    background:var(--bg);cursor:pointer;display:grid;place-content:center;margin:0
+  }
+  .mark input::after{content:"";width:8px;height:5px;border-left:2px solid var(--surface);border-bottom:2px solid var(--surface);transform:rotate(-45deg) scale(0);transition:transform .12s ease}
+  .mark input:checked{background:var(--accent);border-color:var(--accent)}
+  .mark input:checked::after{transform:rotate(-45deg) scale(1)}
+  .mark input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .mark span{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+  .mark input:checked + span{color:var(--accent)}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+  .legend i{display:inline-block;width:14px;height:4px;border-radius:1px;margin-right:6px;vertical-align:middle}
+
+  /* hooks */
+  .hooks{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+  .hk{display:grid;grid-template-columns:74px minmax(0,1fr);gap:0 14px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .hk .d{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--muted);padding-top:2px}
+  .hk q{font-size:16.5px;color:var(--ink);font-style:italic;quotes:"«" "»"}
+  .hk[data-key] q{color:var(--signal)}
+
+  .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:16px}
+  .card{border:1px solid var(--line);background:var(--surface);border-radius:3px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+  .card h3{font-family:Archivo,sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0;font-weight:600}
+  .card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:15px;color:var(--ink-2)}
+  .card ul.plain li{display:grid;grid-template-columns:14px 1fr;gap:9px}
+  .card ul.plain li::before{content:"—";color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:13px}
+  .card ul.no li{display:grid;grid-template-columns:14px 1fr;gap:9px}
+  .card ul.no li::before{content:"×";color:var(--down);font-family:"IBM Plex Mono",monospace;font-weight:600}
+
+  .bio{font-family:"IBM Plex Mono",monospace;font-size:13px;line-height:1.7;background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:12px 14px;white-space:pre-line;color:var(--ink)}
+  .warn{border-left:3px solid var(--down);padding-left:13px;color:var(--ink-2);font-size:15px;max-width:60ch}
+  footer{margin-top:46px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;display:flex;flex-direction:column;gap:5px}
+
+  .toast{
+    position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(12px);opacity:0;pointer-events:none;
+    background:var(--ink);color:var(--bg);font-family:Archivo,sans-serif;font-size:13.5px;padding:9px 16px;border-radius:4px;
+    transition:opacity .18s ease,transform .18s ease;z-index:20
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  @media (max-width:660px){
+    .day{grid-template-columns:4px 62px minmax(0,1fr);row-gap:0}
+    .marks{grid-column:3;padding:0 14px 11px 0}
+    .hk{grid-template-columns:1fr;gap:4px}
+  }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="eyebrow">Instagram · трейдинг · 14—27 сентября</span>
+    <h1>Две недели до набора</h1>
+    <p class="lede">Первая неделя — польза и охват. Вторая — прогрев и продажа. <b>Набор открываем 23-го, закрываем 27-го в 23:59.</b></p>
+    <div class="prog">
+      <div class="row">
+        <span class="count">Сделано <b id="pDone">0</b> из <b id="pAll">0</b></span>
+        <span class="tools">
+          <button type="button" id="copyBtn">Скопировать отчёт</button>
+          <button type="button" id="resetBtn">Сбросить</button>
+        </span>
+      </div>
+      <div class="track"><div class="fill" id="pFill"></div></div>
+      <p class="note">Галочки сохраняются в этом браузере. Отчёт можно скопировать и отправить в чат.</p>
+    </div>
+  </header>
+
+  <section>
+    <h2>Пять правил</h2>
+    <ol class="rules">
+      <li>Один пост в день. Два — режут охват друг другу.</li>
+      <li>Первые три секунды решают всё. Хук сразу, без «привет, друзья».</li>
+      <li>В каждом втором ролике: «отправь другу». Пересылки дают новых зрителей.</li>
+      <li>Лента приводит людей, сторис продаёт.</li>
+      <li>Сначала польза, потом оффер. Не наоборот.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>До старта — к 13 сентября</h2>
+    <div class="two">
+      <div class="card">
+        <h3>Профиль</h3>
+        <ul id="prep1">
+          <li><label class="chk"><input type="checkbox" data-id="p1"><span>Перевести аккаунт в Professional → Creator</span></label></li>
+          <li><label class="chk"><input type="checkbox" data-id="p2"><span>В поле «Имя» написать, чем занимаешься — по нему ищут</span></label></li>
+          <li><label class="chk"><input type="checkbox" data-id="p3"><span>Аватар без лица: значок или график, читаемый в кружке</span></label></li>
+          <li><label class="chk"><input type="checkbox" data-id="p4"><span>Пять хайлайтов: метод, журнал, ошибки, отзывы, обучение</span></label></li>
+          <li><label class="chk"><input type="checkbox" data-id="p5"><span>Три закрепа: о себе, лучший ролик, оффер</span></label></li>
+          <li><label class="chk"><input type="checkbox" data-id="p6"><span>Одна ссылка, не менять две недели</span></label></li>
+          <li><label class="chk"><input type="checkbox" data-id="p7"><span>Убрать скрины прибыли, рядом с которыми нет убытков</span></label></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Шапка — вписать этот текст</h3>
+        <div class="bio">Учу торговать по системе, а не по интуиции
+Крипта, форекс, акции — один метод
+5 лет в рынке, веду журнал сделок
+↓ разбор трёх ошибок новичка</div>
+        <ul id="prep2">
+          <li><label class="chk"><input type="checkbox" data-id="p8"><span>Шапка обновлена</span></label></li>
+          <li><label class="chk"><input type="checkbox" data-id="p9"><span>Сб 12.09 — снято всё для первой недели</span></label></li>
+          <li><label class="chk"><input type="checkbox" data-id="p10"><span>Сб 19.09 — снято всё для второй недели</span></label></li>
+          <li><label class="chk"><input type="checkbox" data-id="p11"><span>К 22.09 — готова страница и приём оплат</span></label></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>График</h2>
+    <div class="days" id="days">
+      <div class="day" data-p="warm"><div class="rail"></div><div class="dnum">Пн 14.09</div><div class="what"><b>Рилс</b> — три ошибки новичка</div>
+        <div class="marks"><label class="mark"><input type="checkbox" data-id="d1a"><span>пост</span></label><label class="mark"><input type="checkbox" data-id="d1b"><span>6 сторис</span></label></div></div>
+      <div class="day" data-p="warm"><div class="rail"></div><div class="dnum">Вт 15.09</div><div class="what"><b>Карусель</b> — как считать размер сделки</div>
+        <div class="marks"><label class="mark"><input type="checkbox" data-id="d2a"><span>пост</span></label><label class="mark"><input type="checkbox" data-id="d2b"><span>6 сторис</span></label></div></div>
+      <div class="day" data-p="warm"><div class="rail"></div><div class="dnum">Ср 16.09</div><div class="what"><b>Рилс</b> — мой журнал сделок за месяц</div>
+        <div class="marks"><label class="mark"><input type="checkbox" data-id="d3a"><span>пост</span></label><label class="mark"><input type="checkbox" data-id="d3b"><span>8 сторис</span></label></div></div>
+      <div class="day" data-p="warm"><div class="rail"></div><div class="dnum">Чт 17.09</div><div class="what"><b>Рилс</b> — где ставить стоп</div>
+        <div class="marks"><label class="mark"><input type="checkbox" data-id="d4a"><span>пост</span></label><label class="mark"><input type="checkbox" data-id="d4b"><span>6 сторис</span></label></div></div>
+      <div class="day" data-p="warm"><div class="rail"></div><div class="dnum">Пт 18.09</div><div class="what"><b>Карусель</b> — 12 терминов простыми словами</div>
+        <div class="marks"><label class="mark"><input type="checkbox" data-id="d5a"><span>пост</span></label><label class="mark"><input type="checkbox" data-id="d5b"><span>5 сторис</span></label></div></div>
+      <div class="day" data-p="warm"><div class="rail"></div><div class="dnum">Сб 19.09</div><div class="what"><b>Рилс</b> — разбор недели на рынке</div>
+        <div class="marks"><label class="mark"><input type="checkbox" data-id="d6a"><span>пост</span></label><label class="mark"><input type="checkbox" data-id="d6b"><span>5 сторис</span></label></div></div>
+      <div class="day" data-p="warm"><div class="rail"></div><div class="dnum">Вс 20.09</div><div class="what"><b>Рилс</b> — чек-лист на конец недели</div>
+        <div class="marks"><label class="mark"><input type="checkbox" data-id="d7a"><span>пост</span></label><label class="mark"><input type="checkbox" data-id="d7b"><span>8 сторис</span></label></div></div>
+      <div class="day" data-p="sell"><div class="rail"></div><div class="dnum">Пн 21.09</div><div class="what"><b>Рилс</b> — почему сигналы не работают</div>
+        <div class="marks"><label class="mark"><input type="checkbox" data-id="d8a"><span>пост</span></label><label class="mark"><input type="checkbox" data-id="d8b"><span>10 сторис</span></label></div></div>
+      <div class="day" data-p="sell"><div class="rail"></div><div class="dnum">Вт 22.09</div><div class="what"><b>Карусель</b> — мой метод в трёх шагах</div>
+        <div class="marks"><label class="mark"><input type="checkbox" data-id="d9a"><span>пост</span></label><label class="mark"><input type="checkbox" data-id="d9b"><span>12 сторис</span></label></div></div>
+      <div class="day" data-p="key"><div class="rail"></div><div class="dnum">Ср 23.09</div><div class="what">Открываем набор + эфир в 20:00</div>
+        <div class="marks"><label class="mark"><input type="checkbox" data-id="d10a"><span>пост</span></label><label class="mark"><input type="checkbox" data-id="d10b"><span>15 сторис</span></label></div></div>
+      <div class="day" data-p="sell"><div class="rail"></div><div class="dnum">Чт 24.09</div><div class="what"><b>Рилс</b> — история одного ученика</div>
+        <div class="marks"><label class="mark"><input type="checkbox" data-id="d11a"><span>пост</span></label><label class="mark"><input type="checkbox" data-id="d11b"><span>12 сторис</span></label></div></div>
+      <div class="day" data-p="sell"><div class="rail"></div><div class="dnum">Пт 25.09</div><div class="what"><b>Рилс</b> — что будет на первом занятии</div>
+        <div class="marks"><label class="mark"><input type="checkbox" data-id="d12a"><span>пост</span></label><label class="mark"><input type="checkbox" data-id="d12b"><span>12 сторис</span></label></div></div>
+      <div class="day" data-p="sell"><div class="rail"></div><div class="dnum">Сб 26.09</div><div class="what"><b>Карусель</b> — ответы на вопросы про обучение</div>
+        <div class="marks"><label class="mark"><input type="checkbox" data-id="d13a"><span>пост</span></label><label class="mark"><input type="checkbox" data-id="d13b"><span>10 сторис</span></label></div></div>
+      <div class="day" data-p="key"><div class="rail"></div><div class="dnum">Вс 27.09</div><div class="what">Последний день. Закрываем в 23:59</div>
+        <div class="marks"><label class="mark"><input type="checkbox" data-id="d14a"><span>пост</span></label><label class="mark"><input type="checkbox" data-id="d14b"><span>15 сторис</span></label></div></div>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--rail-warm)"></i>польза</span>
+      <span><i style="background:var(--rail-sell)"></i>прогрев</span>
+      <span><i style="background:var(--signal)"></i>открытие и закрытие</span>
+      <span>Посты — 19:30 в будни, 12:00 в выходные. Сторис — утром, днём и вечером.</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Первые фразы роликов</h2>
+    <div class="hooks">
+      <div class="hk"><div class="d">Пн 14.09</div><q>Вот мой первый слитый депозит. Три ошибки — все на этом экране.</q></div>
+      <div class="hk"><div class="d">Ср 16.09</div><q>Шесть сделок в минус за месяц. И месяц всё равно плюсовой. Смотри почему.</q></div>
+      <div class="hk"><div class="d">Чт 17.09</div><q>Твой стоп выбивают не потому, что рынок против тебя. А потому что ты поставил его в очевидное место.</q></div>
+      <div class="hk"><div class="d">Сб 19.09</div><q>За неделю рынок дал две точки входа. Обе были видны заранее.</q></div>
+      <div class="hk"><div class="d">Вс 20.09</div><q>Пять пунктов. Если хоть один не сходится — на следующей неделе не торгую.</q></div>
+      <div class="hk" data-key><div class="d">Пн 21.09</div><q>Я дам тебе идеальный сигнал. Ты всё равно потеряешь деньги. Сейчас объясню.</q></div>
+      <div class="hk" data-key><div class="d">Ср 23.09</div><q>Полтора года я торгую по одной таблице. Сегодня отдаю её вместе с методом.</q></div>
+      <div class="hk"><div class="d">Чт 24.09</div><q>Человек пришёл ко мне после третьего слива. Показываю, что изменилось.</q></div>
+      <div class="hk"><div class="d">Пт 25.09</div><q>Показываю первое занятие целиком. Вот с чего начинают.</q></div>
+      <div class="hk" data-key><div class="d">Вс 27.09</div><q>В 23:59 закрываю набор и три месяца не открываю.</q></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Сторис: о чём каждый день</h2>
+    <div class="two">
+      <div class="card">
+        <h3>Неделя 1 — польза</h3>
+        <ul class="plain">
+          <li>Пн — знакомство и опрос: сколько ты в рынке</li>
+          <li>Вт — считаем размер сделки, викторина</li>
+          <li>Ср — журнал сделок, вопросы про статистику</li>
+          <li>Чт — свой выбитый стоп и разбор</li>
+          <li>Пт — термин дня</li>
+          <li>Сб — итоги недели на рынке</li>
+          <li>Вс — опрос: что мешает — страх, жадность или нет системы</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Неделя 2 — продажа</h3>
+        <ul class="plain">
+          <li>Пн — «почему не даю сигналы» + анонс набора</li>
+          <li>Вт — как я торговал до системы и что собрал</li>
+          <li>Ср — программа, цена, места, как оплатить</li>
+          <li>Чт — кейс и скрины первых заявок</li>
+          <li>Пт — «нет времени», «нет денег», «я новичок»</li>
+          <li>Сб — отзывы и сколько мест осталось</li>
+          <li>Вс — отсчёт с полудня, напоминания в 18, 21, 23</li>
+        </ul>
+      </div>
+    </div>
+    <p class="warn">На каждый продающий кадр — один полезный. Иначе к четвергу сторис перестают досматривать.</p>
+  </section>
+
+  <section>
+    <h2>Съёмка</h2>
+    <div class="two">
+      <div class="card">
+        <h3>Две сессии по два часа</h3>
+        <ul class="plain">
+          <li>Сб 12.09 — снять всё для первой недели</li>
+          <li>Сб 19.09 — снять всё для второй</li>
+          <li>Сначала записать голос, потом экран под него</li>
+          <li>Ролик 20—35 секунд, не длиннее</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Как снимать</h3>
+        <ul class="plain">
+          <li>Всегда один и тот же вид терминала — это узнаваемость</li>
+          <li>Зум на важное: мелкий график на телефоне не читается</li>
+          <li>Субтитры обязательно — смотрят без звука</li>
+          <li>Голос в микрофон, не в динамик ноутбука</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Что смотреть и чего не делать</h2>
+    <div class="two">
+      <div class="card">
+        <h3>Три цифры каждый вечер</h3>
+        <ul class="plain">
+          <li>Досмотр ролика — ниже 45% значит слабый сценарий</li>
+          <li>Пересылки — главный источник новых людей</li>
+          <li>Ответы в директ — это и есть будущие ученики</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Никогда</h3>
+        <ul class="no">
+          <li>Обещать доход в процентах</li>
+          <li>Показывать прибыль без убытков рядом</li>
+          <li>Покупать подписчиков и сидеть в чатах активности</li>
+          <li>Продлевать набор после 23:59</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Кто что делает</h2>
+    <div class="two">
+      <div class="card">
+        <h3>Продюсер</h3>
+        <ul class="plain">
+          <li>Сценарии, тексты, монтаж, оформление профиля</li>
+          <li>Страница и приём оплат — к 22.09</li>
+          <li>Сводка цифр каждый вечер</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Партнёр</h3>
+        <ul class="plain">
+          <li>Съёмка экрана и голос — две субботы</li>
+          <li>Сторис каждый день по сценарию</li>
+          <li>Комментарии в первый час и ответы в директ</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Не является инвестиционной рекомендацией. Торговля связана с риском потери денег.</p>
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  var KEY = "trading-plan-2609";
+  var boxes = Array.prototype.slice.call(document.querySelectorAll("input[type=checkbox][data-id]"));
+  var pDone = document.getElementById("pDone");
+  var pAll = document.getElementById("pAll");
+  var pFill = document.getElementById("pFill");
+  var toastEl = document.getElementById("toast");
+  var toastTimer;
+
+  function load(){
+    try{ return JSON.parse(localStorage.getItem(KEY) || "{}") || {}; }
+    catch(e){ return {}; }
+  }
+  function save(state){
+    try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){}
+  }
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.classList.remove("show"); }, 2200);
+  }
+
+  var state = load();
+
+  function paintRows(){
+    var rows = document.querySelectorAll(".day");
+    Array.prototype.forEach.call(rows, function(row){
+      var inputs = row.querySelectorAll("input[type=checkbox]");
+      var all = inputs.length > 0;
+      Array.prototype.forEach.call(inputs, function(i){ if(!i.checked) all = false; });
+      row.classList.toggle("complete", all);
+    });
+  }
+
+  function paintProgress(){
+    var done = 0;
+    boxes.forEach(function(b){ if(b.checked) done++; });
+    pDone.textContent = done;
+    pAll.textContent = boxes.length;
+    pFill.style.width = boxes.length ? (done / boxes.length * 100) + "%" : "0%";
+  }
+
+  function render(){
+    boxes.forEach(function(b){ b.checked = state[b.dataset.id] === true; });
+    paintRows();
+    paintProgress();
+  }
+
+  boxes.forEach(function(b){
+    b.addEventListener("change", function(){
+      if(b.checked){ state[b.dataset.id] = true; } else { delete state[b.dataset.id]; }
+      save(state);
+      paintRows();
+      paintProgress();
+    });
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", function(){
+    if(!confirm("Снять все галочки?")) return;
+    state = {};
+    save(state);
+    render();
+    toast("Галочки сняты");
+  });
+
+  document.getElementById("copyBtn").addEventListener("click", function(){
+    var lines = ["План 14—27.09 — статус"];
+    var done = 0;
+    boxes.forEach(function(b){ if(b.checked) done++; });
+    lines.push("Сделано " + done + " из " + boxes.length);
+    lines.push("");
+
+    var prep = [];
+    Array.prototype.forEach.call(document.querySelectorAll("#prep1 .chk, #prep2 .chk"), function(l){
+      var input = l.querySelector("input");
+      if(!input.checked) prep.push("• " + l.querySelector("span").textContent);
+    });
+    if(prep.length){ lines.push("Не сделано до старта:"); lines = lines.concat(prep); lines.push(""); }
+
+    var days = [];
+    Array.prototype.forEach.call(document.querySelectorAll(".day"), function(row){
+      var inputs = row.querySelectorAll("input[type=checkbox]");
+      var missing = [];
+      Array.prototype.forEach.call(inputs, function(i){
+        if(!i.checked) missing.push(i.parentNode.querySelector("span").textContent);
+      });
+      if(missing.length){
+        days.push("• " + row.querySelector(".dnum").textContent + " — " + row.querySelector(".what").textContent + " (нет: " + missing.join(", ") + ")");
+      }
+    });
+    if(days.length){ lines.push("Не выложено:"); lines = lines.concat(days); }
+    else { lines.push("Всё по графику выложено."); }
+
+    var text = lines.join("\n");
+    function fallback(){
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = false;
+      try{ ok = document.execCommand("copy"); }catch(e){}
+      document.body.removeChild(ta);
+      toast(ok ? "Отчёт скопирован" : "Не удалось скопировать");
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){ toast("Отчёт скопирован"); }, fallback);
+    } else { fallback(); }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
