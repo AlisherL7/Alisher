@@ -76,7 +76,7 @@ ws["B3"].font = F_S
 rows = [
  ("SEC", "ЛИСТЫ ФАЙЛА"),
  ("N", "Настройки", "Все параметры: ставка, надбавки, время смен, лимит переработки, налоговый класс. Жёлтое — можно менять."),
- ("N", "Dienstplan", "График месяца: ND / TD / FREI, статус (Arbeit / Urlaub / Krank), «x» = Eingesprungen. Август 2026 заполнен."),
+ ("N", "Dienstplan", "График месяца: ND / TD / FREI, статус (Arbeit / Urlaub / Krank), «x» = Eingesprungen. Август 2026 заполнен по факту: 18 смен = 216 ч."),
  ("N", "Расчёт", "Брутто, надбавки, счёт часов, соцвзносы, налоги, нетто."),
  ("N", "Lohnsteuer", "Подоходный налог по методу официального Programmablaufplan."),
  ("N", "Контроль ArbZG", "Проверка по закону о рабочем времени."),
@@ -84,6 +84,7 @@ rows = [
  ("N", "Feiertage", "Праздники Нижней Саксонии 2026/2027."),
  ("N", "Мои данные", "Пустые поля для SV-Nummer, Steuer-ID и т.д. Заполни у себя — файл лежит в ПУБЛИЧНОМ репозитории GitHub."),
  ("N", "Год", "Сводка по 12 месяцам и счёт переносимых часов."),
+ ("N", "Сверка с расчёткой", "Реальные Lohnabrechnung 07/2026 и 08/2026, разобранные построчно, и проверка каждой суммы."),
  ("SP",),
  ("SEC", "ВАЖНО ПРО ФОРМАТ"),
  ("N", "Время смен — это ЧИСЛА", "20 = 20:00, 8 = 08:00, 6,5 = 06:30. Так сделано специально: Numbers на iPhone/Mac ломает формулы с настоящими значениями времени."),
@@ -228,7 +229,8 @@ par("Детские вычеты (Zähler)", "Kinderfreibeträge", 1.0, "Kinder"
 par("Бездетный (доплата в PV)?", "kinderlos ab 23 (ja/nein)", "nein", "Kinderlos", None,
     "У тебя ребёнок 2025 г. → «nein». Доплата 0,6 % удерживаться НЕ должна — проверь в Lohnabrechnung")
 par("Взнос KV общий", "KV allgemeiner Beitragssatz", 0.146, "KVSatz", FMT_PCT, "делится пополам")
-par("Доп. взнос кассы", "kassenindiv. Zusatzbeitrag", 0.029, "KVZusatz", FMT_PCT, "средний 2026 — 2,9 %. Поставь ставку СВОЕЙ кассы")
+par("Доп. взнос кассы", "kassenindiv. Zusatzbeitrag", 0.0299, "KVZusatz", FMT_PCT,
+    "AOK Baden-Württemberg 2026 = 2,99 % (проверено по Lohnabrechnung 08/2026: 511,21 € / 5.812,50 € = 8,795 % = (14,6 % + 2,99 %) / 2)")
 par("Взнос PV", "Pflegeversicherung", 0.036, "PVSatz", FMT_PCT, "делится пополам")
 par("Доплата бездетным PV", "Zuschlag Kinderlose", 0.006, "PVZuschlag", FMT_PCT, "применяется только если поле выше = «ja»")
 par("Взнос RV", "Rentenversicherung", 0.186, "RVSatz", FMT_PCT, "→ 9,3 % с работника")
@@ -357,10 +359,13 @@ dp.row_dimensions[4].height = 34
 R0, R1 = 5, 35
 TR = 36
 
+# Август 2026 — фактически отработанное (сверено с Lohnabrechnung 08/2026):
+# 19.08 и 20.08 — выходные (сначала стояли как TD), 31.08 — выходной.
+# 16 ND + 2 TD = 18 смен x 12 ч = 216 ч. Ровно столько и оплачено.
 PLAN = {1:"FREI",2:"ND",3:"ND",4:"ND",5:"ND",6:"FREI",7:"FREI",8:"FREI",9:"ND",10:"ND",
-        11:"ND",12:"ND",13:"FREI",14:"FREI",15:"ND",16:"ND",17:"FREI",18:"FREI",19:"TD",20:"TD",
-        21:"FREI",22:"TD",23:"TD",24:"ND",25:"ND",26:"ND",27:"FREI",28:"ND",29:"ND",30:"ND",31:"ND"}
-SPRN = {19, 20, 28}
+        11:"ND",12:"ND",13:"FREI",14:"FREI",15:"ND",16:"ND",17:"FREI",18:"FREI",19:"FREI",20:"FREI",
+        21:"FREI",22:"TD",23:"TD",24:"ND",25:"ND",26:"ND",27:"FREI",28:"ND",29:"ND",30:"ND",31:"FREI"}
+SPRN = {23, 28}
 
 for i, r in enumerate(range(R0, R1 + 1)):
     n = i + 1
@@ -444,6 +449,12 @@ for c, fmt in [(11,'0.00'),(12,'0.00'),(13,'0.00'),(14,'0.00'),(15,'0.00'),(16,'
                (17,FMT_EUR),(18,FMT_EUR),(19,FMT_EUR)]:
     cl = get_column_letter(c)
     dp.cell(row=TR, column=c, value=f'=SUM({cl}{R0}:{cl}{R1})').number_format = fmt
+# итоги по служебным колонкам: AJ вс+праздник, AK только праздник, AL только вс, AM только ночь.
+# AM — это ночные часы БЕЗ тех, что попали на воскресенье; именно их работодатель
+# показывает строкой «114 Nacht 25%». Нужно для листа «Сверка с расчёткой».
+for c in (36, 37, 38, 39):
+    cl = get_column_letter(c)
+    dp.cell(row=TR, column=c, value=f'=SUM({cl}{R0}:{cl}{R1})').number_format = '0.00'
 for c in range(1, 22):
     cc = dp.cell(row=TR, column=c)
     if c <= 5:
@@ -960,6 +971,187 @@ for i, t in enumerate([
 ]):
     jr.cell(row=20 + i, column=2, value=t).font = F_N
     jr.merge_cells(start_row=20 + i, start_column=2, end_row=20 + i, end_column=9)
+
+# =====================================================================
+# ЛИСТ 11 — СВЕРКА С РАСЧЁТКОЙ
+# =====================================================================
+sv = wb.create_sheet("Сверка с расчёткой")
+sv.sheet_view.showGridLines = False
+for col, w in zip("ABCDEFGH", [2, 34, 10, 10, 9, 14, 14, 44]):
+    sv.column_dimensions[col].width = w
+title_row(sv, 1, "СВЕРКА С РЕАЛЬНОЙ РАСЧЁТКОЙ / ABGLEICH MIT DER LOHNABRECHNUNG", 8)
+sv["B2"] = ("Данные взяты дословно из Verdienstnachweis 07/2026 и 08/2026 (Constantia Intensivpflege GmbH). "
+            "Колонка «Проверка» пересчитывает сумму формулой — если совпало, строка верна.")
+sv["B2"].font = F_S
+sv.merge_cells("B2:H2")
+
+SVR = [3]
+
+def sv_sec(text):
+    r = SVR[0]
+    sv.merge_cells(start_row=r, start_column=2, end_row=r, end_column=8)
+    c = sv.cell(row=r, column=2, value=text); c.font = F_H1; c.fill = FILL_HEAD
+    c.alignment = Alignment(vertical="center", indent=1)
+    sv.row_dimensions[r].height = 19
+    SVR[0] += 1
+
+def sv_head():
+    r = SVR[0]
+    for i, h in enumerate(["Строка расчётки", "Часы", "Ставка", "%", "В расчётке", "Проверка", "Комментарий"], start=2):
+        c = sv.cell(row=r, column=i, value=h)
+        c.font = F_H1; c.fill = FILL_HEAD; c.border = BOX
+        c.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+    SVR[0] += 1
+    return r
+
+def sv_row(name, std, satz, pct, betrag, note=""):
+    r = SVR[0]
+    sv.cell(row=r, column=2, value=name).font = F_B
+    for col, val, fmt in ((3, std, '0.00'), (4, satz, FMT_EUR), (5, pct, '0%'), (6, betrag, FMT_EUR)):
+        c = sv.cell(row=r, column=col, value=val)
+        c.font = F_N; c.border = BOX; c.fill = FILL_CALC
+        c.alignment = Alignment(horizontal="center")
+        if val != "": c.number_format = fmt
+    chk = sv.cell(row=r, column=7,
+                  value=f'=ROUND($C{r}*$D{r}*IF($E{r}="",1,$E{r}),2)' if std != "" else "")
+    chk.font = F_B; chk.border = BOX; chk.fill = FILL_RES
+    chk.number_format = FMT_EUR; chk.alignment = Alignment(horizontal="center")
+    n = sv.cell(row=r, column=8, value=note); n.font = F_S
+    n.alignment = Alignment(wrap_text=True, vertical="center")
+    sv.cell(row=r, column=2).border = BOX
+    SVR[0] += 1
+    return r
+
+def sv_line(name, betrag, note="", bold=False, fmt=FMT_EUR):
+    r = SVR[0]
+    c1 = sv.cell(row=r, column=2, value=name)
+    c1.font = F_H2 if bold else F_B; c1.border = BOX
+    c = sv.cell(row=r, column=6, value=betrag)
+    c.font = F_H2 if bold else F_N; c.border = BOX
+    c.fill = FILL_SUB if bold else FILL_CALC
+    c.number_format = fmt; c.alignment = Alignment(horizontal="center")
+    for col in (3, 4, 5, 7):
+        sv.cell(row=r, column=col).border = BOX
+    n = sv.cell(row=r, column=8, value=note); n.font = F_S
+    n.alignment = Alignment(wrap_text=True, vertical="center")
+    SVR[0] += 1
+    return r
+
+def sv_text(t, font=None):
+    r = SVR[0]
+    c = sv.cell(row=r, column=2, value=t); c.font = font or F_N
+    c.alignment = Alignment(wrap_text=True, vertical="top")
+    sv.merge_cells(start_row=r, start_column=2, end_row=r, end_column=8)
+    sv.row_dimensions[r].height = max(15, 13 * (1 + len(t) // 110))
+    SVR[0] += 1
+    return r
+
+# ---------- АВГУСТ ----------
+sv_sec("АВГУСТ 2026 — Abrechnung vom 09.09.2026, выплата 14.09.2026")
+sv_head()
+a1 = sv_row("101 Stundenlohn", 168.00, 27.00, "", 4536.00, "Норма месяца (Zeitlohn Stunden)")
+a2 = sv_row("103 Überstdgrundvergütung", 48.00, 27.00, "", 1296.00, "Переработка. Та же ставка, надбавки за переработку нет")
+a3 = sv_row("114 Nacht 25% frei", 132.00, 27.00, 0.25, 891.00, "Ночная надбавка. F F = без налога и без взносов")
+a4 = sv_row("115 Sonntag 50% frei", 44.00, 27.00, 0.50, 594.00, "Воскресная надбавка. F F = без налога и без взносов")
+ab = sv_line("Gesamt-Brutto", 7317.00, "Сумма четырёх строк выше", bold=True)
+sv.cell(row=ab, column=7, value=f"=SUM($F${a1}:$F${a4})").number_format = FMT_EUR
+sv.cell(row=ab, column=7).font = F_H2
+sv.cell(row=ab, column=7).fill = FILL_RES
+sv.cell(row=ab, column=7).alignment = Alignment(horizontal="center")
+sv_line("Steuer-Brutto", 5832.00, "4.536 + 1.296. Надбавки 891 + 594 в базу не входят — § 3b EStG")
+sv_line("Lohnsteuer", -587.66, "Класс 3, 1 ребёнок")
+sv_line("KV-Beitrag", -511.21, "5.812,50 € (потолок) × 8,795 % = (14,6 % + 2,99 %) / 2 → доп. взнос AOK BW = 2,99 %")
+sv_line("RV-Beitrag", -542.38, "5.832,00 € × 9,3 %")
+sv_line("AV-Beitrag", -75.82, "5.832,00 € × 1,3 %")
+sv_line("PV-Beitrag", -104.63, "5.812,50 € × 1,8 %. Доплата бездетным 0,6 % НЕ удержана — верно, ребёнок учтён («1»)")
+sv_line("Netto-Verdienst", 5495.30, "Всё, что осталось после налога и взносов", bold=True)
+sv_line("Abschlag / Vorschuss", -2000.00, "Аванс, полученный раньше")
+sv_line("aus NB 07/2026", 117.00, "Доплата ночных за ИЮЛЬ — см. раздел ниже. К августу отношения не имеет")
+sv_line("Auszahlungsbetrag", 3612.30, "Переведено на Sparkasse Hannover", bold=True)
+SVR[0] += 1
+
+sv_sec("АВГУСТ — СХОДЯТСЯ ЛИ ЧАСЫ С ГРАФИКОМ")
+sv_head()
+h1 = sv_line("Смен по графику (лист Dienstplan)", "=Dienstplan!$L$36", "16 ND + 2 TD = 18 смен × 12 ч", fmt='0.00\\ "h"')
+h2 = sv_line("Оплачено по расчётке", 216.00, "168 (норма) + 48 (переработка)", fmt='0.00\\ "h"')
+h3 = sv_line("Разница", f"=$F${h1}-$F${h2}", "0 = всё оплачено", bold=True, fmt='0.00\\ "h"')
+n1 = sv_line("Ночных часов по графику", "=Dienstplan!$AM$36",
+             "20:00–06:00 БЕЗ тех, что попали на воскресенье — их работодатель платит как воскресные (50 %), а не как ночные (25 %)",
+             fmt='0.00\\ "h"')
+sv_line("из них пришлось на воскресенье", "=Dienstplan!$M$36-Dienstplan!$AM$36",
+        "Всего ночных часов по графику 160. Совпадение надбавок: платится только самая высокая — § 3 Abs. 2 договора",
+        fmt='0.00\\ "h"')
+n2 = sv_line("Ночных по расчётке", 132.00, "", fmt='0.00\\ "h"')
+s1 = sv_line("Воскресных по графику", "=Dienstplan!$N$36", "", fmt='0.00\\ "h"')
+s2 = sv_line("Воскресных по расчётке", 44.00, "", fmt='0.00\\ "h"')
+SVR[0] += 1
+sv_text("Изначально в графике стояли смены 19.08 и 20.08 (TD) и 31.08 (ND) — получалось 240 ч и не хватало 24 ч. "
+        "После проверки: 19.08, 20.08 и 31.08 были выходными. 18 смен × 12 ч = 216 ч — ровно столько и оплачено. "
+        "Недоплаты за август НЕТ.", F_B)
+sv_text("Ночные 132 ч и воскресные 44 ч сошлись с графиком копейка в копейку — это подтверждает и время смен "
+        "(ND 20:00–08:00, TD 08:00–20:00), и то, что перерыв из оплаты не вычитают.")
+sv_text("Работодатель заплатил ЩЕДРЕЕ, чем написано в договоре: § 2 Abs. 3 разрешает не платить первые 8 ч "
+        "переработки в месяц, но в расчётке оплачены все 216 ч (168 + 48), а не 208. Это +216,00 € брутто в твою пользу. "
+        "Лист «Расчёт» считает строго по договору, поэтому там брутто 7.101 €, а в расчётке 7.317 €. "
+        "Если хочешь, чтобы файл повторял расчётку точь-в-точь, поставь в «Настройках» "
+        "«Переработка включена в оклад» = 0.")
+sv_text("Почему ночных 132, а не 160: 16 ночных смен × 10 ч = 160 ночных часов, но 28 из них выпали на воскресенье. "
+        "За них платят воскресные 50 %, а не ночные 25 % — надбавки не складываются. 160 − 28 = 132.")
+SVR[0] += 1
+
+# ---------- ИЮЛЬ ----------
+sv_sec("ИЮЛЬ 2026 — Abrechnung vom 12.08.2026 (Eintritt 15.07.2026, 17 дней)")
+sv_head()
+j1 = sv_row("101 Stundenlohn", 46.00, 26.00, "", 1196.00, "Ставка в июле была ещё 26,00 € (Teilzeit-Vertrag)")
+j2 = sv_row("103 Überstdgrundvergütung", 74.00, 26.00, "", 1924.00, "")
+j3 = sv_row("114 Nacht 25% frei", 42.00, 26.00, 0.25, 273.00, "")
+j4 = sv_row("115 Sonntag 50% frei", 20.00, 26.00, 0.50, 260.00, "")
+jb = sv_line("Gesamt-Brutto", 3653.00, "", bold=True)
+sv.cell(row=jb, column=7, value=f"=SUM($F${j1}:$F${j4})").number_format = FMT_EUR
+sv.cell(row=jb, column=7).font = F_H2
+sv.cell(row=jb, column=7).fill = FILL_RES
+sv.cell(row=jb, column=7).alignment = Alignment(horizontal="center")
+sv_line("Lohnsteuer", -853.91, "СТЕРИЛЬНО МНОГО: класс 6, потому что до 31.07 числился ещё и в KRH. "
+                               "Это законно, но переплату вернёт Steuererklärung за 2026 — примерно 800 €")
+sv_line("Соцвзносы всего", -661.28, "KV 274,40 + RV 290,16 + AV 40,56 + PV 56,16")
+sv_line("Netto-Verdienst", 2137.81, "", bold=True)
+sv_line("Abschlag / Vorschuss", -2000.00, "")
+sv_line("Auszahlungsbetrag", 137.81, "", bold=True)
+SVR[0] += 1
+
+sv_sec("ИЮЛЬ — ПЕРЕСЧЁТ (1. NB), проведён вместе с августом")
+sv_head()
+sv_row("N 114 Nacht 25% frei", 18.00, 26.00, 0.25, 117.00,
+       "«N» = Nachberechnung, пересчёт задним числом. Нашли 18 неучтённых ночных часов")
+sv_line("Новый Gesamt-Brutto июля", 3770.00, "3.653,00 + 117,00")
+sv_line("Новый Netto июля", 2254.81, "2.137,81 + 117,00")
+sv_line("Уже выплачено", -2137.81, "2.000,00 аванс + 137,81 перевод")
+sv_line("Доплата, проведённая в августе", 117.00, "Та самая строка «aus NB 07/2026» в августовской расчётке", bold=True)
+SVR[0] += 1
+sv_text("ВАЖНО ПО ИЮЛЮ: пересчитали только НАДБАВКУ за ночь (18 ч × 26 € × 25 %). "
+        "Сами 18 часов при этом в строку 101/103 не добавили — оплаченных часов как было 120, так и осталось. "
+        "Если в июльском графике смен было больше, чем на 120 ч, — это надо предъявить. Срок по июлю: "
+        "3 месяца с 15.08.2026, то есть до 15.11.2026 (§ 14 Ausschlussfrist).", F_RED)
+SVR[0] += 1
+
+sv_sec("ЧТО ВЫЯСНИЛОСЬ ПО ХОДУ")
+for t in [
+  "· Einspringzuschlag / Einspringprämie у работодателя НЕТ вообще — подтверждено письменно (Chris, 09/2026). "
+  "В договоре её тоже нет. Поэтому в «Настройках» премия за Eingesprungen стоит 0,00 €.",
+  "· Verpflegungszuschuss в расчётке отсутствует. Единственная добавка к нетто — 117,00 €, и это ночные за июль.",
+  "· Строки Zeitkonto / Arbeitszeitkonto / Übertrag / Saldo в расчётке НЕТ ни одной. "
+  "Счёт часов, если он ведётся, виден только в Zeitnachweis — его надо запрашивать отдельно.",
+  "· Arbeitszeitkonto был прописан в СТАРОМ Teilzeit-договоре (§ 4 Abs. 1). В новом Vollzeit-договоре с 01.08.2026 "
+  "такого пункта НЕТ — значит формального основания складывать часы на счёт больше не существует.",
+  "· Доп. взнос кассы AOK Baden-Württemberg = 2,99 % (не средние 2,9 %). В «Настройках» исправлено.",
+  "· Доплата бездетным в Pflegeversicherung (0,6 %) не удерживается — ребёнок учтён правильно.",
+  "· Надбавки провели полностью свободными от взносов, хотя § 1 SvEV освобождает только с базы 25 €/ч. "
+  "Сейчас это в твою пользу (~110 € в месяц), но уменьшает будущую пенсию на эту же базу.",
+]:
+    sv_text(t)
+SVR[0] += 1
+sv_text("Сроки, которые нельзя пропустить: по июлю — до 15.11.2026, по августу — до 14.12.2026. "
+        "Разговор в WhatsApp сроки НЕ прерывает, нужна письменная претензия (e-mail достаточно).", F_RED)
 
 wb.active = 0
 wb.save(OUT)
