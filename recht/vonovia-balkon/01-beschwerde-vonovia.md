@@ -56,11 +56,20 @@ vorherige Terminabsprache stellt eine **verbotene Eigenmacht** im Sinne des
 (Beseitigung und — wegen Wiederholungsgefahr — Unterlassung) sowie aus
 § 1004 Abs. 1 BGB analog i. V. m. § 823 Abs. 1 BGB zu.
 
+Daran ändert eine etwaige Duldungspflicht nichts: Eine Duldungspflicht begründet
+**kein Selbsthilferecht**. Sie berechtigt Sie nicht, sich den Zutritt eigenmächtig
+zu verschaffen, sondern wäre erforderlichenfalls im Wege der Duldungsklage
+durchzusetzen.
+
 **2. Verletzung der Ankündigungspflicht.**
 - Soweit es sich um **Erhaltungsmaßnahmen** handelt, war die Maßnahme nach
-  § 555a Abs. 2 BGB **rechtzeitig** anzukündigen, und zwar unter Angabe von Art,
-  Umfang, Beginn und voraussichtlicher Dauer. Ein Fall der sofortigen
-  Notwendigkeit (§ 555a Abs. 2 a. E.) lag ersichtlich nicht vor.
+  § 555a Abs. 2 BGB **rechtzeitig** anzukündigen. Nach ständiger Rechtsprechung
+  muss die Ankündigung Art, Umfang, Beginn und voraussichtliche Dauer der Arbeiten
+  erkennen lassen. Keine der beiden gesetzlichen Ausnahmen liegt vor: Das Betreten
+  des ausschließlich von mir genutzten Balkons durch eine fremde Person und die
+  Blockierung der Balkontür sind keine *nur unerhebliche Einwirkung* auf die
+  Mietsache, und die *sofortige Durchführung* war nicht *zwingend erforderlich* —
+  die Arbeiten waren ersichtlich langfristig geplant.
 - Soweit es sich um eine **Modernisierungsmaßnahme** (§ 555b BGB, etwa
   energetische Maßnahmen im Zusammenhang mit dem Fensteraustausch) handelt, war
   die Maßnahme nach § 555c Abs. 1 BGB **spätestens drei Monate vor Beginn in
@@ -71,9 +80,9 @@ vorherige Terminabsprache stellt eine **verbotene Eigenmacht** im Sinne des
   Ankündigung voraus; an dieser fehlt es hier.
 
 Ein **Aushang im Treppenhaus ersetzt die Ankündigung nicht.** Die Ankündigung
-ist eine empfangsbedürftige Erklärung und muss jedem einzelnen Mieter zugehen
-(§ 130 BGB). Ein Aushang geht dem Mieter nicht zu und wahrt weder die Form noch
-die inhaltlichen Anforderungen der §§ 555a, 555c BGB.
+ist eine empfangsbedürftige, geschäftsähnliche Erklärung und muss jedem einzelnen
+Mieter zugehen (§ 130 BGB analog). Ein Aushang geht dem Mieter nicht zu und wahrt
+weder die Form noch die inhaltlichen Anforderungen der §§ 555a, 555c BGB.
 
 **3. Verletzung der Privatsphäre und des Hausrechts.**
 Das unangekündigte Erscheinen einer fremden Person unmittelbar vor bzw. in dem
@@ -84,7 +93,10 @@ Unverletzlichkeit der Wohnung. In meinem Haushalt leben Personen, die aus
 religiösen und persönlichen Gründen darauf angewiesen sind, sich innerhalb der
 Wohnung und auf dem Balkon unbeobachtet bewegen zu können. Ein unangekündigter
 Zutritt Dritter ist daher in besonderem Maße unzumutbar. Dieser Umstand ist bei
-der Festlegung von Zutrittsmodalitäten nach § 555d Abs. 2 BGB zu berücksichtigen.
+der Festlegung von Zutrittsmodalitäten und im Rahmen des Härteeinwands nach
+§ 555d Abs. 2 BGB zu berücksichtigen. Ich mache diesen Härteeinwand hiermit
+vorsorglich geltend. Die Frist des § 555d Abs. 3 Satz 1 BGB hat mangels
+ordnungsgemäßer Ankündigung nicht zu laufen begonnen (§ 555d Abs. 3 Satz 3 BGB).
 
 Ich weise ausdrücklich darauf hin, dass das Betreten des Balkons gegen meinen
 Willen zugleich den Tatbestand des § 123 StGB erfüllen kann.
@@ -93,7 +105,9 @@ Willen zugleich den Tatbestand des § 123 StGB erfüllen kann.
 Der Entzug der Balkonnutzung stellt einen Mangel der Mietsache im Sinne des
 § 536 Abs. 1 BGB dar. Ich behalte mir eine **Minderung der Miete** für die Dauer
 der Gebrauchsbeeinträchtigung ausdrücklich vor und zahle die Miete ab sofort bis
-zur Klärung **unter Vorbehalt der Rückforderung** (§ 814 BGB).
+zur Klärung **unter dem ausdrücklichen Vorbehalt der Rückforderung** nach
+§ 812 Abs. 1 Satz 1 Alt. 1 BGB. Der Vorbehalt erfolgt, damit mir § 814 BGB nicht
+entgegengehalten werden kann.
 
 ## III. Forderungen
 
@@ -119,7 +133,8 @@ Ich fordere Sie hiermit auf:
 
 3. Die **uneingeschränkte Nutzbarkeit des Balkons unverzüglich wiederherzustellen**,
    soweit die Arbeiten abgeschlossen sind, und den Balkon in gereinigtem Zustand
-   zu übergeben.
+   zu übergeben. Aufwendungen, die mir infolge der Arbeiten entstehen, mache ich
+   nach § 555a Abs. 3 BGB geltend.
 
 4. Das ausführende Unternehmen und dessen Mitarbeiter entsprechend **schriftlich
    anzuweisen** und mir die Erteilung dieser Anweisung zu bestätigen.
@@ -132,7 +147,8 @@ Hilfe in Anspruch nehmen, meine Ansprüche aus § 862 BGB gerichtlich geltend
 machen und die Miete mindern. Eine Strafanzeige nach § 123 StGB behalte ich mir
 für den Wiederholungsfall vor.
 
-Dieses Schreiben ist zugleich eine **Abmahnung** im Sinne des § 541 BGB analog.
+Dieses Schreiben ist zugleich eine **Abmahnung** und dient der Fristsetzung zur
+Abhilfe im Sinne des § 543 Abs. 3 Satz 1 BGB.
 
 Mit freundlichen Grüßen
 

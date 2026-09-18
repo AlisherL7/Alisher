@@ -23,15 +23,35 @@
 - Wiederholtes unbefugtes Betreten → **Unterlassungsklage** (§ 862 BGB) beim
   Amtsgericht Gronau. Streitwert gering, aber Kostenrisiko beachten.
 - Balkon weiterhin unbenutzbar → Mietminderung geltend machen, ab sofort
-  **schriftlich unter Vorbehalt** zahlen.
+  **schriftlich unter Vorbehalt** zahlen. Die Minderung tritt nach § 536 BGB zwar
+  kraft Gesetzes ein, Rückforderung läuft aber über § 812 Abs. 1 Satz 1 Alt. 1 BGB.
+  Der Vorbehalt schließt den Einwand aus § 814 BGB aus und verhindert, dass
+  vorbehaltlose Weiterzahlung trotz Kenntnis des Mangels als Verzicht ausgelegt
+  wird. Er ist deshalb dringend zu empfehlen — nicht, weil der Anspruch sonst
+  zwingend entfiele, sondern weil er sonst angreifbar wird.
 - Erneuter Vorfall → Strafanzeige § 123 StGB möglich; **Strafantragsfrist
   3 Monate** ab Kenntnis (§ 77b StGB).
+
+## Fristen im Blick behalten
+| Frist | Grundlage | Lauf ab |
+|---|---|---|
+| **1 Jahr** — Besitzschutzanspruch (§ 862 BGB) erlischt | § 864 Abs. 1 BGB | Verübung der verbotenen Eigenmacht |
+| **3 Monate** — Strafantrag § 123 StGB | § 77b StGB | Kenntnis von Tat und Täter |
+| **3 Jahre** — Rückforderung überzahlter Miete | §§ 195, 199 BGB | Ende des Jahres der Zahlung |
+| Härteeinwand § 555d Abs. 2 BGB | § 555d Abs. 3 BGB | läuft **nicht**, solange keine ordnungsgemäße Ankündigung zugegangen ist |
 
 ## Realistische Einschätzung der Erfolgsaussichten
 
 **Stark:**
 - Fehlende individuelle Ankündigung. Ein Aushang im Treppenhaus genügt den
   §§ 555a/555c BGB nicht. Das ist der tragende Punkt.
+  **Wichtige Differenzierung:** Bei einer **Modernisierung** entfällt die
+  Duldungspflicht, weil § 555d Abs. 1 BGB eine ordnungsgemäße Ankündigung nach
+  § 555c BGB voraussetzt. Bei reinen **Erhaltungsmaßnahmen** besteht die
+  Duldungspflicht dagegen schon nach § 555a Abs. 1 BGB und entfällt **nicht**
+  allein wegen der fehlenden Ankündigung — dort richten sich die Ansprüche gegen
+  das *Wie* des Zutritts (§§ 858, 862 BGB) und auf Schadensersatz nach
+  § 280 Abs. 1 BGB, nicht gegen die Maßnahme als solche.
 - Unterlassungsanspruch wegen verbotener Eigenmacht (§§ 858, 862 BGB) bei
   Wiederholungsgefahr.
 - Mietminderung für die Dauer der entzogenen Balkonnutzung. Übliche Quoten in der
