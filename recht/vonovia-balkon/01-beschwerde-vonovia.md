@@ -8,14 +8,14 @@
 
 [Vor- und Nachname]
 [Straße, Hausnummer, Wohnungslage z. B. 2. OG links]
-48599 Gronau (Westf.)
+[PLZ, Ort]
 Mieternummer / Vertragsnummer: [Nummer]
 
 Vonovia SE / [zuständige Regionalgesellschaft laut Mietvertrag]
 Kundenservice
 [Anschrift laut Mietvertrag]
 
-Gronau, den [Datum]
+[Ort], [Datum]
 
 **Betreff: Unbefugtes Betreten des mitvermieteten Balkons am [Datum], Verletzung
 der Ankündigungspflicht, Entzug der Balkonnutzung — Mängelanzeige, Abmahnung

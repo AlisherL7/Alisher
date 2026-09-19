@@ -11,9 +11,9 @@
 ## Stufe 2 — Beratung (parallel, Tag 0–7)
 | Stelle | Wofür | Hinweise |
 |---|---|---|
-| Mieterverein (Deutscher Mieterbund, zuständige Geschäftsstelle für Gronau/Kreis Borken) | Laufende Beratung, Prüfung Mietminderung, Schriftverkehr | ca. 80–120 €/Jahr. **Wichtig:** viele Vereine haben 3 Monate Wartezeit für bereits bestehende Streitigkeiten — Beitritt trotzdem sinnvoll für alles Weitere. |
+| Mieterverein (Deutscher Mieterbund, zuständige Geschäftsstelle am Wohnort) | Laufende Beratung, Prüfung Mietminderung, Schriftverkehr | ca. 80–120 €/Jahr. **Wichtig:** viele Vereine haben 3 Monate Wartezeit für bereits bestehende Streitigkeiten — Beitritt trotzdem sinnvoll für alles Weitere. |
 | Mietrechtsschutzversicherung | Deckungszusage vor Anwaltsbeauftragung einholen | ebenfalls Wartezeit (meist 3 Monate) |
-| Beratungshilfe, Amtsgericht Gronau | Anwaltsberatung für 15 € Eigenanteil bei geringem Einkommen | Beratungshilfeschein **vor** dem Anwaltstermin beantragen |
+| Beratungshilfe, Amtsgericht [zuständiges Amtsgericht am Ort der Wohnung] | Anwaltsberatung für 15 € Eigenanteil bei geringem Einkommen | Beratungshilfeschein **vor** dem Anwaltstermin beantragen |
 | Fachanwalt für Mietrecht | Wenn Vonovia die Frist verstreichen lässt | Erstberatung gesetzlich auf max. 190 € netto gedeckelt |
 | Verbraucherzentrale NRW | Allgemeine Orientierung | Mietrecht nur eingeschränkt |
 
@@ -21,7 +21,7 @@
 - Keine Reaktion → anwaltliches Aufforderungsschreiben, Kosten als Verzugsschaden
   (§ 280 Abs. 2, § 286 BGB) geltend machen.
 - Wiederholtes unbefugtes Betreten → **Unterlassungsklage** (§ 862 BGB) beim
-  Amtsgericht Gronau. Streitwert gering, aber Kostenrisiko beachten.
+  Amtsgericht [zuständiges Amtsgericht am Ort der Wohnung]. Streitwert gering, aber Kostenrisiko beachten.
 - Balkon weiterhin unbenutzbar → Mietminderung geltend machen, ab sofort
   **schriftlich unter Vorbehalt** zahlen. Die Minderung tritt nach § 536 BGB zwar
   kraft Gesetzes ein, Rückforderung läuft aber über § 812 Abs. 1 Satz 1 Alt. 1 BGB.
