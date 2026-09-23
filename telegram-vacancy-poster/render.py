@@ -80,3 +80,14 @@ def render_unique(rng: random.Random, recent_hashes: set[str], max_attempts: int
     # Не удалось найти уникальный за max_attempts попыток (маловероятно
     # при 6 шаблонах * фрагментах) — возвращаем последний вариант как есть.
     return text, h
+
+
+if __name__ == "__main__":
+    # python render.py — посмотреть, как выглядит текст. Telegram не нужен.
+    _rng = random.Random()
+    _seen: set[str] = set()
+    for _i in range(3):
+        _text, _hash = render_unique(_rng, _seen)
+        _seen.add(_hash)
+        print(f"{'=' * 60}\nВАРИАНТ {_i + 1}  (hash {_hash[:8]})\n{'=' * 60}")
+        print(_text)

@@ -116,6 +116,17 @@ timer + внешний lock для процесса с многочасовым�
 | `joiner.py` | Постепенное вступление в группы |
 | `stats.py` | Отчёт в stdout + `reports/YYYY-MM-DD-stats.txt` |
 
+## Проверка перед боевым запуском
+
+```bash
+.venv/bin/python render.py            # как выглядит текст, Telegram не нужен
+.venv/bin/python poster.py --dry-run  # что и куда ушло бы, без отправки
+.venv/bin/python poster.py --once     # один реальный пост и выход
+```
+
+`--dry-run` не пишет в БД и не тратит дневной лимит, ночная пауза в этом
+режиме игнорируется.
+
 ## Эксплуатация
 
 ```bash
