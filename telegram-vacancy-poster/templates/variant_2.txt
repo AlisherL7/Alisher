@@ -1,0 +1,10 @@
+{greeting} {emoji_header}
+
+NAS-Connect GmbH ищет: Bauhelfer / Tiefbauarbeiter (m/w/d)
+Строительство оптоволоконных сетей (Glasfaser-Tiefbau), Niedersachsen.
+Формат: полная занятость, старт сразу после собеседования.
+
+{blocks}
+
+{closing}
+Контакт: WhatsApp +49 176 72515797 · info@nasconnect.de

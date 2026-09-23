@@ -1,0 +1,15 @@
+[Unit]
+Description=NAS-Connect Telegram gradual group joiner
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=nasconnect
+WorkingDirectory=/opt/telegram-vacancy-poster
+ExecStart=/opt/telegram-vacancy-poster/.venv/bin/python joiner.py
+Restart=on-failure
+RestartSec=60
+
+[Install]
+WantedBy=multi-user.target

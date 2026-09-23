@@ -1,0 +1,35 @@
+[
+  {
+    "id": "rabota_v_germanii_example",
+    "username": "@rabota_v_germanii_example",
+    "language": "ru",
+    "requires_approval": true,
+    "approved_by": "admin @example_admin, 2026-09-01, договорено по WhatsApp",
+    "min_interval_hours": 24,
+    "posting_rules": "Объявления только с 09:00 до 20:00, без ссылок кроме контактных",
+    "dead": false,
+    "notes": ""
+  },
+  {
+    "id": "ishlash_germaniyada_example",
+    "username": "@ishlash_germaniyada_example",
+    "language": "uz",
+    "requires_approval": true,
+    "approved_by": "владелец группы, устно, 2026-08-20",
+    "min_interval_hours": 24,
+    "posting_rules": "",
+    "dead": false,
+    "notes": "Правил постинга нет — соблюдаем общий лимит кода"
+  },
+  {
+    "id": "vacancy_de_open_example",
+    "username": "@vacancy_de_open_example",
+    "language": "ru",
+    "requires_approval": false,
+    "approved_by": null,
+    "min_interval_hours": 24,
+    "posting_rules": "",
+    "dead": false,
+    "notes": "ПРИМЕР: requires_approval=false — poster.py такую группу пропустит. Заполните approved_by и requires_approval=true после получения разрешения администратора."
+  }
+]

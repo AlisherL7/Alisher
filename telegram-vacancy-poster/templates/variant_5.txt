@@ -1,0 +1,11 @@
+{greeting}
+
+NAS-Connect GmbH (Niedersachsen) {emoji_header}
+
+Открыта вакансия: Bauhelfer / Tiefbauarbeiter (m/w/d)
+Сфера: строительство оптоволоконных сетей. Полная занятость, начало сразу.
+
+{blocks}
+
+{closing}
+Контакты: WhatsApp +49 176 72515797, info@nasconnect.de
